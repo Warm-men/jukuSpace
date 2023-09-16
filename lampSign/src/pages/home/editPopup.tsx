@@ -27,6 +27,7 @@ const { hsv2rgb } = Utils.ColorUtils.color;
 // 7-追逐     （速度，亮度，颜色）
 // 8-闪烁       （速度，颜色）
 // 9-过渡        （速度，亮度）
+// 10-默认      （颜色，速度，亮度）
 const EFFECT_HSV_CONFIG = [
   [false, true, true],
   [false, true, true],
@@ -37,6 +38,7 @@ const EFFECT_HSV_CONFIG = [
   [false, true, true],
   [true, true, false],
   [false, true, true],
+  [true, true, true],
 ];
 
 const PopUp = (props: any) => {
@@ -45,7 +47,7 @@ const PopUp = (props: any) => {
   const [brightness, setBrightness] = useState(50);
   const [speed, setSpeed] = useState(50);
   const [hue, setHue] = useState(50);
-  const [effect, setEffect] = useState(0);
+  const [effect, setEffect] = useState(9);
   const animatedValue = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -82,7 +84,7 @@ const PopUp = (props: any) => {
       }
       return item;
     });
-    onValueChange(newData);
+    // onValueChange(newData);
   }, [extraKey]);
 
   useEffect(() => {

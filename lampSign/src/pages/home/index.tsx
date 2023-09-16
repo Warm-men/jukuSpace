@@ -47,6 +47,7 @@ function Home() {
   const [selectedList, setSelectedList] = useState([]);
   const [selectedListCopy, setSelectedListCopy] = useState([]); // 用于编辑时的备份
   const currentSceneString = useRef(null);
+  const scrollViewRef = useRef(null);
 
   const isVisiblePop = selectedListCopy.filter(i => !!i.onFocus).length > 0;
 
@@ -142,6 +143,11 @@ function Home() {
     setSelectedList(list);
     setSelectedListCopy(list);
     putDpData(list);
+  };
+
+  const onTapElementType = (index: number) => {
+    setElementType(index);
+    scrollViewRef.current.scrollTo({ x: 0, y: 0, animated: true });
   };
 
   return (
@@ -260,7 +266,7 @@ function Home() {
             const isActive = index === elementType;
             return (
               <TouchableOpacity
-                onPress={() => setElementType(index)}
+                onPress={() => onTapElementType(index)}
                 key={item.name}
                 style={styles.elementView}
                 activeOpacity={0.85}
@@ -287,6 +293,7 @@ function Home() {
             contentContainerStyle={{ paddingLeft: cx(16) }}
             style={styles.listView}
             showsHorizontalScrollIndicator={false}
+            ref={scrollViewRef}
           >
             {ListData[elementType].map((item, index) => {
               const isPhrase = item.size === 2;
