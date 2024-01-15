@@ -5,15 +5,16 @@ import composeLayout from './composeLayout';
 import { store } from './models';
 import Home from './pages/home';
 import Setting from './pages/setting';
-import Plan from './pages/plan';
+import Clock from './pages/clock';
+import ModalEdit from './pages/modalEdit';
 
 console.disableYellowBox = true;
 
 const commonStyles = {
   renderStatusBar: () => <StatusBar barStyle="default" />,
   background: {
-    '0%': '#17171A',
-    '100%': '#17171A',
+    '0%': '#0D0C10',
+    '100%': '#0D0C10',
   },
   gestureEnabled: true,
   hideTopbar: true,
@@ -22,7 +23,7 @@ const commonStyles = {
 const router: NavigationRoute[] = [
   {
     name: 'main',
-    component: Home,
+    component: ModalEdit,
     options: {
       ...commonStyles,
     },
@@ -35,8 +36,15 @@ const router: NavigationRoute[] = [
     },
   },
   {
-    name: 'plan',
-    component: Plan,
+    name: 'clock',
+    component: Clock,
+    options: {
+      ...commonStyles,
+    },
+  },
+  {
+    name: 'modalEdit',
+    component: ModalEdit,
     options: {
       ...commonStyles,
     },
