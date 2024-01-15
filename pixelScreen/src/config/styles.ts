@@ -48,6 +48,7 @@ const commonStyles = {
 };
 
 const commonColor = {
+  mainColor: '#6051FA',
   mainText: '#fff',
   subText: '#C5C5C5',
   green: '#44B74A',

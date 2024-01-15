@@ -28,12 +28,12 @@ const styles = StyleSheet.create({
   },
   productImg: {
     width: cx(80),
-    height: cx(60),
+    height: cx(50),
   },
   productText: {
     fontSize: cx(20),
     color: commonColor.mainText,
-    marginLeft: cx(8),
+    marginLeft: cx(12),
   },
   settingView: {
     paddingVertical: cx(6),
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     color: commonColor.mainText,
   },
   modeContainer: {
-    marginTop: cx(16),
+    marginTop: cx(20),
     borderRadius: cx(12),
     padding: cx(20),
     backgroundColor: '#21202C',
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   },
   line: {
     width: cx(287),
-    height: cx(1),
+    height: StyleSheet.hairlineWidth,
     backgroundColor: '#3B394A',
     marginVertical: cx(8),
   },
@@ -107,6 +107,68 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
+  },
+  homeModalWrapper: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.95)',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  homeModalTop: {
+    width: '100%',
+    alignItems: 'center',
+    marginTop: cx(200),
+  },
+  homeModalText: {
+    marginTop: cx(12),
+    color: '#fff',
+    fontSize: cx(17),
+    fontWeight: '600',
+  },
+  homeModalTime: {
+    marginTop: cx(40),
+    color: '#fff',
+    fontSize: cx(60),
+    fontWeight: '600',
+    lineHeight: cx(60),
+  },
+  homeModalLater: {
+    width: cx(204),
+    height: cx(55),
+    marginTop: cx(60),
+    borderRadius: cx(27.5),
+    backgroundColor: commonColor.mainColor,
+  },
+  snoozeView: {
+    fontSize: cx(14),
+    width: cx(200),
+    lineHeight: cx(20),
+    color: '#fff',
+    marginTop: cx(20),
+  },
+  homeModalLaterIcon: {
+    marginRight: cx(6),
+    width: cx(16),
+    height: cx(16),
+  },
+  homeModalLaterStop: {
+    width: cx(134),
+    height: cx(55),
+    marginTop: cx(60),
+    borderRadius: cx(27.5),
+    backgroundColor: '#262528',
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  center: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  blackText: {
+    fontSize: cx(16),
+    color: '#fff',
   },
 });
 

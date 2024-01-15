@@ -228,3 +228,49 @@ export const sceneString2Data = (sceneData: string) => {
     return [];
   }
 };
+export const getAmPmData = () => {
+  return [
+    {
+      label: 'AM',
+      value: 'AM',
+    },
+    {
+      label: 'PM',
+      value: 'PM',
+    },
+  ];
+};
+
+export const getHourData = () => {
+  const range = Utils.NumberUtils.range(1, 13, 1);
+  const timerRange = range.map((item: number) => {
+    return {
+      label: `${item}`,
+      value: item,
+    };
+  });
+  return timerRange;
+};
+
+export const getMinuteData = () => {
+  const range = Utils.NumberUtils.range(0, 60, 1);
+  const timerRange = range.map((item: number) => {
+    return {
+      label: `${item}`,
+      value: item,
+    };
+  });
+  return timerRange;
+};
+
+export const string2ClockState = (str: string) => {
+  if (str.length !== 8)
+    return {
+      alarm1: '',
+      alarm2: '',
+    };
+  return {
+    alarm1: +str.slice(0, 2), //  0-闹钟1响闹状态，1-闹钟1贪睡状态， 2-闹钟1停闹状态
+    alarm2: +str.slice(2, 4), //  0-闹钟2响闹状态，1-闹钟2贪睡状态， 2-闹钟2停闹状态
+  };
+};

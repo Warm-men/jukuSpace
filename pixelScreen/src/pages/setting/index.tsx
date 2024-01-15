@@ -1,216 +1,302 @@
-import React, { useState, useEffect } from 'react';
-import { View, TouchableOpacity, ScrollView, StyleSheet, Image } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, TouchableOpacity, ScrollView, Image } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { Utils, TYText, TYSdk, TopBar, Picker, Slider, SwitchButton } from 'tuya-panel-kit';
 import { useSelector } from 'react-redux';
-import { SwitchButton, TYText, TYSdk, TopBar, Utils } from 'tuya-panel-kit';
 import Res from '@res';
 import i18n from '@i18n';
-import { commonStyles, cx, commonColor, width } from '@config/styles';
+import { planOpen2Object, } from '@utils';
+import { cx, commonColor, commonStyles } from '@config/styles';
 import { dpCodes } from '@config';
-import { planOpen2Object, repeat2Text, planOpen2String } from '@utils';
-import CountdownPop from './countdownPopup';
+import TimePopup from './timePopup';
+import styles from './styles';
 
-const { toFixed } = Utils.CoreUtils;
-const { countdownCode, openPlanCode } = dpCodes;
+const { hsv2rgb } = Utils.ColorUtils.color;
+const { openPlanCode } = dpCodes;
 function Setting() {
-  const { [countdownCode]: countdown, [openPlanCode]: openPlan } = useSelector(
-    ({ dpState }: any) => dpState
-  );
+  const { [openPlanCode]: openPlan } = useSelector(({ dpState }: any) => dpState);
 
   const openPlanObject = planOpen2Object(openPlan);
-  console.log('🚀 ~ file: index.tsx:22 ~ Setting ~ openPlanObject:', openPlanObject);
-  const { switchState: open } = openPlanObject;
 
+  const { time, switchState } = openPlanObject;
+  // const route = useRoute();
   const navigation = useNavigation<StackNavigationProp<any, any>>();
-  // const [open, setOpen] = useState(openPlanObject.switchState);
   const [isVisiblePop, setIsVisiblePop] = useState(false);
+  const [screenBrightness, setScreenBrightness] = useState(0);
+  const [syncTime, setSyncTime] = useState(false);
+  const [syncWeather, setSyncWeather] = useState(false);
+  const [timeColorType, setTimeColorType] = useState('0');
+  const [gradientColorType, setGradientColorType] = useState('0');
 
-  const handleCountdown = () => {
+  const [hue, setHue] = useState(50);
+
+  const brightnessRef = useRef(null);
+
+  const handleOpenSetTime = () => {
     setIsVisiblePop(true);
   };
 
-  const handleOnClose = () => {
+  const handleOnCloseTimePop = () => {
     setIsVisiblePop(false);
   };
 
-  const handleOnConfirm = (value: any) => {
-    setIsVisiblePop(false);
-    TYSdk.device.putDeviceData({
-      [countdownCode]: value * 60,
-    });
+  const handleOnConfirmTime = (value: number) => {};
+
+  const getThumbColor = () => {
+    const [r, g, b] = hsv2rgb(hue, 100, 100, 1);
+    return `rgb(${r}, ${g}, ${b})`;
   };
 
-  const handleUpdatePlanOpen = (value: boolean) => {
-    const newPlan = { ...openPlanObject, switchState: value };
-    const newDpDate = planOpen2String(newPlan);
-    TYSdk.device.putDeviceData({
-      [openPlanCode]: newDpDate,
-    });
+  const theme = {
+    width: cx(295),
+    height: cx(4),
+    trackRadius: cx(2),
+    trackHeight: cx(4),
+    thumbSize: cx(14),
+    thumbRadius: cx(14),
   };
 
-  const getCountdownTime = () => {
-    if (countdown === 0) return i18n.getLang('countdown_close');
-    const minute = Math.floor(countdown / 60);
-    return `${minute} ${i18n.getLang('minute')}`;
+  const gradientColors = [
+    {
+      image: Res.gradient_color_0,
+      value: '0',
+    },
+    {
+      image: Res.gradient_color_1,
+      value: '1',
+    },
+    {
+      image: Res.gradient_color_2,
+      value: '2',
+    },
+    {
+      image: Res.gradient_color_3,
+      value: '3',
+    },
+  ];
+
+  const getTimeText = () => {
+    return `10:25`;
   };
 
-  const getPlanTimeText = () => {
-    const { time } = openPlanObject;
-    return `${toFixed(time.hour, 2)}:${toFixed(time.minute, 2)}`;
-  };
-
-  const getRepeatText = () => {
-    const { repeat, switchState } = openPlanObject;
-    const repeatText = repeat2Text(repeat, switchState);
-    return repeatText;
-  };
-
-  const size = { width: cx(40), height: cx(24), activeSize: cx(18) };
   return (
     <View style={styles.container}>
       <TopBar
         color={commonColor.mainText}
-        title={i18n.getLang('setting_title')}
+        title={i18n.getLang('setting')}
         titleStyle={{ color: commonColor.mainText }}
         background="transparent"
-        onBack={() => navigation.goBack()}
-        actions={[
-          {
-            source: Res.device_info,
-            contentStyle: {
-              width: cx(24),
-              height: cx(24),
-              marginRight: cx(16),
-            },
-            color: commonColor.mainText,
-            onPress: () => {
-              TYSdk.native.showDeviceMenu();
-            },
-          },
-        ]}
+        onBack={() => {
+          navigation.goBack();
+        }}
       />
-      <ScrollView style={{ flex: 1 }}>
-        {/* 定时开 */}
-        <View style={styles.barView}>
-          <View style={commonStyles.flexRowBetween}>
-            <TYText color="#ABABAC" size={cx(14)}>
-              {i18n.getLang('plan_open')}
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingTop: cx(24) }}>
+        <View style={styles.optionView}>
+          <View style={styles.optionViewItem}>
+            <TYText size={cx(14)} color="#C5C5C5">
+              {i18n.getLang('sync_time')}
             </TYText>
             <SwitchButton
-              size={size}
+              onTintColor={commonColor.mainColor}
+              tintColor="#2E2C3D"
+              thumbTintColor="#5A5774"
+              onThumbTintColor="#fff"
+              size={{ width: cx(42), height: cx(28) }}
+              thumbStyle={{ width: cx(18), height: cx(18), borderRadius: cx(9) }}
+              value={syncTime}
               onValueChange={value => {
-                handleUpdatePlanOpen(value);
+                setSyncTime(value);
               }}
-              value={open}
-              tintColor="#474748"
-              onTintColor="#6B73E7"
-              thumbTintColor="#78787A"
             />
           </View>
-          <View style={[commonStyles.flexRowBetween, styles.marginT40, { alignItems: 'flex-end' }]}>
-            <View style={styles.textView}>
-              <TYText style={styles.text24}>{getPlanTimeText()}</TYText>
-              <TYText style={[styles.text12, styles.marginL12]}>{getRepeatText()}</TYText>
+          {!syncTime && <View style={styles.line} />}
+          {!syncTime && (
+            <View style={styles.optionViewItem}>
+              <TYText size={cx(14)} color="#C5C5C5">
+                {i18n.getLang('sync_time')}
+              </TYText>
+              <TouchableOpacity activeOpacity={0.8} onPress={handleOpenSetTime}>
+                <View style={styles.clickView}>
+                  <TYText size={cx(14)} color="#78787A">
+                    {getTimeText()}
+                  </TYText>
+                  <Image style={styles.arrowImage} source={Res.arrow_right} />
+                </View>
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity
-              style={styles.clickView}
-              activeOpacity={0.8}
-              onPress={() => {
-                navigation.push('plan');
+          )}
+        </View>
+
+        <View style={styles.optionView}>
+          <View style={styles.optionViewItem}>
+            <TYText size={cx(14)} color="#C5C5C5">
+              {i18n.getLang('sync_weather')}
+            </TYText>
+            <SwitchButton
+              onTintColor={commonColor.mainColor}
+              tintColor="#2E2C3D"
+              thumbTintColor="#5A5774"
+              onThumbTintColor="#fff"
+              size={{ width: cx(42), height: cx(28) }}
+              thumbStyle={{ width: cx(18), height: cx(18), borderRadius: cx(9) }}
+              value={syncWeather}
+              onValueChange={value => {
+                setSyncWeather(value);
               }}
-            >
-              <Image source={Res.arrow_right} style={styles.arrow} />
-            </TouchableOpacity>
+            />
           </View>
         </View>
-        {/* 倒计时关 */}
-        <View style={styles.barView}>
-          <View style={commonStyles.flexRowBetween}>
-            <TYText color="#ABABAC" size={cx(14)}>
-              {i18n.getLang('countdown')}
-            </TYText>
-            <SwitchButton
-              size={size}
-              onValueChange={value => {
-                TYSdk.device.putDeviceData({
-                  [countdownCode]: value ? 600 : 0,
-                });
-              }}
-              value={!!countdown}
-              tintColor="#474748"
-              onTintColor="#6B73E7"
-              thumbTintColor="#78787A"
-            />
-          </View>
-          <View style={[commonStyles.flexRowBetween, styles.marginT40, { alignItems: 'flex-end' }]}>
-            <View style={styles.textView}>
-              <TYText style={styles.text24}>{getCountdownTime()}</TYText>
+
+        <View style={styles.optionView}>
+          <View
+            style={[styles.optionViewItem, { flexDirection: 'column', alignItems: 'flex-start' }]}
+          >
+            <View style={[commonStyles.flexRowBetween, { width: cx(295), height: cx(34) }]}>
+              <TYText size={cx(14)} color="#C5C5C5">
+                {i18n.getLang('time_text_color')}
+              </TYText>
+              <View style={[commonStyles.flexRowBetween, { width: cx(120) }]}>
+                <TouchableOpacity
+                  activeOpacity={0.85}
+                  onPress={() => {
+                    setTimeColorType('1');
+                  }}
+                >
+                  <View style={[commonStyles.flexRowCenter, { width: cx(50) }]}>
+                    <Image
+                      source={timeColorType === '1' ? Res.time_color_focus : Res.time_color_blur}
+                      style={styles.selectColor}
+                    />
+                    <TYText size={cx(14)} color={timeColorType === '1' ? '#fff' : '#78787A'}>
+                      {i18n.getLang('pure_color')}
+                    </TYText>
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.85}
+                  onPress={() => {
+                    setTimeColorType('2');
+                  }}
+                >
+                  <View style={[commonStyles.flexRowCenter, { width: cx(50) }]}>
+                    <Image
+                      source={timeColorType === '2' ? Res.time_color_focus : Res.time_color_blur}
+                      style={styles.selectColor}
+                    />
+                    <TYText size={cx(14)} color={timeColorType === '2' ? '#fff' : '#78787A'}>
+                      {i18n.getLang('gradient_color')}
+                    </TYText>
+                  </View>
+                </TouchableOpacity>
+              </View>
             </View>
-            <TouchableOpacity
-              style={styles.clickView}
-              activeOpacity={0.8}
-              onPress={handleCountdown}
-            >
-              <Image source={Res.arrow_right} style={styles.arrow} />
-            </TouchableOpacity>
+            {timeColorType === '1' && (
+              <Slider.Horizontal
+                theme={theme}
+                value={hue}
+                minimumValue={0}
+                maximumValue={360}
+                onlyMaximumTrack={true}
+                thumbStyle={styles.thumbStyle}
+                renderMaximumTrack={() => (
+                  <Image
+                    source={Res.color_slider_bg}
+                    resizeMode="stretch"
+                    style={styles.MaximumTrack}
+                  />
+                )}
+                renderThumb={() => (
+                  <View
+                    style={[
+                      styles.renderThumb,
+                      {
+                        backgroundColor: getThumbColor(),
+                      },
+                    ]}
+                  />
+                )}
+                onValueChange={v => setHue(Math.round(v))}
+                onSlidingComplete={v => {
+                  setHue(Math.round(v));
+                }}
+              />
+            )}
+
+            {timeColorType === '2' && (
+              <View style={[commonStyles.flexRowBetween, { width: cx(295) }]}>
+                {gradientColors.map(item => {
+                  const isActive = item.value === gradientColorType;
+                  return (
+                    <TouchableOpacity
+                      activeOpacity={0.85}
+                      key={item.value}
+                      onPress={() => {
+                        setGradientColorType(item.value);
+                      }}
+                      style={[
+                        styles.gradientView,
+                        {
+                          borderWidth: isActive ? cx(2) : 0,
+                          borderColor: isActive ? '#fff' : '#21202C',
+                        },
+                      ]}
+                    >
+                      <Image source={item.image} style={styles.gradientImage} />
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+            )}
+          </View>
+        </View>
+
+        <View style={styles.optionView}>
+          <View
+            style={[styles.optionViewItem, { flexDirection: 'column', alignItems: 'flex-start' }]}
+          >
+            <View style={[commonStyles.flexRowBetween, { width: cx(295), height: cx(34) }]}>
+              <TYText size={cx(14)} color="#C5C5C5">
+                {i18n.getLang('screen_brightness')}
+              </TYText>
+              <TYText size={cx(14)} color="#78787A" ref={brightnessRef}>
+                {screenBrightness}
+              </TYText>
+            </View>
+
+            <Slider.Horizontal
+              theme={{
+                width: cx(295),
+                height: cx(4),
+                trackRadius: cx(2),
+                trackHeight: cx(4),
+                thumbSize: cx(14),
+                thumbRadius: cx(14),
+                thumbTintColor: '#F6F6F6',
+                minimumTrackTintColor: '#E5E5E5',
+                maximumTrackTintColor: '#272632',
+              }}
+              maximumValue={100}
+              minimumValue={0}
+              value={screenBrightness}
+              onValueChange={(v: number) => {
+                brightnessRef &&
+                  brightnessRef.current &&
+                  brightnessRef.current?.setText(Math.round(v));
+              }}
+              onSlidingComplete={v => setScreenBrightness(Math.round(v))}
+            />
           </View>
         </View>
       </ScrollView>
-      <CountdownPop
-        onClose={handleOnClose}
-        onConfirm={handleOnConfirm}
+      <TimePopup
+        onClose={handleOnCloseTimePop}
+        onConfirm={handleOnConfirmTime}
         isVisiblePop={isVisiblePop}
+        value={openPlanObject.duration}
       />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  barView: {
-    width: width - cx(40),
-    marginLeft: cx(20),
-    marginTop: cx(20),
-    borderRadius: cx(16),
-    backgroundColor: '#222225',
-    padding: cx(20),
-  },
-  clickView: {
-    width: cx(28),
-    height: cx(20),
-    borderRadius: cx(6),
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#2E2E30',
-  },
-  textView: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    width: width - cx(150),
-  },
-  marginT40: {
-    marginTop: cx(40),
-  },
-  marginL12: {
-    marginLeft: cx(12),
-  },
-  text24: {
-    fontSize: cx(24),
-    color: '#ABABAC',
-  },
-  text12: {
-    fontSize: cx(12),
-    color: '#ABABAC',
-    marginBottom: cx(4),
-    width: cx(160),
-  },
-  arrow: {
-    width: cx(14),
-    height: cx(14),
-  },
-});
 
 export default Setting;

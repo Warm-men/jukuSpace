@@ -1,18 +1,9 @@
-import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
-import {
-  View,
-  TouchableOpacity,
-  ScrollView,
-  Image,
-  StyleSheet,
-  Animated,
-  Platform,
-  Easing,
-} from 'react-native';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { View, TouchableOpacity, Image, StyleSheet, TextInput } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import SortableList from 'react-native-sortable-list';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Utils, TYText, TYSdk, TopBar } from 'tuya-panel-kit';
+import { Notification, TYText, TYSdk, TopBar } from 'tuya-panel-kit';
 import { useSelector } from 'react-redux';
 import Res from '@res';
 import i18n from '@i18n';
@@ -27,36 +18,62 @@ function ModalEdit() {
   // const route = useRoute();
   const navigation = useNavigation<StackNavigationProp<any, any>>();
 
-  const [repeatTime, setRepeatTime] = useState(0);
+  const [repeatTime, setRepeatTime] = useState(150);
+  const [modelConfigState, setModelConfig] = useState<any[]>(modelConfig);
 
-  const scrollRef = useRef(null);
+  const textRef = useRef(null);
 
   const getDataObject = () => {
     const dataObject = {};
     // 遍历modelConfig，返回对象型数据
-    modelConfig.forEach((item, index) => {
+    modelConfigState.forEach((item, index) => {
       dataObject[index] = item;
     });
     return dataObject;
   };
 
   const renderRow = useCallback(({ data, active }) => {
-    return <SortListItem data={data} active={active} />;
+    return <SortListItem data={data} active={active} onDeleteItem={onDeleteItem} />;
   }, []);
 
   const onChangeOrder = i => {
     console.log('onChangeOrder', i);
   };
 
-  const onPressRow = () => {
-    console.log('🚀 ~ onPressRow ~ scrollRef:', scrollRef);
+  const onDeleteItem = item => {
+    console.log('🚀 ~ onDeleteItem ~ item:', item);
+    const newData = modelConfigState.filter(i => i.model_id !== item.model_id);
+    setModelConfig(newData);
   };
 
-  const onReleaseRow = () => {
-    console.log('🚀 ~ onReleaseRow ~ scrollRef:', scrollRef);
+  const repeatTimeData = [30, 60, 120, 240, 300];
+
+  const isCustomer = !repeatTimeData.includes(repeatTime) && repeatTime !== 0;
+
+  const onChangeText = text => {
+    if (+text > 600) {
+      Notification.show({
+        message: i18n.getLang('screen_repeat_time_max_tip'),
+        onClose: () => {
+          Notification.hide();
+        },
+        theme: {
+          warningIcon: 'black',
+        },
+      });
+      setTimeout(() => {
+        Notification.hide();
+      }, 2000);
+      return;
+    }
+    setRepeatTime(+text);
   };
 
-  const repeatTimeData = [30, 60, 120, 240, 300, 600];
+  const onBlur = () => {
+    if (repeatTime > 600) {
+      setRepeatTime(600);
+    }
+  };
 
   const renderFooter = () => {
     return (
@@ -73,6 +90,8 @@ function ModalEdit() {
                 activeOpacity={0.85}
                 style={[styles.timeItem, { borderColor: isActive ? '#fff' : '#21202C' }]}
                 onPress={() => {
+                  textRef?.current?.blur();
+                  textRef?.current?.clear();
                   setRepeatTime(item);
                 }}
               >
@@ -82,6 +101,21 @@ function ModalEdit() {
               </TouchableOpacity>
             );
           })}
+          <TouchableOpacity
+            activeOpacity={0.85}
+            style={[styles.timeItem, { borderColor: isCustomer ? '#fff' : '#21202C' }]}
+          >
+            <TextInput
+              value={isCustomer ? `${repeatTime}` : ''}
+              keyboardType="numeric"
+              placeholder={i18n.getLang('custom')}
+              placeholderTextColor="#747476"
+              onChangeText={onChangeText}
+              onBlur={onBlur}
+              style={styles.textInput}
+              ref={textRef}
+            />
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -104,11 +138,10 @@ function ModalEdit() {
         title={i18n.getLang('setting')}
         titleStyle={{ color: commonColor.mainText }}
         background="transparent"
-        onBack={() => navigation.goBack()}
         leftActions={[
           {
             children: (
-              <TouchableOpacity style={styles.backView} onPress={() => {}}>
+              <TouchableOpacity style={styles.backView} onPress={navigation.goBack}>
                 <Image source={Res.close_1} style={styles.backImage} />
               </TouchableOpacity>
             ),
@@ -118,7 +151,7 @@ function ModalEdit() {
           {
             children: (
               <TouchableOpacity style={styles.saveView} onPress={() => {}}>
-                <TYText style={styles.saveText}>保存</TYText>
+                <TYText style={styles.saveText}>{i18n.getLang('save')}</TYText>
               </TouchableOpacity>
             ),
           },
@@ -130,8 +163,6 @@ function ModalEdit() {
         data={getDataObject()}
         renderRow={renderRow}
         onChangeOrder={onChangeOrder}
-        onPressRow={onPressRow}
-        onReleaseRow={onReleaseRow}
         renderHeader={renderHeader}
         renderFooter={renderFooter}
       />
@@ -155,7 +186,7 @@ const styles = StyleSheet.create({
   saveView: {
     width: cx(52),
     height: cx(26),
-    backgroundColor: '#6051FA',
+    backgroundColor: commonColor.mainColor,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: cx(12),
@@ -195,6 +226,10 @@ const styles = StyleSheet.create({
     marginBottom: cx(16),
     borderWidth: cx(2),
     borderColor: '#21202C',
+  },
+  textInput: {
+    fontSize: cx(14),
+    color: '#fff',
   },
 });
 

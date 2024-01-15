@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import {
   View,
   TouchableOpacity,
@@ -9,18 +9,14 @@ import {
   Easing,
 } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import SortableList from 'react-native-sortable-list';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { Utils, TYText, TYSdk, Swipeout } from 'tuya-panel-kit';
+import { Utils, TYText, TYSdk, Dialog } from 'tuya-panel-kit';
 import { useSelector } from 'react-redux';
 import Res from '@res';
 import i18n from '@i18n';
 import { cx, commonColor, width } from '@config/styles';
-import modelConfig from 'config/common';
-import { dpCodes } from '@config';
-// const { openPlanCode } = dpCodes;
+
 function Row(props) {
-  const { active, data } = props;
+  const { active, data, onDeleteItem } = props;
 
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
@@ -101,7 +97,29 @@ function Row(props) {
   }, [isDeleteOpen]);
 
   const onDelete = () => {
-    setIsDeleteOpen(!isDeleteOpen);
+    setIsDeleteOpen(true);
+  };
+
+  const handleDelete = () => {
+    Dialog.confirm({
+      title: i18n.getLang('make_sure_delete'),
+      subTitle: '',
+      cancelText: i18n.getLang('cancel'),
+      confirmText: i18n.getLang('sure'),
+      onConfirm: (_, { close }) => {
+        setIsDeleteOpen(false);
+        onDeleteItem(data);
+        close();
+      },
+      onCancel: () => {
+        setIsDeleteOpen(false);
+        Dialog.close();
+      },
+    });
+  };
+
+  const onCancel = () => {
+    setIsDeleteOpen(false);
   };
 
   return (
@@ -117,11 +135,11 @@ function Row(props) {
         <Image source={Res.sort} style={styles.sortImage} />
       </Animated.View>
       <View style={styles.operationView}>
-        <TouchableOpacity activeOpacity={0.85} style={styles.deleteView} onPress={onDelete}>
-          <TYText style={styles.deleteText}>删除</TYText>
+        <TouchableOpacity activeOpacity={0.85} style={styles.deleteView} onPress={handleDelete}>
+          <TYText style={styles.deleteText}>{i18n.getLang('delete')}</TYText>
         </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.85} style={styles.cancelView} onPress={onDelete}>
-          <TYText style={styles.deleteText}>取消</TYText>
+        <TouchableOpacity activeOpacity={0.85} style={styles.cancelView} onPress={onCancel}>
+          <TYText style={styles.deleteText}>{i18n.getLang('cancel')}</TYText>
         </TouchableOpacity>
       </View>
     </Animated.View>
@@ -187,7 +205,7 @@ const styles = StyleSheet.create({
   cancelView: {
     height: cx(100),
     width: cx(60),
-    backgroundColor: '#6051FA',
+    backgroundColor: '#403D53',
     justifyContent: 'center',
     alignItems: 'center',
   },

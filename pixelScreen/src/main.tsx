@@ -23,7 +23,7 @@ const commonStyles = {
 const router: NavigationRoute[] = [
   {
     name: 'main',
-    component: ModalEdit,
+    component: Home,
     options: {
       ...commonStyles,
     },

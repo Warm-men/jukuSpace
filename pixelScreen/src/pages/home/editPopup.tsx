@@ -9,7 +9,6 @@ import {
   Modal,
 } from 'react-native';
 import { Utils, TYText } from 'tuya-panel-kit';
-import _times from 'lodash/times';
 import _deepClone from 'lodash/cloneDeep';
 import Res from '@res';
 import i18n from '@i18n';

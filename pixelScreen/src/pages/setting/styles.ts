@@ -13,24 +13,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-end',
   },
-  pickerView: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  pickerMiddle: {
-    height: 36,
-    width: cx(248),
-    backgroundColor: '#21202C',
-    borderRadius: cx(8),
-    position: 'absolute',
-    left: cx(44),
-    top: Platform.OS === 'android' ? 58 : 90,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginHorizontal: cx(10),
-    zIndex: -1,
-  },
   pickerText: {
     marginLeft: cx(64),
     fontSize: cx(18),
@@ -40,7 +22,7 @@ const styles = StyleSheet.create({
     marginHorizontal: cx(20),
     borderRadius: cx(16),
     backgroundColor: '#21202C',
-    marginTop: cx(56),
+    marginBottom: cx(16),
   },
   optionViewItem: {
     flexDirection: 'row',
@@ -91,6 +73,38 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  thumbStyle: {
+    width: cx(14),
+    height: cx(14),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  MaximumTrack: {
+    height: cx(4),
+    width: cx(295),
+    borderRadius: cx(2),
+  },
+  renderThumb: {
+    width: cx(8),
+    height: cx(8),
+    borderRadius: cx(4),
+  },
+  selectColor: {
+    width: cx(16),
+    height: cx(16),
+    marginRight: cx(2),
+  },
+  gradientView: {
+    width: cx(70),
+    height: cx(40),
+    borderRadius: cx(8),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  gradientImage: {
+    width: cx(60),
+    height: cx(30),
   },
 });
 

@@ -6,7 +6,14 @@ import { Utils, TYText, TYSdk, TopBar, Picker, Slider } from 'tuya-panel-kit';
 import { useSelector } from 'react-redux';
 import Res from '@res';
 import i18n from '@i18n';
-import { planOpen2Object, planOpen2String, repeat2Text } from '@utils';
+import {
+  planOpen2Object,
+  planOpen2String,
+  repeat2Text,
+  getAmPmData,
+  getHourData,
+  getMinuteData,
+} from '@utils';
 import { cx, commonColor } from '@config/styles';
 import { dpCodes } from '@config';
 import CountdownPop from './timePopup';
@@ -82,41 +89,6 @@ function Setting() {
     });
   };
 
-  const getAmPmData = () => {
-    return [
-      {
-        label: 'AM',
-        value: 'AM',
-      },
-      {
-        label: 'PM',
-        value: 'PM',
-      },
-    ];
-  };
-
-  const getHourData = () => {
-    const range = Utils.NumberUtils.range(1, 13, 1);
-    const timerRange = range.map((item: number) => {
-      return {
-        label: `${item}`,
-        value: item,
-      };
-    });
-    return timerRange;
-  };
-
-  const getMinuteData = () => {
-    const range = Utils.NumberUtils.range(0, 60, 1);
-    const timerRange = range.map((item: number) => {
-      return {
-        label: `${item}`,
-        value: item,
-      };
-    });
-    return timerRange;
-  };
-
   const handleOnChange = (value: any, type: string) => {
     if (type === 'hour') {
       setHour(value);
@@ -149,11 +121,15 @@ function Setting() {
         title={i18n.getLang('edit_clock')}
         titleStyle={{ color: commonColor.mainText }}
         background="transparent"
-        onBack={() => navigation.goBack()}
         leftActions={[
           {
             children: (
-              <TouchableOpacity style={styles.backView} onPress={() => {}}>
+              <TouchableOpacity
+                style={styles.backView}
+                onPress={() => {
+                  navigation.goBack();
+                }}
+              >
                 <Image source={Res.close_1} style={styles.backImage} />
               </TouchableOpacity>
             ),
