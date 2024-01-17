@@ -6,7 +6,7 @@ import { Utils, TYText, TYSdk, TopBar, Picker, Slider, SwitchButton } from 'tuya
 import { useSelector } from 'react-redux';
 import Res from '@res';
 import i18n from '@i18n';
-import { planOpen2Object, } from '@utils';
+import { planOpen2Object } from '@utils';
 import { cx, commonColor, commonStyles } from '@config/styles';
 import { dpCodes } from '@config';
 import TimePopup from './timePopup';
@@ -41,7 +41,10 @@ function Setting() {
     setIsVisiblePop(false);
   };
 
-  const handleOnConfirmTime = (value: number) => {};
+  const handleOnConfirmTime = (value: number) => {
+    console.log('value', value);
+    setIsVisiblePop(false);
+  };
 
   const getThumbColor = () => {
     const [r, g, b] = hsv2rgb(hue, 100, 100, 1);
@@ -266,12 +269,7 @@ function Setting() {
 
             <Slider.Horizontal
               theme={{
-                width: cx(295),
-                height: cx(4),
-                trackRadius: cx(2),
-                trackHeight: cx(4),
-                thumbSize: cx(14),
-                thumbRadius: cx(14),
+                ...theme,
                 thumbTintColor: '#F6F6F6',
                 minimumTrackTintColor: '#E5E5E5',
                 maximumTrackTintColor: '#272632',

@@ -11,6 +11,7 @@ import i18n from '@i18n';
 import { dpCodes } from '@config';
 import modelConfig from 'config/common';
 import EditPopup from './editPopup';
+import Alarm from './alarm';
 import styles from './styles';
 import { string2ClockState, repeat2Text } from '../../utils';
 
@@ -27,6 +28,7 @@ function Home() {
 
   const [isClockOpen, setIsClockOpen] = useState(false);
   const [clockStatus, setClockStatus] = useState(0);
+
   useEffect(() => {
     const { isClockOpen: _isClockOpen, status } = getClockData();
     setIsClockOpen(_isClockOpen);
@@ -36,7 +38,8 @@ function Home() {
   const navigation = useNavigation<StackNavigationProp<any, any>>();
 
   const onConfirmModal = (data: any) => {
-    console.log('data', data);
+    // console.log('data', data);
+    setIsVisiblePop(false);
     setModalData(data);
   };
 
@@ -48,10 +51,26 @@ function Home() {
       switch: clockSwitch1,
     },
     {
-      time: '7:00 AM',
+      time: '7:01 PM',
       switch: clockSwitch2,
     },
   ];
+
+  const openPop = () => {
+    setIsVisiblePop(true);
+  };
+
+  const goEditModal = () => {
+    navigation.navigate('modalEdit');
+  };
+
+  const goSetting = () => {
+    navigation.navigate('setting');
+  };
+
+  const goClockDetail = () => {
+    navigation.navigate('clock');
+  };
 
   const getClockData = () => {
     return {
@@ -74,13 +93,8 @@ function Home() {
   const renderClock = () => {
     return clockData.map((item, index) => {
       return (
-        <>
-          <TouchableOpacity
-            key={item.time}
-            onPress={() => {
-              navigation.navigate('clock');
-            }}
-          >
+        <View key={item.time}>
+          <TouchableOpacity onPress={goClockDetail}>
             <View style={[styles.flexRowSp, styles.clockItem]}>
               <TYText style={styles.text14}>{item.time}</TYText>
               <SwitchButton
@@ -102,7 +116,7 @@ function Home() {
             </View>
           </TouchableOpacity>
           {index === 0 && <View style={styles.line} />}
-        </>
+        </View>
       );
     });
   };
@@ -128,14 +142,11 @@ function Home() {
         <View style={styles.topView}>
           <View style={styles.flexRow}>
             <Image source={Res.mode_0} style={styles.productImg} resizeMode="center" />
-            <TYText style={styles.productText}>{name}</TYText>
+            <TYText style={styles.productText} numberOfLines={1}>
+              {name}
+            </TYText>
           </View>
-          <TouchableOpacity
-            style={styles.settingView}
-            onPress={() => {
-              navigation.navigate('setting');
-            }}
-          >
+          <TouchableOpacity style={styles.settingView} onPress={goSetting}>
             <TYText style={styles.settingText}>{i18n.getLang('setting')}</TYText>
           </TouchableOpacity>
         </View>
@@ -143,11 +154,7 @@ function Home() {
           <View style={styles.modeTop}>
             <TYText style={styles.text17Bold}>{i18n.getLang('my_screen')}</TYText>
             {hasModel ? (
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('modalEdit');
-                }}
-              >
+              <TouchableOpacity onPress={goEditModal}>
                 <TYText style={styles.text14}>{i18n.getLang('setting')}</TYText>
               </TouchableOpacity>
             ) : null}
@@ -162,11 +169,7 @@ function Home() {
                   </View>
                 );
               })}
-              <TouchableOpacity
-                onPress={() => {
-                  setIsVisiblePop(true);
-                }}
-              >
+              <TouchableOpacity onPress={openPop}>
                 <View style={[styles.addView, { width: cx(138), height: cx(68) }]}>
                   <Image source={Res.add} style={styles.addImg} />
                   <TYText style={styles.text14}>{i18n.getLang('add_model')}</TYText>
@@ -174,11 +177,7 @@ function Home() {
               </TouchableOpacity>
             </View>
           ) : (
-            <TouchableOpacity
-              onPress={() => {
-                setIsVisiblePop(true);
-              }}
-            >
+            <TouchableOpacity onPress={openPop}>
               <View style={styles.addView}>
                 <Image source={Res.add} style={styles.addImg} />
                 <TYText style={styles.text14}>{i18n.getLang('add_model')}</TYText>
@@ -203,58 +202,7 @@ function Home() {
         onConfirm={onConfirmModal}
         data={modalData}
       />
-
-      <Modal animationType="fade" transparent={true} style={{ flex: 1 }} visible={false}>
-        <View style={styles.homeModalWrapper}>
-          <View style={styles.homeModalTop}>
-            <TYText style={styles.homeModalText}>
-              {`${repeat2Text([0, 0, 1, 0, 1, 0, 0], true)} ${i18n.getLang('clock')}`}
-            </TYText>
-            <TYText style={styles.homeModalTime}>timeStr</TYText>
-            {clockStatus !== 0 ? (
-              <TouchableOpacity
-                onPress={() => {
-                  // this.props.updateDp({ snooze: true }); // 稍后提醒
-                }}
-              >
-                <View style={[styles.row, styles.center, styles.homeModalLater]}>
-                  <Image source={Res.clock_icon} style={styles.homeModalLaterIcon} />
-                  <TYText style={styles.blackText}>{i18n.getLang('remind_later')}</TYText>
-                </View>
-              </TouchableOpacity>
-            ) : (
-              <TYText style={styles.snoozeView} align="center">
-                {i18n.getLang('snooze_hint')}
-              </TYText>
-            )}
-          </View>
-          <View style={styles.center}>
-            <TouchableOpacity
-              onPress={() => {
-                // this.props.updateDp({ alarm_stop: true }); // 停止响铃
-              }}
-            >
-              <View
-                style={[
-                  styles.row,
-                  styles.center,
-                  styles.homeModalLaterStop,
-                  { backgroundColor: clockStatus !== 0 ? '#262528' : commonColor.mainColor },
-                ]}
-              >
-                <TYText style={styles.blackText}>{i18n.getLang('alarm_stop')}</TYText>
-              </View>
-            </TouchableOpacity>
-            <TYText
-              style={[styles.blackText, { marginTop: cx(12), marginBottom: cx(95) }]}
-              align="center"
-              numberOfLines={2}
-            >
-              {i18n.getLang('stop_in_device')}
-            </TYText>
-          </View>
-        </View>
-      </Modal>
+      <Alarm />
     </View>
   );
 }

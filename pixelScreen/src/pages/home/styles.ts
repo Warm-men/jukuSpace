@@ -34,6 +34,7 @@ const styles = StyleSheet.create({
     fontSize: cx(20),
     color: commonColor.mainText,
     marginLeft: cx(12),
+    width: cx(150),
   },
   settingView: {
     paddingVertical: cx(6),
