@@ -75,6 +75,12 @@ function ModalEdit() {
     }
   };
 
+  const onSetRepeat = item => {
+    textRef?.current?.blur();
+    textRef?.current?.clear();
+    setRepeatTime(item);
+  };
+
   const renderFooter = () => {
     return (
       <View style={styles.footerView}>
@@ -90,9 +96,7 @@ function ModalEdit() {
                 activeOpacity={0.85}
                 style={[styles.timeItem, { borderColor: isActive ? '#fff' : '#21202C' }]}
                 onPress={() => {
-                  textRef?.current?.blur();
-                  textRef?.current?.clear();
-                  setRepeatTime(item);
+                  onSetRepeat(item);
                 }}
               >
                 <TYText size={cx(14)} color={isActive ? '#fff' : '#747476'}>

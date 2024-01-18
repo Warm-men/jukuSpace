@@ -2,13 +2,15 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, TouchableOpacity, ScrollView, Image } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Utils, TYText, TYSdk, TopBar, Picker, Slider, SwitchButton } from 'tuya-panel-kit';
+import { Utils, TYText, TYSdk, TopBar, Slider } from 'tuya-panel-kit';
 import { useSelector } from 'react-redux';
 import Res from '@res';
 import i18n from '@i18n';
 import { planOpen2Object } from '@utils';
 import { cx, commonColor, commonStyles } from '@config/styles';
 import { dpCodes } from '@config';
+import SwitchView from '@components/switch';
+import SliderHorizontal from '@components/sliderHorizontal';
 import TimePopup from './timePopup';
 import styles from './styles';
 
@@ -19,7 +21,7 @@ function Setting() {
 
   const openPlanObject = planOpen2Object(openPlan);
 
-  const { time, switchState } = openPlanObject;
+  // const { time, switchState } = openPlanObject;
   // const route = useRoute();
   const navigation = useNavigation<StackNavigationProp<any, any>>();
   const [isVisiblePop, setIsVisiblePop] = useState(false);
@@ -100,18 +102,7 @@ function Setting() {
             <TYText size={cx(14)} color="#C5C5C5">
               {i18n.getLang('sync_time')}
             </TYText>
-            <SwitchButton
-              onTintColor={commonColor.mainColor}
-              tintColor="#2E2C3D"
-              thumbTintColor="#5A5774"
-              onThumbTintColor="#fff"
-              size={{ width: cx(42), height: cx(28) }}
-              thumbStyle={{ width: cx(18), height: cx(18), borderRadius: cx(9) }}
-              value={syncTime}
-              onValueChange={value => {
-                setSyncTime(value);
-              }}
-            />
+            <SwitchView value={syncTime} onValueChange={setSyncTime} />
           </View>
           {!syncTime && <View style={styles.line} />}
           {!syncTime && (
@@ -136,18 +127,7 @@ function Setting() {
             <TYText size={cx(14)} color="#C5C5C5">
               {i18n.getLang('sync_weather')}
             </TYText>
-            <SwitchButton
-              onTintColor={commonColor.mainColor}
-              tintColor="#2E2C3D"
-              thumbTintColor="#5A5774"
-              onThumbTintColor="#fff"
-              size={{ width: cx(42), height: cx(28) }}
-              thumbStyle={{ width: cx(18), height: cx(18), borderRadius: cx(9) }}
-              value={syncWeather}
-              onValueChange={value => {
-                setSyncWeather(value);
-              }}
-            />
+            <SwitchView value={syncWeather} onValueChange={setSyncWeather} />
           </View>
         </View>
 
@@ -266,23 +246,15 @@ function Setting() {
                 {screenBrightness}
               </TYText>
             </View>
-
-            <Slider.Horizontal
-              theme={{
-                ...theme,
-                thumbTintColor: '#F6F6F6',
-                minimumTrackTintColor: '#E5E5E5',
-                maximumTrackTintColor: '#272632',
-              }}
-              maximumValue={100}
-              minimumValue={0}
+            <SliderHorizontal
+              width={cx(295)}
               value={screenBrightness}
               onValueChange={(v: number) => {
                 brightnessRef &&
                   brightnessRef.current &&
                   brightnessRef.current?.setText(Math.round(v));
               }}
-              onSlidingComplete={v => setScreenBrightness(Math.round(v))}
+              onSlidingComplete={setScreenBrightness}
             />
           </View>
         </View>

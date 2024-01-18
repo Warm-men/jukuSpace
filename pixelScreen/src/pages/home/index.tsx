@@ -1,16 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, ScrollView, StyleSheet, TouchableOpacity, Modal, Image } from 'react-native';
+import { View, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { TopBar, TYSdk, TYText, GlobalToast, SwitchButton } from 'tuya-panel-kit';
+import { TopBar, TYSdk, TYText } from 'tuya-panel-kit';
 import { useSelector } from 'react-redux';
 import _deepClone from 'lodash/cloneDeep';
-import { commonStyles, cx, commonColor, height, width, isIphoneX } from '@config/styles';
+import { commonStyles, cx, commonColor } from '@config/styles';
 import Res from '@res';
 import i18n from '@i18n';
+import SwitchView from 'components/switch';
 import { dpCodes } from '@config';
 import modelConfig from 'config/common';
-import EditPopup from './editPopup';
+import EditPopup from './editModal';
 import Alarm from './alarm';
 import styles from './styles';
 import { string2ClockState, repeat2Text } from '../../utils';
@@ -97,13 +98,7 @@ function Home() {
           <TouchableOpacity onPress={goClockDetail}>
             <View style={[styles.flexRowSp, styles.clockItem]}>
               <TYText style={styles.text14}>{item.time}</TYText>
-              <SwitchButton
-                onTintColor="#6051FA"
-                tintColor="#2E2C3D"
-                thumbTintColor="#5A5774"
-                onThumbTintColor="#fff"
-                size={{ width: cx(42), height: cx(28) }}
-                thumbStyle={{ width: cx(18), height: cx(18), borderRadius: cx(9) }}
+              <SwitchView
                 value={item.switch}
                 onValueChange={value => {
                   if (index === 0) {

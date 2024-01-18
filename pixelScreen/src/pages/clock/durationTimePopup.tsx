@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Utils, TYText, Picker } from 'tuya-panel-kit';
+import { Utils, TYText } from 'tuya-panel-kit';
 import _times from 'lodash/times';
 import _deepClone from 'lodash/cloneDeep';
 import i18n from '@i18n';
 import ModalPop from '@components/modalRender';
+import PickerView from '@components/pickerView';
 
 const { convertX: cx } = Utils.RatioUtils;
 
@@ -40,24 +41,7 @@ const PopUp = (props: any) => {
         <View style={styles.pickerBg}>
           <TYText style={styles.pickerText}>{i18n.getLang('minute')}</TYText>
         </View>
-        <Picker
-          style={{
-            width: 100,
-            height: 225,
-            backgroundColor: 'transparent',
-          }}
-          theme={{
-            fontColor: '#FFFFFF',
-            fontSize: cx(24),
-            dividerColor: 'transparent',
-          }}
-          selectedValue={value}
-          onValueChange={value => setValue(value)}
-        >
-          {getPickerData().map(item => (
-            <Picker.Item key={item.value} value={item.value} label={item.label} />
-          ))}
-        </Picker>
+        <PickerView value={value} onChange={setValue} data={getPickerData()} />
       </View>
     </ModalPop>
   );

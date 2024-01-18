@@ -16,12 +16,34 @@ import {
 } from '@utils';
 import { cx, commonColor } from '@config/styles';
 import { dpCodes } from '@config';
-import CountdownPop from './timePopup';
+import PickerView from '@components/pickerView';
+import SliderHorizontal from '@components/sliderHorizontal';
+import DurationTimePopup from './durationTimePopup';
 import RepeatPopup from './repeatPopup';
 import MusicPopup from './musicPopup';
 import styles from './styles';
 
 const { openPlanCode } = dpCodes;
+
+function RowItem(props) {
+  const { title, onPress, text } = props;
+  return (
+    <View style={styles.optionViewItem}>
+      <TYText size={cx(14)} color="#C5C5C5">
+        {title}
+      </TYText>
+      <TouchableOpacity activeOpacity={0.8} onPress={onPress}>
+        <View style={styles.clickView}>
+          <TYText size={cx(14)} color="#C5C5C5">
+            {text}
+          </TYText>
+          <Image style={styles.arrowImage} source={Res.arrow_right} />
+        </View>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
 function Setting() {
   const { [openPlanCode]: openPlan } = useSelector(({ dpState }: any) => dpState);
 
@@ -114,6 +136,12 @@ function Setting() {
     return `${duration} ${i18n.getLang('minute')}`;
   };
 
+  const goBack = () => {
+    navigation.goBack();
+  };
+
+  const save = () => {};
+
   return (
     <View style={styles.container}>
       <TopBar
@@ -124,12 +152,7 @@ function Setting() {
         leftActions={[
           {
             children: (
-              <TouchableOpacity
-                style={styles.backView}
-                onPress={() => {
-                  navigation.goBack();
-                }}
-              >
+              <TouchableOpacity style={styles.backView} onPress={goBack}>
                 <Image source={Res.close_1} style={styles.backImage} />
               </TouchableOpacity>
             ),
@@ -138,8 +161,8 @@ function Setting() {
         actions={[
           {
             children: (
-              <TouchableOpacity style={styles.saveView} onPress={() => {}}>
-                <TYText style={styles.saveText}>保存</TYText>
+              <TouchableOpacity style={styles.saveView} onPress={save}>
+                <TYText style={styles.saveText}>{i18n.getLang('save')}</TYText>
               </TouchableOpacity>
             ),
           },
@@ -147,101 +170,52 @@ function Setting() {
       />
       <ScrollView style={{ flex: 1 }}>
         <View style={styles.pickerView}>
-          <Picker
-            style={styles.pickerStyle}
-            theme={{
-              fontColor: '#FFFFFF',
-              fontSize: cx(22),
-              dividerColor: 'transparent',
-            }}
-            selectedValue={ampm}
-            onValueChange={value => {
+          <PickerView
+            value={ampm}
+            onChange={value => {
               handleOnChange(value, 'ampm');
             }}
-          >
-            {getAmPmData().map(item => (
-              <Picker.Item key={item.value} value={item.value} label={item.label} />
-            ))}
-          </Picker>
-          <Picker
-            style={styles.pickerStyle}
-            theme={{
-              fontColor: '#FFFFFF',
-              fontSize: cx(22),
-              dividerColor: 'transparent',
-            }}
-            selectedValue={hour}
-            onValueChange={value => {
+            data={getAmPmData()}
+          />
+          <PickerView
+            value={hour}
+            onChange={value => {
               handleOnChange(value, 'hour');
             }}
-          >
-            {getHourData().map(item => (
-              <Picker.Item key={item.value} value={item.value} label={item.label} />
-            ))}
-          </Picker>
+            data={getHourData()}
+          />
           <View style={styles.pickerMiddle}>
             <TYText style={styles.pickerText}>:</TYText>
           </View>
-          <Picker
-            style={styles.pickerStyle}
-            theme={{
-              fontColor: '#FFFFFF',
-              fontSize: cx(22),
-              dividerColor: 'transparent',
-            }}
-            selectedValue={minute}
-            onValueChange={value => {
+          <PickerView
+            value={minute}
+            onChange={value => {
               handleOnChange(value, 'minute');
             }}
-          >
-            {getMinuteData().map(item => (
-              <Picker.Item key={item.value} value={item.value} label={item.label} />
-            ))}
-          </Picker>
+            data={getMinuteData()}
+          />
         </View>
+
         <View style={styles.optionView}>
-          <View style={styles.optionViewItem}>
-            <TYText size={cx(14)} color="#C5C5C5">
-              {i18n.getLang('repeat')}
-            </TYText>
-            <TouchableOpacity activeOpacity={0.8} onPress={handleOpenRepeat}>
-              <View style={styles.clickView}>
-                <TYText size={cx(14)} color="#C5C5C5">
-                  {getRepeatText()}
-                </TYText>
-                <Image style={styles.arrowImage} source={Res.arrow_right} />
-              </View>
-            </TouchableOpacity>
-          </View>
+          <RowItem
+            title={i18n.getLang('repeat_time')}
+            onPress={handleOpenRepeat}
+            text={getRepeatText()}
+          />
           <View style={styles.line} />
-          <View style={styles.optionViewItem}>
-            <TYText size={cx(14)} color="#C5C5C5">
-              {i18n.getLang('duration')}
-            </TYText>
-            <TouchableOpacity activeOpacity={0.8} onPress={handleOpenDuration}>
-              <View style={styles.clickView}>
-                <TYText size={cx(14)} color="#C5C5C5">
-                  {getDurationText()}
-                </TYText>
-                <Image style={styles.arrowImage} source={Res.arrow_right} />
-              </View>
-            </TouchableOpacity>
-          </View>
+          <RowItem
+            title={i18n.getLang('duration')}
+            onPress={handleOpenDuration}
+            text={getDurationText()}
+          />
         </View>
+
         <View style={styles.optionView}>
-          <View style={styles.optionViewItem}>
-            <TYText size={cx(14)} color="#C5C5C5">
-              {i18n.getLang('clock_music')}
-            </TYText>
-            <TouchableOpacity activeOpacity={0.8} onPress={handleOpenMusic}>
-              <View style={styles.clickView}>
-                <TYText size={cx(14)} color="#C5C5C5">
-                  {getRepeatText()}
-                </TYText>
-                <Image style={styles.arrowImage} source={Res.arrow_right} />
-              </View>
-            </TouchableOpacity>
-          </View>
+          <RowItem
+            title={i18n.getLang('clock_music')}
+            onPress={handleOpenMusic}
+            text={getRepeatText()}
+          />
           <View style={styles.line} />
           <View
             style={[styles.optionViewItem, { flexDirection: 'column', alignItems: 'flex-start' }]}
@@ -250,23 +224,7 @@ function Setting() {
               {i18n.getLang('clock_volume')}
             </TYText>
             <View style={styles.sliderView}>
-              <Slider.Horizontal
-                theme={{
-                  width: cx(268),
-                  height: cx(4),
-                  trackRadius: cx(2),
-                  trackHeight: cx(4),
-                  thumbSize: cx(14),
-                  thumbRadius: cx(14),
-                  thumbTintColor: '#F6F6F6',
-                  minimumTrackTintColor: '#E5E5E5',
-                  maximumTrackTintColor: '#272632',
-                }}
-                maximumValue={100}
-                minimumValue={0}
-                value={musicVolume}
-                onSlidingComplete={v => setMusicVolume(Math.round(v))}
-              />
+              <SliderHorizontal value={musicVolume} onValueChange={setMusicVolume} />
               <TYText size={cx(14)} color="#C5C5C5">
                 {musicVolume}
               </TYText>
@@ -274,7 +232,7 @@ function Setting() {
           </View>
         </View>
       </ScrollView>
-      <CountdownPop
+      <DurationTimePopup
         onClose={handleOnCloseDuration}
         onConfirm={handleOnConfirmDuration}
         isVisiblePop={isVisibleDurationPop}

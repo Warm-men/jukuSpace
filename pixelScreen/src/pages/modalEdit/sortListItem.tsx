@@ -8,12 +8,10 @@ import {
   Platform,
   Easing,
 } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { Utils, TYText, TYSdk, Dialog } from 'tuya-panel-kit';
-import { useSelector } from 'react-redux';
+import { TYText, Dialog } from 'tuya-panel-kit';
 import Res from '@res';
 import i18n from '@i18n';
-import { cx, commonColor, width } from '@config/styles';
+import { cx } from '@config/styles';
 
 function Row(props) {
   const { active, data, onDeleteItem } = props;
@@ -66,7 +64,7 @@ function Row(props) {
     []
   );
 
-  const style1 = useMemo(
+  const rowStyle = useMemo(
     () => ({
       transform: [
         {
@@ -124,7 +122,7 @@ function Row(props) {
 
   return (
     <Animated.View style={[styles.rowView, style]}>
-      <Animated.View style={[styles.itemView, style1]}>
+      <Animated.View style={[styles.itemView, rowStyle]}>
         <View style={styles.itemLeft}>
           <TouchableOpacity activeOpacity={0.85} onPress={onDelete}>
             <Image source={Res.delete_icon} style={styles.sortImage} />

@@ -16,6 +16,12 @@ const PopUp = (props: any) => {
     onConfirm(repeat);
   };
 
+  const onChange = index => {
+    const newData = _deepClone(repeat);
+    newData[index] = newData[index] === 1 ? 0 : 1;
+    setRepeat(newData);
+  };
+
   return (
     <ModalPop
       visible={isVisiblePop}
@@ -33,9 +39,7 @@ const PopUp = (props: any) => {
               key={item}
               style={[styles.repeatItem, { backgroundColor: isActive ? '#6B73E7' : '#474748' }]}
               onPress={() => {
-                const newData = _deepClone(repeat);
-                newData[index] = newData[index] === 1 ? 0 : 1;
-                setRepeat(newData);
+                onChange(index);
               }}
             >
               <TYText size={cx(12)} color={isActive ? '#fff' : '#78787A'}>

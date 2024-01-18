@@ -50,6 +50,7 @@ export default {
       'The device is in a snooze state. After the snooze time expires, the device will ring again',
     alarm_stop: 'STOP',
     stop_in_device: 'You can also press the button on the top of the device to close it',
+    repeat_time: 'Repeat time',
   },
   zh: {
     setting: '设置',
@@ -110,5 +111,6 @@ export default {
     snooze_hint: '设备此时是贪睡状态，再过贪睡时长到达后，设备会重新响闹',
     alarm_stop: '停止',
     stop_in_device: '你也可以按设备顶部按钮进行关闭',
+    repeat_time: '重复时间',
   },
 };

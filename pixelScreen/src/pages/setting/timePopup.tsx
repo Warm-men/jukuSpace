@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Animated, StyleSheet, Platform } from 'react-native';
-import { Utils, Picker } from 'tuya-panel-kit';
+import { View, StyleSheet, Platform } from 'react-native';
+import { Utils } from 'tuya-panel-kit';
 import i18n from '@i18n';
 import { getAmPmData, getHourData, getMinuteData } from '@utils';
 import ModalPop from '@components/modalRender';
+import PickerView from '@components/pickerView';
 
 const { convertX: cx } = Utils.RatioUtils;
 
@@ -37,55 +38,28 @@ const PopUp = (props: any) => {
       outputRangeStart={300}
     >
       <View style={styles.pickerView}>
-        <Picker
-          style={styles.pickerStyle}
-          theme={{
-            fontColor: '#FFFFFF',
-            fontSize: cx(22),
-            dividerColor: 'transparent',
-          }}
-          selectedValue={hour}
-          onValueChange={value => {
+        <PickerView
+          value={hour}
+          onChange={value => {
             handleOnChange(value, 'hour');
           }}
-        >
-          {getHourData().map(item => (
-            <Picker.Item key={item.value} value={item.value} label={item.label} />
-          ))}
-        </Picker>
+          data={getHourData()}
+        />
         <View style={styles.pickerMiddle} />
-        <Picker
-          style={styles.pickerStyle}
-          theme={{
-            fontColor: '#FFFFFF',
-            fontSize: cx(22),
-            dividerColor: 'transparent',
-          }}
-          selectedValue={minute}
-          onValueChange={value => {
+        <PickerView
+          value={minute}
+          onChange={value => {
             handleOnChange(value, 'minute');
           }}
-        >
-          {getMinuteData().map(item => (
-            <Picker.Item key={item.value} value={item.value} label={item.label} />
-          ))}
-        </Picker>
-        <Picker
-          style={styles.pickerStyle}
-          theme={{
-            fontColor: '#FFFFFF',
-            fontSize: cx(22),
-            dividerColor: 'transparent',
-          }}
-          selectedValue={ampm}
-          onValueChange={value => {
+          data={getMinuteData()}
+        />
+        <PickerView
+          value={ampm}
+          onChange={value => {
             handleOnChange(value, 'ampm');
           }}
-        >
-          {getAmPmData().map(item => (
-            <Picker.Item key={item.value} value={item.value} label={item.label} />
-          ))}
-        </Picker>
+          data={getAmPmData()}
+        />
       </View>
     </ModalPop>
   );
@@ -98,11 +72,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  pickerStyle: {
-    width: cx(50),
-    height: cx(160),
-    backgroundColor: 'transparent',
   },
   pickerMiddle: {
     height: 38,
