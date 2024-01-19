@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, TouchableOpacity, ScrollView, Image } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Utils, TYText, TYSdk, TopBar, Picker, Slider } from 'tuya-panel-kit';
+import { Utils, TYText, TYSdk, TopBar } from 'tuya-panel-kit';
 import { useSelector } from 'react-redux';
 import Res from '@res';
 import i18n from '@i18n';
