@@ -6,7 +6,8 @@ import { Utils, TYText, TYSdk, TopBar, Slider } from 'tuya-panel-kit';
 import { useSelector } from 'react-redux';
 import Res from '@res';
 import i18n from '@i18n';
-import { planOpen2Object } from '@utils';
+import moment from 'moment';
+import { timeSync2String, timeSync2Object, padStart2 } from '@utils';
 import { cx, commonColor, commonStyles } from '@config/styles';
 import { dpCodes } from '@config';
 import SwitchView from '@components/switch';
@@ -15,19 +16,23 @@ import TimePopup from './timePopup';
 import styles from './styles';
 
 const { hsv2rgb } = Utils.ColorUtils.color;
-const { openPlanCode } = dpCodes;
+const { openPlanCode, networkTimingCode, timeSyncCode, wetherOnOffCode } = dpCodes;
+
 function Setting() {
-  const { [openPlanCode]: openPlan } = useSelector(({ dpState }: any) => dpState);
+  const {
+    [openPlanCode]: openPlan,
+    [networkTimingCode]: networkTiming,
+    [timeSyncCode]: timeSync,
+    [wetherOnOffCode]: wetherOnOff,
+  } = useSelector(({ dpState }: any) => dpState);
 
-  const openPlanObject = planOpen2Object(openPlan);
+  const timeObject = timeSync
+    ? timeSync2Object(timeSync)
+    : { hour: moment(new Date()).hour(), minute: moment(new Date()).minute() };
 
-  // const { time, switchState } = openPlanObject;
-  // const route = useRoute();
   const navigation = useNavigation<StackNavigationProp<any, any>>();
   const [isVisiblePop, setIsVisiblePop] = useState(false);
   const [screenBrightness, setScreenBrightness] = useState(0);
-  const [syncTime, setSyncTime] = useState(false);
-  const [syncWeather, setSyncWeather] = useState(false);
   const [timeColorType, setTimeColorType] = useState('0');
   const [gradientColorType, setGradientColorType] = useState('0');
 
@@ -43,8 +48,15 @@ function Setting() {
     setIsVisiblePop(false);
   };
 
-  const handleOnConfirmTime = (value: number) => {
-    console.log('value', value);
+  const handleOnConfirmTime = (value: number | string[]) => {
+    const [hour, minute, amPm] = value as string[];
+    const _hour = amPm === 'PM' ? hour + 12 : hour;
+    const _minute = minute;
+    const _timeObject = { ...timeObject, hour: _hour, minute: _minute };
+    const data = timeSync2String(_timeObject);
+    TYSdk.device.putDeviceData({
+      [timeSyncCode]: data,
+    });
     setIsVisiblePop(false);
   };
 
@@ -82,7 +94,24 @@ function Setting() {
   ];
 
   const getTimeText = () => {
-    return `10:25`;
+    if (timeObject) {
+      const apm = timeObject.hour >= 12 ? 'PM' : 'AM';
+      const hourText = timeObject.hour > 12 ? timeObject.hour - 12 : timeObject.hour;
+      return `${padStart2(hourText)}:${padStart2(timeObject.minute)} ${apm}`;
+    }
+    return ``;
+  };
+
+  const setSyncTime = () => {
+    TYSdk.device.putDeviceData({
+      [networkTimingCode]: !networkTiming,
+    });
+  };
+
+  const setSyncWeather = () => {
+    TYSdk.device.putDeviceData({
+      [wetherOnOffCode]: !wetherOnOff,
+    });
   };
 
   return (
@@ -102,13 +131,13 @@ function Setting() {
             <TYText size={cx(14)} color="#C5C5C5">
               {i18n.getLang('sync_time')}
             </TYText>
-            <SwitchView value={syncTime} onValueChange={setSyncTime} />
+            <SwitchView value={networkTiming} onValueChange={setSyncTime} />
           </View>
-          {!syncTime && <View style={styles.line} />}
-          {!syncTime && (
+          {!networkTiming && <View style={styles.line} />}
+          {!networkTiming && (
             <View style={styles.optionViewItem}>
               <TYText size={cx(14)} color="#C5C5C5">
-                {i18n.getLang('sync_time')}
+                {i18n.getLang('device_time')}
               </TYText>
               <TouchableOpacity activeOpacity={0.8} onPress={handleOpenSetTime}>
                 <View style={styles.clickView}>
@@ -127,7 +156,7 @@ function Setting() {
             <TYText size={cx(14)} color="#C5C5C5">
               {i18n.getLang('sync_weather')}
             </TYText>
-            <SwitchView value={syncWeather} onValueChange={setSyncWeather} />
+            <SwitchView value={wetherOnOff} onValueChange={setSyncWeather} />
           </View>
         </View>
 
@@ -263,7 +292,11 @@ function Setting() {
         onClose={handleOnCloseTimePop}
         onConfirm={handleOnConfirmTime}
         isVisiblePop={isVisiblePop}
-        value={openPlanObject.duration}
+        value={{
+          hour: timeObject ? (timeObject.hour > 12 ? timeObject.hour - 12 : timeObject.hour) : 0,
+          minute: timeObject ? timeObject.minute : 0,
+          amPm: timeObject ? (timeObject.hour >= 12 ? 'PM' : 'AM') : 'AM',
+        }}
       />
     </View>
   );

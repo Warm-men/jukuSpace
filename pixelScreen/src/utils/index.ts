@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable import/prefer-default-export */
 import { Utils } from 'tuya-panel-kit';
+import moment from 'moment';
 import Res from '@res';
 import { store } from '../models';
 import Strings from '../i18n';
@@ -273,4 +275,169 @@ export const string2ClockState = (str: string) => {
     alarm1: +str.slice(0, 2), //  0-闹钟1响闹状态，1-闹钟1贪睡状态， 2-闹钟1停闹状态
     alarm2: +str.slice(2, 4), //  0-闹钟2响闹状态，1-闹钟2贪睡状态， 2-闹钟2停闹状态
   };
+};
+
+// Data[0]为年份, 0x14表示2020年；
+// Data[1]为月份,1-12；
+// Data[2]为日期,1-31；
+// Data[3]为时钟,0-23；
+// Data[4]为分钟,0-59；
+// Data[5]为秒钟,0-59；
+// Data[6]为星期,1-7；
+// 默认值为2024年3月1日12:00 星期五
+// 设备端1分钟上报一次；
+// 输出格式 { year: 24, month: 3, day: 1, hour: 12, minute: 0, second: 0, week: 5 }
+export const timeSync2Object = (timeSync: string) => {
+  if (!timeSync || timeSync.length !== 14) return null;
+  return {
+    year: parseInt(timeSync.slice(0, 2), 16),
+    month: parseInt(timeSync.slice(2, 4), 16),
+    day: parseInt(timeSync.slice(4, 6), 16),
+    hour: parseInt(timeSync.slice(6, 8), 16),
+    minute: parseInt(timeSync.slice(8, 10), 16),
+    second: parseInt(timeSync.slice(10, 12), 16),
+    week: parseInt(timeSync.slice(12, 14), 16),
+  };
+};
+
+export const timeSync2String = (timeSync: any) => {
+  if (!timeSync) return '';
+  const year = timeSync.year ? toString16(timeSync.year, 2) : '00';
+  const month = timeSync.month ? toString16(timeSync.month, 2) : '00';
+  const day = timeSync.day ? toString16(timeSync.day, 2) : '00';
+  const hour = timeSync.hour ? toString16(timeSync.hour, 2) : '00';
+  const minute = timeSync.minute ? toString16(timeSync.minute, 2) : '00';
+  const second = timeSync.second ? toString16(timeSync.second, 2) : '00';
+  const week = timeSync.week ? toString16(timeSync.week, 2) : '00';
+  return `${year}${month}${day}${hour}${minute}${second}${week}`;
+};
+
+export const padStart2 = (value: number | string) => {
+  return `${value}`.padStart(2, '0');
+};
+
+// Data[0]第1个列表序号要显示的模板编号，对应的模板参数；
+// Data[1] 背景色：黑底，对比色，5纯色；
+// Data[2] 边框：无，彩条1，彩条2，彩条3；
+// Data[3]进场方式：无（直接出现），淡入，左移，右移，上移，下移；（1-6）
+// Data[4]停留方式：直接显示，反白，闪烁
+// Data[5]出场方式：无（直接消失），淡出，左移，右移，上移，下移；（1-6）
+// Data[6]速度：1-10，根据显示内容来做进出场动作的速度计算；
+// Data[7]停留时长：进场完成后，显示内容的停留时间，5秒-1800秒；
+// Data[8]颜色：显示内容的颜色（6纯色+5种彩色带）；
+
+// Data[9]第2个列表序号要显示的模板编号，对应的模板参数;
+// Data[10] Data[11] Data[12]Data[13]Data[14]Data[15]Data[16]；
+// 同上循环，直到显示列表完全展示完，显示列表最大20条（9*20=180字节，可以一包传输完）。
+export const playListMap2String = (playList: { modeId: number; dpValue: string }[]) => {
+  const playListStr = playList.reduce((prev, item) => {
+    return prev + item.dpValue;
+  }, '');
+  return playListStr;
+};
+
+// 将playListString转成playListMap, 每个item的dpValue长度为18，每个data的长度是2
+export const playListString2Map = (playListStr: string) => {
+  // 判断是否是18的倍数
+  if (playListStr.length % 18 !== 0) return [];
+  const playList: { modeId: number; dpValue: string }[] = [];
+  for (let i = 0; i < playListStr.length; i += 18) {
+    const dpValue = playListStr.slice(i, i + 18);
+    const modeId = dpValue.slice(0, 2);
+    playList.push({
+      modeId: parseInt(modeId, 16),
+      dpValue,
+    });
+  }
+  return playList;
+};
+
+const clockDefault = {
+  hour: moment().hour(),
+  minute: moment().minute(),
+  repeat: [1, 1, 1, 1, 1, 1, 1],
+  music: 1,
+  volume: 50,
+  effect: 1,
+  duration: 30,
+  shake: 0,
+  animation: 0,
+  animationId: 0,
+  snooze: 1,
+  snoozeDuration: 9,
+  snoozeClose: 0,
+};
+
+// Data[0] HH；
+// Data[1] MM；
+// Data[2] 重复周期（0-单次，0b01111111 周一-周日 16进制传输 0x7F，默认每天)；
+// Data[3] 闹钟音乐（1-8首）；
+// Data[4] 闹钟音量（1-10级）；
+// Data[5] 闹钟音效（0x0--正常，0x01-渐强，0x2--渐弱，默认01-渐强）
+// Data[6] 持续响闹时间长度（15-30分钟，默认30分钟）；
+// Data[7] 响闹时是否支持震动；
+// Data[8] 响闹时是否支持响闹动画；
+// Data[9] 响闹动画模板号；
+// Data[10] 响闹时是否支持贪睡（默认支持）；
+// Data[11] 贪睡间隔时间长度（5-30分钟，默认9分钟）；
+// Data[12] 贪睡执行的关闭内容（关闭音乐；关闭动画；关闭动画+音乐）；
+// 示例：'0a0a7f0101011e010101010901'
+// 解析返回：{ hour: 10, minute: 10, repeat: [1, 1, 1, 1, 1, 1, 1], music: 1, volume: 1, effect: 1, duration: 30, shake: 1, animation: 1, animationId: 1, snooze: 1, snoozeDuration: 9, snoozeClose: 1 }
+export const clockString2Object = (clockStr: string) => {
+  if (clockStr.length !== 26) return clockDefault;
+  return {
+    hour: parseInt(clockStr.slice(0, 2), 16),
+    minute: parseInt(clockStr.slice(2, 4), 16),
+    repeat: parseInt(clockStr.slice(4, 6), 16)
+      .toString(2)
+      .padStart(7, '0')
+      .split('')
+      .map(item => +item),
+    music: parseInt(clockStr.slice(6, 8), 16),
+    volume: parseInt(clockStr.slice(8, 10), 16),
+    effect: parseInt(clockStr.slice(10, 12), 16),
+    duration: parseInt(clockStr.slice(12, 14), 16),
+    shake: parseInt(clockStr.slice(14, 16), 16),
+    animation: parseInt(clockStr.slice(16, 18), 16),
+    animationId: parseInt(clockStr.slice(18, 20), 16),
+    snooze: parseInt(clockStr.slice(20, 22), 16),
+    snoozeDuration: parseInt(clockStr.slice(22, 24), 16),
+    snoozeClose: parseInt(clockStr.slice(24, 26), 16),
+  };
+};
+
+interface ClockObject {
+  hour: number;
+  minute: number;
+  repeat: number[];
+  music: number;
+  volume: number;
+  effect: number;
+  duration: number;
+  shake: number;
+  animation: number;
+  animationId: number;
+  snooze: number;
+  snoozeDuration: number;
+  snoozeClose: number;
+}
+
+export const clockObject2String = (clock: ClockObject) => {
+  if (!clock) return '';
+  // 转16进字符
+  const hour = toString16(clock.hour, 2);
+  const minute = toString16(clock.minute, 2);
+  const repeat = parseInt(clock.repeat.join(''), 2);
+  const repeatStr = toString16(repeat, 2);
+  const music = toString16(clock.music, 2);
+  const volume = toString16(clock.volume, 2);
+  const effect = toString16(clock.effect, 2);
+  const duration = toString16(clock.duration, 2);
+  const shake = toString16(clock.shake, 2);
+  const animation = toString16(clock.animation, 2);
+  const animationId = toString16(clock.animationId, 2);
+  const snooze = toString16(clock.snooze, 2);
+  const snoozeDuration = toString16(clock.snoozeDuration, 2);
+  const snoozeClose = toString16(clock.snoozeClose, 2);
+  return `${hour}${minute}${repeatStr}${music}${volume}${effect}${duration}${shake}${animation}${animationId}${snooze}${snoozeDuration}${snoozeClose}`;
 };

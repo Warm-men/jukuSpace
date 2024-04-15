@@ -103,6 +103,7 @@ const styles = StyleSheet.create({
   modalItemImage: {
     width: cx(138),
     height: cx(69),
+    borderRadius: cx(8),
   },
   modalList: {
     flexDirection: 'row',
@@ -132,6 +133,12 @@ const styles = StyleSheet.create({
     fontSize: cx(60),
     fontWeight: '600',
     lineHeight: cx(60),
+  },
+  homeModalTime1: {
+    color: '#fff',
+    fontSize: cx(16),
+    fontWeight: '600',
+    marginLeft: cx(4),
   },
   homeModalLater: {
     width: cx(204),

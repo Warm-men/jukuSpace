@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, TouchableOpacity, ScrollView, Image } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Utils, TYText, TYSdk, TopBar } from 'tuya-panel-kit';
+import { TYText, TYSdk, TopBar, GlobalToast } from 'tuya-panel-kit';
 import { useSelector } from 'react-redux';
 import Res from '@res';
 import i18n from '@i18n';
 import {
-  planOpen2Object,
-  planOpen2String,
   repeat2Text,
   getAmPmData,
   getHourData,
   getMinuteData,
+  clockString2Object,
+  clockObject2String,
 } from '@utils';
 import { cx, commonColor } from '@config/styles';
 import { dpCodes } from '@config';
@@ -23,7 +23,23 @@ import RepeatPopup from './repeatPopup';
 import MusicPopup from './musicPopup';
 import styles from './styles';
 
-const { openPlanCode } = dpCodes;
+const { alarm1SettingCode, alarm2SettingCode } = dpCodes;
+
+interface ClockObject {
+  hour: number;
+  minute: number;
+  repeat: number[];
+  music: number;
+  volume: number;
+  effect: number;
+  duration: number;
+  shake: number;
+  animation: number;
+  animationId: number;
+  snooze: number;
+  snoozeDuration: number;
+  snoozeClose: number;
+}
 
 function RowItem(props) {
   const { title, onPress, text } = props;
@@ -44,21 +60,48 @@ function RowItem(props) {
   );
 }
 
-function Setting() {
-  const { [openPlanCode]: openPlan } = useSelector(({ dpState }: any) => dpState);
+function Clock() {
+  const { [alarm1SettingCode]: alarm1Setting, [alarm2SettingCode]: alarm2Setting } = useSelector(
+    ({ dpState }: any) => dpState
+  );
 
-  const openPlanObject = planOpen2Object(openPlan);
+  // 在路由中获取参数
+  const route = useRoute();
+  const clockIndex = (route.params as { clockIndex?: number })?.clockIndex ?? 0;
 
-  const { time, switchState } = openPlanObject;
-  // const route = useRoute();
+  const clockData = {
+    0: clockString2Object(alarm1Setting),
+    1: clockString2Object(alarm2Setting),
+  };
+
+  const clockCode = {
+    0: alarm1SettingCode,
+    1: alarm2SettingCode,
+  };
+
   const navigation = useNavigation<StackNavigationProp<any, any>>();
+
+  const getAmPm = () => {
+    const data = clockData[clockIndex];
+    const { hour } = data;
+    return hour < 12 ? 'AM' : 'PM';
+  };
+
+  const getHour = () => {
+    const data = clockData[clockIndex];
+    const { hour } = data;
+    return hour > 12 ? hour - 12 : hour;
+  };
+
+  const [clockDataState, setClockDataState] = useState<ClockObject>(clockData[clockIndex]);
+
   const [isVisibleRepeatPop, setIsVisibleRepeatPop] = useState(false);
   const [isVisibleDurationPop, setIsVisibleDurationPop] = useState(false);
   const [isVisibleMusicPop, setIsVisibleMusicPop] = useState(false);
-  const [hour, setHour] = useState(time.hour);
-  const [minute, setMinute] = useState(time.minute);
-  const [ampm, setAmpm] = useState('AM');
-  const [musicVolume, setMusicVolume] = useState(0);
+  const [hour, setHour] = useState(getHour());
+  const [minute, setMinute] = useState(clockData[clockIndex]?.minute ?? 0);
+  const [amPm, setAmPm] = useState(getAmPm());
+  const [musicVolume, setMusicVolume] = useState(clockData[clockIndex]?.volume ?? 10);
 
   const handleOpenRepeat = () => {
     setIsVisibleRepeatPop(true);
@@ -80,59 +123,62 @@ function Setting() {
     setIsVisibleMusicPop(false);
   };
 
-  const handleOnConfirmMusic = repeat => {
+  const handleOnConfirmMusic = music => {
     setIsVisibleMusicPop(false);
-    // const newPlan = { ...openPlanObject, repeat };
-    // const newDpDate = planOpen2String(newPlan);
-    // TYSdk.device.putDeviceData({
-    //   [openPlanCode]: newDpDate,
-    // });
+    updateClockDataState('music', music);
   };
 
   const handleOnConfirmRepeat = repeat => {
     setIsVisibleRepeatPop(false);
-    const newPlan = { ...openPlanObject, repeat };
-    const newDpDate = planOpen2String(newPlan);
-    TYSdk.device.putDeviceData({
-      [openPlanCode]: newDpDate,
-    });
+    updateClockDataState('repeat', repeat);
   };
 
   const handleOnCloseDuration = () => {
     setIsVisibleDurationPop(false);
   };
 
+  const updateClockDataState = (key: string, value: any) => {
+    const _clockDataState = { ...clockDataState, [key]: value };
+    setClockDataState(_clockDataState);
+  };
+
   const handleOnConfirmDuration = duration => {
     setIsVisibleDurationPop(false);
-    const newPlan = { ...openPlanObject, duration };
-    const newDpDate = planOpen2String(newPlan);
-    TYSdk.device.putDeviceData({
-      [openPlanCode]: newDpDate,
-    });
+    updateClockDataState('duration', duration);
   };
 
   const handleOnChange = (value: any, type: string) => {
     if (type === 'hour') {
       setHour(value);
-    } else if (type === 'ampm') {
-      setAmpm(value);
+      const _hour = amPm === 'AM' ? value : value + 12;
+      updateClockDataState('hour', _hour);
+    } else if (type === 'amPm') {
+      setAmPm(value);
+      const _hour = value === 'AM' ? hour : hour + 12;
+      updateClockDataState('hour', _hour);
     } else {
       setMinute(value);
+      updateClockDataState('minute', value);
     }
-    const newPlan = { ...openPlanObject, time: { ...openPlanObject.time, [type]: value } };
-    const newDpDate = planOpen2String(newPlan);
-    TYSdk.device.putDeviceData({
-      [openPlanCode]: newDpDate,
-    });
+  };
+
+  const onChangeVolume = (value: number) => {
+    setMusicVolume(value);
+    updateClockDataState('volume', value);
   };
 
   const getRepeatText = () => {
-    const { repeat } = openPlanObject;
-    return repeat2Text(repeat, switchState);
+    const { repeat } = clockDataState;
+    return repeat2Text(repeat, true);
+  };
+
+  const getMusic = () => {
+    const { music } = clockDataState;
+    return i18n.getLang(`music_${music}`);
   };
 
   const getDurationText = () => {
-    const { duration } = openPlanObject;
+    const { duration } = clockDataState;
     return `${duration} ${i18n.getLang('minute')}`;
   };
 
@@ -140,7 +186,17 @@ function Setting() {
     navigation.goBack();
   };
 
-  const save = () => {};
+  const save = () => {
+    const dpData = clockObject2String(clockDataState);
+    TYSdk.device.putDeviceData({
+      [clockCode[clockIndex]]: dpData,
+    });
+    GlobalToast.show({
+      text: i18n.getLang('done'),
+      showIcon: false,
+    });
+    goBack();
+  };
 
   return (
     <View style={styles.container}>
@@ -171,9 +227,9 @@ function Setting() {
       <ScrollView style={{ flex: 1 }}>
         <View style={styles.pickerView}>
           <PickerView
-            value={ampm}
+            value={amPm}
             onChange={value => {
-              handleOnChange(value, 'ampm');
+              handleOnChange(value, 'amPm');
             }}
             data={getAmPmData()}
           />
@@ -214,7 +270,7 @@ function Setting() {
           <RowItem
             title={i18n.getLang('clock_music')}
             onPress={handleOpenMusic}
-            text={getRepeatText()}
+            text={getMusic()}
           />
           <View style={styles.line} />
           <View
@@ -224,7 +280,7 @@ function Setting() {
               {i18n.getLang('clock_volume')}
             </TYText>
             <View style={styles.sliderView}>
-              <SliderHorizontal value={musicVolume} onValueChange={setMusicVolume} />
+              <SliderHorizontal value={musicVolume} onValueChange={onChangeVolume} />
               <TYText size={cx(14)} color="#C5C5C5">
                 {musicVolume}
               </TYText>
@@ -236,23 +292,23 @@ function Setting() {
         onClose={handleOnCloseDuration}
         onConfirm={handleOnConfirmDuration}
         isVisiblePop={isVisibleDurationPop}
-        value={openPlanObject.duration}
+        value={clockDataState.duration}
       />
       <RepeatPopup
         onClose={handleOnCloseRepeat}
         onConfirm={handleOnConfirmRepeat}
         isVisiblePop={isVisibleRepeatPop}
-        value={openPlanObject.repeat}
+        value={clockDataState.repeat}
       />
 
       <MusicPopup
         onClose={handleCloseMusic}
         onConfirm={handleOnConfirmMusic}
         isVisiblePop={isVisibleMusicPop}
-        value="0"
+        value={clockDataState.music}
       />
     </View>
   );
 }
 
-export default Setting;
+export default Clock;

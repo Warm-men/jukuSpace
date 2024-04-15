@@ -26,7 +26,7 @@ const PopUp = (props: any) => {
     >
       <ScrollView contentContainerStyle={{ paddingBottom: cx(28) }}>
         <View style={styles.musicBox}>
-          {_times(10).map((item: number, index: number) => {
+          {_times(8).map((item: number, index: number) => {
             const isActive = index === value;
             return (
               <View key={item} style={styles.musicItem}>
@@ -61,27 +61,27 @@ export default PopUp;
 const styles = StyleSheet.create({
   musicBox: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
     alignItems: 'center',
     flexWrap: 'wrap',
-    paddingHorizontal: cx(16),
+    paddingLeft: cx(16),
   },
   musicItem: {
     width: cx(100),
     marginBottom: cx(22),
     borderRadius: cx(8),
+    marginRight: cx(16),
   },
   imageView: {
     width: cx(108),
     height: cx(108),
-    borderRadius: cx(8),
+    borderRadius: cx(16),
     borderWidth: cx(4),
     borderColor: 'transparent',
   },
   musicImage: {
     width: cx(100),
     height: cx(100),
-    borderRadius: cx(8),
+    // borderRadius: cx(8),
     marginBottom: cx(8),
   },
 });

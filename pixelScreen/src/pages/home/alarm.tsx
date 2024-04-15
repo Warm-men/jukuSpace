@@ -1,60 +1,96 @@
 import React, { useState, useEffect } from 'react';
 import { View, TouchableOpacity, Modal, Image } from 'react-native';
-import { TYText } from 'tuya-panel-kit';
+import { TYText, TYSdk } from 'tuya-panel-kit';
 import { useSelector } from 'react-redux';
 import _deepClone from 'lodash/cloneDeep';
-import { cx, commonColor } from '@config/styles';
+import { cx } from '@config/styles';
 import Res from '@res';
 import i18n from '@i18n';
-import modelConfig from 'config/common';
+import { dpCodes } from '@config';
 import styles from './styles';
-import { string2ClockState, repeat2Text } from '../../utils';
+import { clockString2Object } from '../../utils';
 
-// const { powerCode, sceneDataCode } = dpCodes;
+const { clockStatusCode, alarmStopCode, alarm1SettingCode, alarm2SettingCode } = dpCodes;
+
 function Alarm() {
-  const { clock_status_data } = useSelector(({ dpState }: any) => dpState);
+  const {
+    [clockStatusCode]: clockStatusData,
+    [alarm1SettingCode]: alarm1Setting,
+    [alarm2SettingCode]: alarm2Setting,
+  } = useSelector(({ dpState }: any) => dpState);
+
+  const getStatus = () => {
+    // Data[0]表示闹钟1状态00-02；00-响闹 01-贪睡 02-停闹
+    // Data[1]表示闹钟2状态00-02；00-响闹 01-贪睡 02-停闹
+    const clock1String = clockStatusData.slice(0, 2);
+    const clock2String = clockStatusData.slice(2, 4);
+    return clock1String === '00' || clock2String === '00';
+  };
+
+  const getClockIndex = (): number => {
+    // Data[0]表示闹钟1状态00-02；00-响闹 01-贪睡 02-停闹
+    // Data[1]表示闹钟2状态00-02；00-响闹 01-贪睡 02-停闹
+    const clock1String = clockStatusData.slice(0, 2);
+    const clock2String = clockStatusData.slice(2, 4);
+    if (clock1String === '00') {
+      return 1;
+    }
+    if (clock2String === '00') {
+      return 2;
+    }
+    return 1;
+  };
+
+  const clockData = {
+    1: clockString2Object(alarm1Setting),
+    2: clockString2Object(alarm2Setting),
+  };
 
   const [isClockOpen, setIsClockOpen] = useState(false);
-  const [clockStatus, setClockStatus] = useState(0);
 
   useEffect(() => {
-    const { isClockOpen: _isClockOpen, status } = getClockData();
-    setIsClockOpen(_isClockOpen);
-    setClockStatus(status);
-  }, [clock_status_data]);
+    setIsClockOpen(getStatus());
+  }, [clockStatusData]);
 
-  const getClockData = () => {
-    return {
-      isClockOpen: true,
-      data: [],
-      status: true,
-    };
-    const alarmData = string2ClockState(clock_status_data);
-    const isClock1Open = [0, 1].includes(alarmData.alarm1);
-    const isClock2Open = [0, 1].includes(alarmData.alarm2);
-    const _isClockOpen = isClock1Open || isClock2Open;
-    if (!isClockOpen) return { isClockOpen: false, data: {}, status: 2 };
-    return {
-      isClockOpen: _isClockOpen,
-      data: [],
-      status: isClock1Open ? alarmData.alarm1 : alarmData.alarm2,
-    };
+  const remindLater = () => {
+    TYSdk.device.putDeviceData({
+      [alarmStopCode]: false,
+    });
+  };
+
+  const stop = () => {
+    TYSdk.device.putDeviceData({
+      [alarmStopCode]: true,
+    });
+  };
+
+  const getTime = () => {
+    const data = clockData[getClockIndex()];
+    const { hour, minute } = data;
+    const h = hour > 12 ? hour - 12 : hour;
+    const _hour = h < 10 ? `0${h}` : `${h}`;
+    const _minute = minute < 10 ? `0${minute}` : minute;
+    const ampm = hour < 12 ? 'AM' : 'PM';
+    return `${_hour}:${_minute}`;
+  };
+
+  const getAmPm = () => {
+    const data = clockData[getClockIndex()];
+    const { hour } = data;
+    return hour < 12 ? 'AM' : 'PM';
   };
 
   return (
-    <Modal animationType="fade" transparent={true} style={{ flex: 1 }} visible={false}>
+    <Modal animationType="fade" transparent={true} style={{ flex: 1 }} visible={isClockOpen}>
       <View style={styles.homeModalWrapper}>
         <View style={styles.homeModalTop}>
-          <TYText style={styles.homeModalText}>
-            {`${repeat2Text([0, 0, 1, 0, 1, 0, 0], true)} ${i18n.getLang('clock')}`}
+          <TYText style={styles.homeModalText}>{i18n.getLang(`clock${getClockIndex()}`)}</TYText>
+          <TYText style={styles.homeModalTime}>
+            {getTime()}
+            <TYText style={styles.homeModalTime1}>{getAmPm()}</TYText>
           </TYText>
-          <TYText style={styles.homeModalTime}>timeStr</TYText>
-          {clockStatus !== 0 ? (
-            <TouchableOpacity
-              onPress={() => {
-                // this.props.updateDp({ snooze: true }); // 稍后提醒
-              }}
-            >
+          {/* {clockStatus !== 0 ? (
+            <TouchableOpacity onPress={}>
               <View style={[styles.row, styles.center, styles.homeModalLater]}>
                 <Image source={Res.clock_icon} style={styles.homeModalLaterIcon} />
                 <TYText style={styles.blackText}>{i18n.getLang('remind_later')}</TYText>
@@ -64,20 +100,22 @@ function Alarm() {
             <TYText style={styles.snoozeView} align="center">
               {i18n.getLang('snooze_hint')}
             </TYText>
-          )}
+          )} */}
+          <TouchableOpacity onPress={remindLater}>
+            <View style={[styles.row, styles.center, styles.homeModalLater]}>
+              <Image source={Res.clock_icon} style={styles.homeModalLaterIcon} />
+              <TYText style={styles.blackText}>{i18n.getLang('remind_later')}</TYText>
+            </View>
+          </TouchableOpacity>
         </View>
         <View style={styles.center}>
-          <TouchableOpacity
-            onPress={() => {
-              // this.props.updateDp({ alarm_stop: true }); // 停止响铃
-            }}
-          >
+          <TouchableOpacity onPress={stop}>
             <View
               style={[
                 styles.row,
                 styles.center,
                 styles.homeModalLaterStop,
-                { backgroundColor: clockStatus !== 0 ? '#262528' : commonColor.mainColor },
+                { backgroundColor: '#262528' },
               ]}
             >
               <TYText style={styles.blackText}>{i18n.getLang('alarm_stop')}</TYText>

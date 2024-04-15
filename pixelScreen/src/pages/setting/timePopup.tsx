@@ -10,22 +10,22 @@ const { convertX: cx } = Utils.RatioUtils;
 
 const PopUp = (props: any) => {
   const { isVisiblePop, onClose, onConfirm, value: _value } = props;
-  const [hour, setHour] = useState(0);
-  const [minute, setMinute] = useState(0);
-  const [ampm, setAmpm] = useState('AM');
+  const [hour, setHour] = useState(_value.hour || 0);
+  const [minute, setMinute] = useState(_value.minute || 0);
+  const [amPm, setAmPm] = useState(_value.amPm || 'AM');
 
   const handleOnChange = (value: any, type: string) => {
     if (type === 'hour') {
       setHour(value);
-    } else if (type === 'ampm') {
-      setAmpm(value);
+    } else if (type === 'amPm') {
+      setAmPm(value);
     } else {
       setMinute(value);
     }
   };
 
   const handleConfirm = () => {
-    onConfirm([hour, minute, ampm]);
+    onConfirm([hour, minute, amPm]);
   };
 
   return (
@@ -54,9 +54,9 @@ const PopUp = (props: any) => {
           data={getMinuteData()}
         />
         <PickerView
-          value={ampm}
+          value={amPm}
           onChange={value => {
-            handleOnChange(value, 'ampm');
+            handleOnChange(value, 'amPm');
           }}
           data={getAmPmData()}
         />

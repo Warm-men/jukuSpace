@@ -1,29 +1,84 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
-import { Utils, TYText } from 'tuya-panel-kit';
+import { Utils, TYText, TYSdk } from 'tuya-panel-kit';
 import _deepClone from 'lodash/cloneDeep';
+import { dpCodes } from '@config';
+import { useSelector } from 'react-redux';
+import { modelConfig } from '@config/common';
 import ModalPop from '@components/modalRender';
 import i18n from '@i18n';
+import { playListString2Map, playListMap2String } from '@utils';
 
 const { convertX: cx } = Utils.RatioUtils;
+const { playListCode } = dpCodes;
+
+interface ModelConfig {
+  name?: string;
+  icon?: any;
+  modeId: number;
+  dpValue: string;
+  isActive?: boolean;
+}
 
 const PopUp = (props: any) => {
-  const { isVisiblePop, onClose, onConfirm, data } = props;
+  const { isVisiblePop, onClose } = props;
 
-  const [currentData, setCurrentData] = useState<any>(data);
+  const { [playListCode]: playList } = useSelector(({ dpState }: any) => dpState);
+
+  const [modeData, setModeData] = useState<ModelConfig[]>(modelConfig);
+
+  const [selectedMode, setSelectedMode] = useState<ModelConfig[]>([]);
+
+  useEffect(() => {
+    const data: ModelConfig[] = playListString2Map(playList);
+    const newData: ModelConfig[] = _deepClone(modelConfig);
+    newData.forEach((item: ModelConfig) => {
+      const _item = data.find((i: ModelConfig) => i.modeId === item.modeId);
+      if (_item) {
+        const updatedItem = { ...item, isActive: true };
+        Object.assign(item, updatedItem);
+      }
+    });
+    setModeData(newData);
+  }, [playList, isVisiblePop]);
+
+  useEffect(() => {
+    const data: ModelConfig[] = playListString2Map(playList);
+    const newData: ModelConfig[] = [];
+    data.forEach(item => {
+      const _item = modelConfig.find(i => i.modeId === item.modeId);
+      if (_item) {
+        newData.push(_item);
+      }
+    });
+    setSelectedMode(newData);
+  }, [playList]);
 
   const handleSelect = (item: any) => {
-    const newData = _deepClone(currentData).map((i: any) => {
-      if (i.model_id === item.model_id) {
-        i.isActive = !i.isActive;
+    const newData = _deepClone(modeData).map((i: ModelConfig) => {
+      if (i.modeId === item.modeId) {
+        return { ...i, isActive: !i.isActive };
       }
       return i;
     });
-    setCurrentData(newData);
+    setModeData(newData);
+
+    const _selectedMode: ModelConfig[] = _deepClone(selectedMode);
+    const _index = _selectedMode.findIndex((i: ModelConfig) => i.modeId === item.modeId);
+    if (_index > -1) {
+      _selectedMode.splice(_index, 1);
+    } else {
+      _selectedMode.push(item);
+    }
+    setSelectedMode(_selectedMode);
   };
 
   const handleConfirm = () => {
-    onConfirm(currentData);
+    const _data = playListMap2String(selectedMode);
+    TYSdk.device.putDeviceData({
+      [playListCode]: _data,
+    });
+    onClose();
   };
 
   return (
@@ -39,9 +94,9 @@ const PopUp = (props: any) => {
         contentContainerStyle={{ paddingLeft: cx(22), paddingBottom: cx(16) }}
       >
         <View style={styles.popupViewEffect}>
-          {currentData.map((item, index) => {
+          {modeData.map(item => {
             return (
-              <View key={item.model_id} style={styles.effectItem}>
+              <View key={item.modeId} style={styles.effectItem}>
                 <TouchableOpacity
                   style={[
                     styles.effectItemEffect,
@@ -91,13 +146,13 @@ const styles = StyleSheet.create({
   effectItemEffect: {
     borderWidth: cx(3),
     borderColor: 'transparent',
-    borderRadius: cx(4),
+    borderRadius: cx(8),
     marginBottom: cx(4),
     overflow: 'hidden',
   },
   effectImage: {
-    width: cx(154),
-    height: cx(78),
-    resizeMode: 'contain',
+    width: cx(152),
+    height: cx(77),
+    borderRadius: cx(8),
   },
 });

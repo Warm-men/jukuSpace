@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -8,52 +8,86 @@ import _deepClone from 'lodash/cloneDeep';
 import { commonStyles, cx, commonColor } from '@config/styles';
 import Res from '@res';
 import i18n from '@i18n';
-import SwitchView from 'components/switch';
+import SwitchView from '@components/switch';
 import { dpCodes } from '@config';
-import modelConfig from 'config/common';
+import { modelConfig } from '@config/common';
 import EditPopup from './editModal';
 import Alarm from './alarm';
 import styles from './styles';
-import { string2ClockState, repeat2Text } from '../../utils';
+import { clockString2Object, playListString2Map } from '../../utils';
 
-// const { powerCode, sceneDataCode } = dpCodes;
+interface ClockObject {
+  hour: number;
+  minute: number;
+  repeat: number[];
+  music: number;
+  volume: number;
+  effect: number;
+  duration: number;
+  shake: number;
+  animation: number;
+  animationId: number;
+  snooze: number;
+  snoozeDuration: number;
+  snoozeClose: number;
+}
+
+const { playListCode, clock1SwitchCode, clock2SwitchCode, alarm1SettingCode, alarm2SettingCode } =
+  dpCodes;
+interface ModelConfig {
+  name?: string;
+  icon?: any;
+  modeId: number;
+  dpValue: string;
+  isActive?: boolean;
+}
+
 function Home() {
   const { name } = useSelector(({ devInfo }: any) => devInfo);
 
-  const { clock_status_data } = useSelector(({ dpState }: any) => dpState);
+  const {
+    [clock1SwitchCode]: clock1Switch,
+    [clock2SwitchCode]: clock2Switch,
+    [playListCode]: playList,
+    [alarm1SettingCode]: alarm1Setting,
+    [alarm2SettingCode]: alarm2Setting,
+  } = useSelector(({ dpState }: any) => dpState);
 
-  const [clockSwitch1, setClockSwitch1] = useState(false);
-  const [clockSwitch2, setClockSwitch2] = useState(true);
   const [isVisiblePop, setIsVisiblePop] = useState(false);
-  const [modalData, setModalData] = useState<any[]>(modelConfig);
-
-  const [isClockOpen, setIsClockOpen] = useState(false);
-  const [clockStatus, setClockStatus] = useState(0);
+  const [modeData, setModeData] = useState<ModelConfig[]>([]);
 
   useEffect(() => {
-    const { isClockOpen: _isClockOpen, status } = getClockData();
-    setIsClockOpen(_isClockOpen);
-    setClockStatus(status);
-  }, [clock_status_data]);
+    const data: ModelConfig[] = playListString2Map(playList);
+    const newData: ModelConfig[] = [];
+    data.forEach(item => {
+      const _item = modelConfig.find(i => i.modeId === item.modeId);
+      if (_item) {
+        newData.push(_item);
+      }
+    });
+    setModeData(newData);
+  }, [playList]);
 
   const navigation = useNavigation<StackNavigationProp<any, any>>();
 
-  const onConfirmModal = (data: any) => {
-    // console.log('data', data);
-    setIsVisiblePop(false);
-    setModalData(data);
-  };
-
-  const hasModel = modalData.some(item => item.isActive);
-
   const clockData = [
     {
-      time: '7:00 AM',
-      switch: clockSwitch1,
+      switch: clock1Switch,
+      data: clockString2Object(alarm1Setting),
+      onSwitchChange: value => {
+        TYSdk.device.putDeviceData({
+          [clock1SwitchCode]: value,
+        });
+      },
     },
     {
-      time: '7:01 PM',
-      switch: clockSwitch2,
+      switch: clock2Switch,
+      data: clockString2Object(alarm2Setting),
+      onSwitchChange: value => {
+        TYSdk.device.putDeviceData({
+          [clock2SwitchCode]: value,
+        });
+      },
     },
   ];
 
@@ -69,45 +103,32 @@ function Home() {
     navigation.navigate('setting');
   };
 
-  const goClockDetail = () => {
-    navigation.navigate('clock');
+  const goClockDetail = clockIndex => {
+    navigation.navigate('clock', { clockIndex });
   };
 
-  const getClockData = () => {
-    return {
-      isClockOpen: true,
-      data: [],
-      status: true,
-    };
-    const alarmData = string2ClockState(clock_status_data);
-    const isClock1Open = [0, 1].includes(alarmData.alarm1);
-    const isClock2Open = [0, 1].includes(alarmData.alarm2);
-    const _isClockOpen = isClock1Open || isClock2Open;
-    if (!isClockOpen) return { isClockOpen: false, data: {}, status: 2 };
-    return {
-      isClockOpen: _isClockOpen,
-      data: [],
-      status: isClock1Open ? alarmData.alarm1 : alarmData.alarm2,
-    };
+  const getTime = (data: ClockObject) => {
+    const { hour, minute } = data;
+    const h = hour > 12 ? hour - 12 : hour;
+    const _hour = h < 10 ? `0${h}` : `${h}`;
+    const _minute = minute < 10 ? `0${minute}` : minute;
+    const ampm = hour < 12 ? 'AM' : 'PM';
+    return `${_hour}:${_minute} ${ampm}`;
   };
 
   const renderClock = () => {
     return clockData.map((item, index) => {
+      const time = getTime(item.data);
       return (
-        <View key={item.time}>
-          <TouchableOpacity onPress={goClockDetail}>
+        <View key={index}>
+          <TouchableOpacity
+            onPress={() => {
+              goClockDetail(index);
+            }}
+          >
             <View style={[styles.flexRowSp, styles.clockItem]}>
-              <TYText style={styles.text14}>{item.time}</TYText>
-              <SwitchView
-                value={item.switch}
-                onValueChange={value => {
-                  if (index === 0) {
-                    setClockSwitch1(value);
-                  } else {
-                    setClockSwitch2(value);
-                  }
-                }}
-              />
+              <TYText style={styles.text14}>{time}</TYText>
+              <SwitchView value={item.switch} onValueChange={item.onSwitchChange} />
             </View>
           </TouchableOpacity>
           {index === 0 && <View style={styles.line} />}
@@ -148,28 +169,29 @@ function Home() {
         <View style={styles.modeContainer}>
           <View style={styles.modeTop}>
             <TYText style={styles.text17Bold}>{i18n.getLang('my_screen')}</TYText>
-            {hasModel ? (
+            {modeData.length ? (
               <TouchableOpacity onPress={goEditModal}>
                 <TYText style={styles.text14}>{i18n.getLang('setting')}</TYText>
               </TouchableOpacity>
             ) : null}
           </View>
-          {hasModel ? (
+          {modeData.length ? (
             <View style={styles.modalList}>
-              {modalData.map(item => {
-                if (!item.isActive) return null;
+              {modeData.map(item => {
                 return (
-                  <View key={item.model_id} style={styles.modalItemView}>
+                  <View key={item.modeId} style={styles.modalItemView}>
                     <Image source={item.icon} style={styles.modalItemImage} />
                   </View>
                 );
               })}
-              <TouchableOpacity onPress={openPop}>
-                <View style={[styles.addView, { width: cx(138), height: cx(68) }]}>
-                  <Image source={Res.add} style={styles.addImg} />
-                  <TYText style={styles.text14}>{i18n.getLang('add_model')}</TYText>
-                </View>
-              </TouchableOpacity>
+              {modeData.length < 20 ? (
+                <TouchableOpacity onPress={openPop}>
+                  <View style={[styles.addView, { width: cx(138), height: cx(68) }]}>
+                    <Image source={Res.add} style={styles.addImg} />
+                    <TYText style={styles.text14}>{i18n.getLang('add_model')}</TYText>
+                  </View>
+                </TouchableOpacity>
+              ) : null}
             </View>
           ) : (
             <TouchableOpacity onPress={openPop}>
@@ -194,8 +216,6 @@ function Home() {
         onClose={() => {
           setIsVisiblePop(false);
         }}
-        onConfirm={onConfirmModal}
-        data={modalData}
       />
       <Alarm />
     </View>
