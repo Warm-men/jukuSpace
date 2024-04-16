@@ -10,6 +10,7 @@ export default {
   alarm2SettingCode: 'alarm2_setting',
   clockStatusCode: 'clock_status',
   alarmStopCode: 'alarm_stop',
+  snoozeCode: 'snooze',
   brightValueCode: 'bright_value',
   sceneDataCode: 'scene_data',
   controlDataCode: 'control_data',

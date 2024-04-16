@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { View, TouchableOpacity, Modal, Image } from 'react-native';
 import { TYText, TYSdk } from 'tuya-panel-kit';
+import { commonColor, cx } from '@config/styles';
 import { useSelector } from 'react-redux';
 import _deepClone from 'lodash/cloneDeep';
-import { cx } from '@config/styles';
 import Res from '@res';
 import i18n from '@i18n';
 import { dpCodes } from '@config';
 import styles from './styles';
 import { clockString2Object } from '../../utils';
 
-const { clockStatusCode, alarmStopCode, alarm1SettingCode, alarm2SettingCode } = dpCodes;
+const { clockStatusCode, alarmStopCode, alarm1SettingCode, alarm2SettingCode, snoozeCode } =
+  dpCodes;
 
 function Alarm() {
   const {
@@ -24,7 +25,16 @@ function Alarm() {
     // Data[1]表示闹钟2状态00-02；00-响闹 01-贪睡 02-停闹
     const clock1String = clockStatusData.slice(0, 2);
     const clock2String = clockStatusData.slice(2, 4);
-    return clock1String === '00' || clock2String === '00';
+    const openStatus = ['00', '01'];
+    return openStatus.includes(clock1String) || openStatus.includes(clock2String);
+  };
+
+  const isSnoozeFun = () => {
+    // Data[0]表示闹钟1状态00-02；00-响闹 01-贪睡 02-停闹
+    // Data[1]表示闹钟2状态00-02；00-响闹 01-贪睡 02-停闹
+    const clock1String = clockStatusData.slice(0, 2);
+    const clock2String = clockStatusData.slice(2, 4);
+    return clock1String === '01' || clock2String === '01';
   };
 
   const getClockIndex = (): number => {
@@ -47,18 +57,22 @@ function Alarm() {
   };
 
   const [isClockOpen, setIsClockOpen] = useState(false);
+  const [isSnooze, setIsSnooze] = useState(false);
 
   useEffect(() => {
     setIsClockOpen(getStatus());
+    setIsSnooze(isSnoozeFun());
   }, [clockStatusData]);
 
   const remindLater = () => {
+    // setIsClockOpen(false);
     TYSdk.device.putDeviceData({
-      [alarmStopCode]: false,
+      [snoozeCode]: true,
     });
   };
 
   const stop = () => {
+    // setIsClockOpen(false);
     TYSdk.device.putDeviceData({
       [alarmStopCode]: true,
     });
@@ -70,7 +84,6 @@ function Alarm() {
     const h = hour > 12 ? hour - 12 : hour;
     const _hour = h < 10 ? `0${h}` : `${h}`;
     const _minute = minute < 10 ? `0${minute}` : minute;
-    const ampm = hour < 12 ? 'AM' : 'PM';
     return `${_hour}:${_minute}`;
   };
 
@@ -89,24 +102,24 @@ function Alarm() {
             {getTime()}
             <TYText style={styles.homeModalTime1}>{getAmPm()}</TYText>
           </TYText>
-          {/* {clockStatus !== 0 ? (
-            <TouchableOpacity onPress={}>
+          {isSnooze ? (
+            <TYText style={styles.snoozeView} align="center">
+              {i18n.getLang('snooze_hint')}
+            </TYText>
+          ) : (
+            <TouchableOpacity onPress={remindLater}>
               <View style={[styles.row, styles.center, styles.homeModalLater]}>
                 <Image source={Res.clock_icon} style={styles.homeModalLaterIcon} />
                 <TYText style={styles.blackText}>{i18n.getLang('remind_later')}</TYText>
               </View>
             </TouchableOpacity>
-          ) : (
-            <TYText style={styles.snoozeView} align="center">
-              {i18n.getLang('snooze_hint')}
-            </TYText>
-          )} */}
-          <TouchableOpacity onPress={remindLater}>
+          )}
+          {/* <TouchableOpacity onPress={remindLater}>
             <View style={[styles.row, styles.center, styles.homeModalLater]}>
               <Image source={Res.clock_icon} style={styles.homeModalLaterIcon} />
               <TYText style={styles.blackText}>{i18n.getLang('remind_later')}</TYText>
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
         <View style={styles.center}>
           <TouchableOpacity onPress={stop}>
@@ -115,7 +128,7 @@ function Alarm() {
                 styles.row,
                 styles.center,
                 styles.homeModalLaterStop,
-                { backgroundColor: '#262528' },
+                { backgroundColor: isSnooze ? commonColor.mainColor : '#262528' },
               ]}
             >
               <TYText style={styles.blackText}>{i18n.getLang('alarm_stop')}</TYText>
