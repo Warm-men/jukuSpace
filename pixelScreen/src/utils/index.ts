@@ -323,30 +323,91 @@ export const padStart2 = (value: number | string) => {
 // Data[4]停留方式：直接显示，反白，闪烁
 // Data[5]出场方式：无（直接消失），淡出，左移，右移，上移，下移；（1-6）
 // Data[6]速度：1-10，根据显示内容来做进出场动作的速度计算；
-// Data[7]停留时长：进场完成后，显示内容的停留时间，5秒-1800秒；
-// Data[8]颜色：显示内容的颜色（6纯色+5种彩色带）；
+// Data[7-8]停留时长：进场完成后，显示内容的停留时间，5秒-1800秒；
+// Data[9]颜色：显示内容的颜色（6纯色+5种彩色带）；
+// Data[10]整体亮度：亮度（1-10级）
 
-// Data[9]第2个列表序号要显示的模板编号，对应的模板参数;
-// Data[10] Data[11] Data[12]Data[13]Data[14]Data[15]Data[16]；
+// Data[10]第2个列表序号要显示的模板编号，对应的模板参数;
+// Data[11] Data[11] Data[12]Data[13]Data[14]Data[15]Data[16]；
 // 同上循环，直到显示列表完全展示完，显示列表最大20条（9*20=180字节，可以一包传输完）。
-export const playListMap2String = (playList: { modeId: number; dpValue: string }[]) => {
+
+const defaultData = {
+  modeId: 0,
+  background: 1,
+  borderColor: 1,
+  enterEffect: 1,
+  stayEffect: 1,
+  showEffect: 1,
+  speed: 5,
+  stayTime: 300,
+  textColor: 0,
+  brightness: 50,
+};
+
+const encodePlayItem = (item: any, modeId: number) => {
+  const data = { ...defaultData, ...item, modeId };
+  const _modeId = toString16(data.modeId, 2);
+  const background = toString16(data.background, 2);
+  const borderColor = toString16(data.borderColor, 2);
+  const enterEffect = toString16(data.enterEffect, 2);
+  const stayEffect = toString16(data.stayEffect, 2);
+  const showEffect = toString16(data.showEffect, 2);
+  const speed = toString16(data.speed, 2);
+  const stayTime = toString16(data.stayTime, 4);
+  const textColor = toString16(data.textColor, 2);
+  const brightness = toString16(data.brightness, 2);
+  return `${_modeId}${background}${borderColor}${enterEffect}${stayEffect}${showEffect}${speed}${stayTime}${textColor}${brightness}`;
+};
+export const playListMap2String = (
+  playList: { modeId: number; dpValue: string; extra: Extra }[]
+) => {
   const playListStr = playList.reduce((prev, item) => {
-    return prev + item.dpValue;
+    return prev + encodePlayItem(item.extra, item.modeId);
   }, '');
   return playListStr;
 };
 
+const decodePlayItem = (dpValue: string) => {
+  if (!dpValue || dpValue.length !== 22) return defaultData;
+  return {
+    modeId: parseInt(dpValue.slice(0, 2), 16),
+    background: parseInt(dpValue.slice(2, 4), 16),
+    borderColor: parseInt(dpValue.slice(4, 6), 16),
+    enterEffect: parseInt(dpValue.slice(6, 8), 16),
+    stayEffect: parseInt(dpValue.slice(8, 10), 16),
+    showEffect: parseInt(dpValue.slice(10, 12), 16),
+    speed: parseInt(dpValue.slice(12, 14), 16),
+    stayTime: parseInt(dpValue.slice(14, 18), 16),
+    textColor: parseInt(dpValue.slice(18, 20), 16),
+    brightness: parseInt(dpValue.slice(20, 22), 16),
+  };
+};
+
+interface Extra {
+  modeId?: number;
+  background?: number;
+  borderColor?: number;
+  enterEffect?: number;
+  stayEffect?: number;
+  showEffect?: number;
+  speed?: number;
+  stayTime?: number;
+  textColor?: number;
+  brightness?: number;
+}
+
 // 将playListString转成playListMap, 每个item的dpValue长度为18，每个data的长度是2
 export const playListString2Map = (playListStr: string) => {
   // 判断是否是18的倍数
-  if (playListStr.length % 18 !== 0) return [];
-  const playList: { modeId: number; dpValue: string }[] = [];
-  for (let i = 0; i < playListStr.length; i += 18) {
-    const dpValue = playListStr.slice(i, i + 18);
+  if (playListStr.length % 22 !== 0) return [];
+  const playList: { modeId: number; dpValue: string; extra: Extra }[] = [];
+  for (let i = 0; i < playListStr.length; i += 22) {
+    const dpValue = playListStr.slice(i, i + 22);
     const modeId = dpValue.slice(0, 2);
     playList.push({
       modeId: parseInt(modeId, 16),
       dpValue,
+      extra: decodePlayItem(dpValue),
     });
   }
   return playList;

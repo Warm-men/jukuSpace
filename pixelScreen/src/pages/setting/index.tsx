@@ -160,7 +160,7 @@ function Setting() {
           </View>
         </View>
 
-        <View style={styles.optionView}>
+        {/* <View style={styles.optionView}>
           <View
             style={[styles.optionViewItem, { flexDirection: 'column', alignItems: 'flex-start' }]}
           >
@@ -261,9 +261,9 @@ function Setting() {
               </View>
             )}
           </View>
-        </View>
+        </View> */}
 
-        <View style={styles.optionView}>
+        {/* <View style={styles.optionView}>
           <View
             style={[styles.optionViewItem, { flexDirection: 'column', alignItems: 'flex-start' }]}
           >
@@ -286,7 +286,7 @@ function Setting() {
               onSlidingComplete={setScreenBrightness}
             />
           </View>
-        </View>
+        </View> */}
       </ScrollView>
       <TimePopup
         onClose={handleOnCloseTimePop}
