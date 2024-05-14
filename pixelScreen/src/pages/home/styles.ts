@@ -171,10 +171,12 @@ const styles = StyleSheet.create({
     marginVertical: cx(8),
   },
   modalItemView: {
-    width: cx(138),
-    height: cx(69),
     borderRadius: cx(8),
     marginBottom: cx(12),
+  },
+  modalItemViewBorder: {
+    borderColor: '#fff',
+    borderWidth: cx(3),
   },
   modalItemImage: {
     width: cx(138),

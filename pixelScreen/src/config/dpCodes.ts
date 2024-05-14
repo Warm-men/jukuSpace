@@ -21,4 +21,8 @@ export default {
   sleepAidStatusCode: 'sleep_aid_status',
   switchFaSleepCode: 'switch_fasleep',
   sleepSettingCode: 'sleep_setting',
+  playListStateCode: 'play_list_state',
+  playListUpCode: 'play_list_up',
+  playListDownCode: 'play_list_down',
+  playModeCode: 'play_mode',
 };

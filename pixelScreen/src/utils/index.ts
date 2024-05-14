@@ -577,3 +577,25 @@ export const getSoundOrLightString = (music: number, animation: number) => {
   if (!animation) [Strings.getLang('music')];
   return [Strings.getLang('animation'), Strings.getLang('music')];
 };
+
+// Data[0]显示列表里面列表序号总数；（最大预留到20，前期做到9左右，每种动画做一个）；
+// Data[1]当前正在显示的列表序号；
+// Data[2]当前正在显示的列表序号的模板编号；
+// Data[3]显示列表的执行方式：0-按列表顺序显示（默认）；1-单循环显示列表某一条；
+// 设备上传为主（显示列表序号变化，显示列表执行方式变化等条件触发），如果APP想获取下发Data[0]=0
+
+export const decodePlayString = (str: string) => {
+  if (str.length !== 8)
+    return {
+      total: 0,
+      current: -1,
+      modeId: 0,
+      loop: 0,
+    };
+  return {
+    total: parseInt(str.slice(0, 2), 16),
+    current: parseInt(str.slice(2, 4), 16),
+    modeId: parseInt(str.slice(4, 6), 16),
+    loop: parseInt(str.slice(6, 8), 16),
+  };
+};

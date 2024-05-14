@@ -3,7 +3,7 @@ import { View, TouchableOpacity, Image, StyleSheet, TextInput, ScrollView } from
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import _deepClone from 'lodash/cloneDeep';
-import { Notification, TYText, TYSdk, TopBar } from 'tuya-panel-kit';
+import { TYText, TYSdk, TopBar, Dialog } from 'tuya-panel-kit';
 import { useSelector } from 'react-redux';
 import Res from '@res';
 import SliderHorizontal from '@components/sliderHorizontal';
@@ -42,22 +42,20 @@ function ModalEdit() {
 
   const navigation = useNavigation<StackNavigationProp<any, any>>();
   const route = useRoute();
+  const repeatTimeData = [30, 60, 120];
 
-  const [repeatTime, setRepeatTime] = useState(150);
   const [modeData, setModeData] = useState<ModelConfig[]>([]);
-  const [orderList, setOrderList] = useState<string[]>([]);
+  const [repeatTime, setRepeatTime] = useState(repeatTimeData[2]);
   const [timeColorType, setTimeColorType] = useState('0');
   const [gradientColorType, setGradientColorType] = useState(0);
   const [screenBrightness, setScreenBrightness] = useState(0);
   const [extra, setExtra] = useState<Extra>({}); // 保存额外数据
-  const [showDelete, setShowDelete] = useState<boolean>(false); // 显示删除
 
   const brightnessRef = useRef(null);
   const textRef = useRef(null);
 
   // 从路由参数中获取模版数据
   const modalItem = route?.params?.item;
-  console.log('🚀 ~ file: index.tsx:59 ~ ModalEdit ~ modalItem:', modalItem);
 
   useEffect(() => {
     const data: ModelConfig[] = playListString2Map(playList);
@@ -68,17 +66,15 @@ function ModalEdit() {
         newData.push({ ...item, ..._item });
       }
     });
-    const _orderList = newData.map((item, index) => `${index}`);
-    setOrderList(_orderList);
     setModeData(newData);
-    const _extra = newData.find(item => item.extra)?.extra; // 目前版本模版的参数是统一配置的，但是参数分配到每组dp片段中，所以只取第一个即可
+    const _extra = newData.find(item => item.modeId === modalItem.modeId)?.extra; // 目前版本模版的参数是统一配置的，但是参数分配到每组dp片段中，所以只取第一个即可
     if (_extra) {
       setExtra(_extra);
       const _timeColorType =
         _extra.textColor !== undefined ? (+_extra.textColor < 8 ? '1' : '2') : '0';
       const _gradientColorType = _extra.textColor ? _extra.textColor : 0;
       const _screenBrightness = _extra.brightness ? _extra.brightness : 0;
-      const _repeatTime = _extra.stayTime ? _extra.stayTime : 150;
+      const _repeatTime = _extra.stayTime ? _extra.stayTime : repeatTimeData[2];
 
       setTimeColorType(_timeColorType);
       setGradientColorType(_gradientColorType);
@@ -88,77 +84,31 @@ function ModalEdit() {
   }, [playList]);
 
   const save = () => {
-    const newList: ModelConfig[] = [];
-    orderList.forEach((index: string) => {
-      const _item = modeData[+index];
-      newList.push(_item);
-    });
-    const validList = newList.filter(item => !item.isDeleted);
     const _extra = {
       ...extra,
       stayTime: repeatTime,
       textColor: gradientColorType,
       brightness: screenBrightness,
     };
-    const _modeData = validList.map(item => {
-      return { ...item, extra: { ..._extra, modeId: item.modeId } };
-    });
-    const _data = playListMap2String(_modeData);
+    const index = modeData.findIndex(item => item.modeId === modalItem.modeId);
+    if (index !== -1) {
+      const _data = _deepClone(modeData);
+      _data[index] = { ..._data[index], extra: _extra };
+      const dpData = playListMap2String(_data);
+      TYSdk.device.putDeviceData({
+        [playListCode]: dpData,
+      });
+      navigation.goBack();
+    }
+  };
+
+  const onDeleteItem = () => {
+    const validList = modeData.filter(item => item.modeId !== modalItem.modeId);
+    const _data = playListMap2String(validList);
     TYSdk.device.putDeviceData({
       [playListCode]: _data,
     });
     navigation.goBack();
-  };
-
-  const onChangeOrder = (newOrderList: string[]) => {
-    setOrderList(newOrderList);
-  };
-
-  const onDeleteItem = item => {
-    const newData = modeData.map(i => {
-      if (i.modeId === item.modeId) {
-        return { ...i, isDeleted: true };
-      }
-      return i;
-    });
-    const _modeData: ModelConfig[] = [];
-    orderList.forEach((index: string) => {
-      const _item = newData[+index];
-      _modeData.push(_item);
-    });
-    // 表单更新了，序号创新初始化
-    const _newOrderList = _modeData.map((item, index) => `${index}`);
-    setOrderList(_newOrderList);
-    setModeData(_modeData);
-  };
-
-  const repeatTimeData = [30, 60, 120];
-
-  const isCustomer = !repeatTimeData.includes(repeatTime) && repeatTime !== 0;
-
-  const onChangeText = text => {
-    if (+text > 600) {
-      Notification.show({
-        message: i18n.getLang('screen_repeat_time_max_tip'),
-        onClose: () => {
-          Notification.hide();
-        },
-        theme: {
-          warningIcon: 'black',
-        },
-      });
-      setTimeout(() => {
-        Notification.hide();
-      }, 2000);
-      return;
-    }
-    setRepeatTime(+text);
-  };
-
-  const onBlur = () => {
-    if (repeatTime > 600) {
-      setRepeatTime(600);
-    }
   };
 
   const onSetRepeat = item => {
@@ -186,7 +136,21 @@ function ModalEdit() {
     },
   ];
 
-  const onDelete = () => {};
+  const onDelete = () => {
+    Dialog.confirm({
+      title: i18n.getLang('make_sure_delete'),
+      subTitle: '',
+      cancelText: i18n.getLang('cancel'),
+      confirmText: i18n.getLang('sure'),
+      onConfirm: (_, { close }) => {
+        onDeleteItem();
+        close();
+      },
+      onCancel: () => {
+        Dialog.close();
+      },
+    });
+  };
 
   const renderFooter = () => {
     return (
@@ -321,46 +285,6 @@ function ModalEdit() {
             </TYText>
           </View>
         </TouchableOpacity>
-
-        {/* <View style={styles.repeatView}>
-          <TYText size={cx(16)} color="rgba(255, 255, 255, 0.75)">
-            {i18n.getLang('screen_repeat_time')}
-          </TYText>
-          <View style={styles.timeView}>
-            {repeatTimeData.map((item, index) => {
-              const isActive = item === repeatTime;
-              return (
-                <TouchableOpacity
-                  key={item}
-                  activeOpacity={0.85}
-                  style={[styles.timeItem, { borderColor: isActive ? '#fff' : '#21202C' }]}
-                  onPress={() => {
-                    onSetRepeat(item);
-                  }}
-                >
-                  <TYText size={cx(14)} color={isActive ? '#fff' : '#747476'}>
-                    {item}
-                  </TYText>
-                </TouchableOpacity>
-              );
-            })}
-            <TouchableOpacity
-              activeOpacity={0.85}
-              style={[styles.timeItem, { borderColor: isCustomer ? '#fff' : '#21202C' }]}
-            >
-              <TextInput
-                value={isCustomer ? `${repeatTime}` : ''}
-                keyboardType="numeric"
-                placeholder={i18n.getLang('custom')}
-                placeholderTextColor="#747476"
-                onChangeText={onChangeText}
-                onBlur={onBlur}
-                style={styles.textInput}
-                ref={textRef}
-              />
-            </TouchableOpacity>
-          </View>
-        </View> */}
       </View>
     );
   };
@@ -447,9 +371,6 @@ const styles = StyleSheet.create({
   footerView: {
     // marginTop: cx(24),
   },
-  repeatView: {
-    marginBottom: cx(24),
-  },
   timeView: {
     flexDirection: 'row',
     width: cx(295),
@@ -465,10 +386,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: cx(2),
     borderColor: '#21202C',
-  },
-  textInput: {
-    fontSize: cx(14),
-    color: '#fff',
   },
   optionViewWidth: {
     width: cx(295),
@@ -508,6 +425,9 @@ const styles = StyleSheet.create({
   modeImage: {
     width: cx(152),
     height: cx(76),
+    borderWidth: cx(2),
+    borderColor: '#21202C',
+    borderRadius: cx(8),
   },
 });
 

@@ -1,20 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { View, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, TouchableOpacity, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useSelector } from 'react-redux';
 import { dpCodes } from '@config';
-import { TYText } from 'tuya-panel-kit';
+import { TYSdk, TYText } from 'tuya-panel-kit';
 import { modelConfig } from '@config/common';
-import { cx } from '@config/styles';
 import Res from '@res';
 import i18n from '@i18n';
 import styles from './styles';
-// import _deepClone from 'lodash/cloneDeep';
-import { clockString2Object, playListString2Map } from '../../utils';
+import { decodePlayString, playListString2Map } from '../../utils';
 
-const { playListCode, clock1SwitchCode, clock2SwitchCode, alarm1SettingCode, alarm2SettingCode } =
-  dpCodes;
+const { playListCode, playListStateCode, playListUpCode, playListDownCode, playModeCode } = dpCodes;
 
 interface ModelConfig {
   name?: string;
@@ -26,15 +23,13 @@ interface ModelConfig {
 function Modal(props) {
   const navigation = useNavigation<StackNavigationProp<any, any>>();
 
-  const {
-    [clock1SwitchCode]: clock1Switch,
-    [clock2SwitchCode]: clock2Switch,
-    [playListCode]: playList,
-    [alarm1SettingCode]: alarm1Setting,
-    [alarm2SettingCode]: alarm2Setting,
-  } = useSelector(({ dpState }: any) => dpState);
+  const { [playListStateCode]: playListState, [playListCode]: playList } = useSelector(
+    ({ dpState }: any) => dpState
+  );
 
   const [modeData, setModeData] = useState<ModelConfig[]>([]);
+  const [playId, setPlayId] = useState(-1);
+  const [loop, setLoop] = useState(0);
 
   useEffect(() => {
     const data: ModelConfig[] = playListString2Map(playList);
@@ -45,24 +40,47 @@ function Modal(props) {
         newData.push(_item);
       }
     });
+
     setModeData(newData);
   }, [playList]);
+
+  useEffect(() => {
+    const playData = decodePlayString('04011001');
+    setPlayId(playData.modeId);
+    setLoop(playData.loop);
+  }, [playListState]);
 
   const goEdit = () => {
     navigation.navigate('homeEditModal');
   };
 
   const playButtons = [
-    { name: 'pre', icon: Res.pre, onPress: () => {} },
+    {
+      name: 'pre',
+      icon: Res.pre,
+      onPress: () => {
+        TYSdk.device.putDeviceData({
+          [playListUpCode]: true,
+        });
+      },
+    },
     {
       name: 'next',
       icon: Res.next,
-      onPress: () => {},
+      onPress: () => {
+        TYSdk.device.putDeviceData({
+          [playListDownCode]: true,
+        });
+      },
     },
     {
       name: 'loop',
-      icon: Res.loop,
-      onPress: () => {},
+      icon: loop ? Res.loop1 : Res.loop,
+      onPress: () => {
+        TYSdk.device.putDeviceData({
+          [playModeCode]: loop ? 'Continuous' : 'Loop',
+        });
+      },
     },
     {
       name: 'setting',
@@ -72,6 +90,10 @@ function Modal(props) {
       },
     },
   ];
+
+  const goDetail = item => {
+    navigation.push('modalDetail', { item });
+  };
 
   return (
     <View style={styles.modeView}>
@@ -87,10 +109,19 @@ function Modal(props) {
           ) : null}
           <View style={styles.modalList}>
             {modeData.map(item => {
+              const isPLaying = playId === item.modeId;
               return (
-                <View key={item.modeId} style={styles.modalItemView}>
-                  <Image source={item.icon} style={styles.modalItemImage} />
-                </View>
+                <TouchableOpacity
+                  key={item.modeId}
+                  onPress={() => {
+                    goDetail(item);
+                  }}
+                  activeOpacity={0.85}
+                >
+                  <View style={[styles.modalItemView, isPLaying && styles.modalItemViewBorder]}>
+                    <Image source={item.icon} style={styles.modalItemImage} />
+                  </View>
+                </TouchableOpacity>
               );
             })}
           </View>

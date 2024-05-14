@@ -93,16 +93,7 @@ function Home() {
     },
   ];
 
-  const openPop = () => {
-    setIsVisiblePop(true);
-  };
-
-  const goEditModal = () => {
-    navigation.navigate('modalEdit');
-  };
-
   const goSetting = () => {
-    // navigation.navigate('setting');
     navigation.navigate('dpChart');
   };
 
@@ -159,55 +150,7 @@ function Home() {
         ]}
       />
       <ScrollView style={styles.containerStyle} contentContainerStyle={styles.contentStyle}>
-        {/* <View style={styles.topView}>
-          <View style={styles.flexRow}>
-            <Image source={Res.mode_0} style={styles.productImg} resizeMode="center" />
-            <TYText style={styles.productText} numberOfLines={1}>
-              {name}
-            </TYText>
-          </View>
-          <TouchableOpacity style={styles.settingView} onPress={goSetting}>
-            <TYText style={styles.settingText}>{i18n.getLang('setting')}</TYText>
-          </TouchableOpacity>
-        </View> */}
         <Modal />
-        {/* <View style={styles.modeContainer}>
-          <View style={styles.modeTop}>
-            <TYText style={styles.text17Bold}>{i18n.getLang('my_screen')}</TYText>
-            {modeData.length ? (
-              <TouchableOpacity onPress={goEditModal}>
-                <TYText style={styles.text14}>{i18n.getLang('setting')}</TYText>
-              </TouchableOpacity>
-            ) : null}
-          </View>
-          {modeData.length ? (
-            <View style={styles.modalList}>
-              {modeData.map(item => {
-                return (
-                  <View key={item.modeId} style={styles.modalItemView}>
-                    <Image source={item.icon} style={styles.modalItemImage} />
-                  </View>
-                );
-              })}
-              {modeData.length < 20 ? (
-                <TouchableOpacity onPress={openPop}>
-                  <View style={[styles.addView, { width: cx(138), height: cx(68) }]}>
-                    <Image source={Res.add} style={styles.addImg} />
-                    <TYText style={styles.text14}>{i18n.getLang('add_model')}</TYText>
-                  </View>
-                </TouchableOpacity>
-              ) : null}
-            </View>
-          ) : (
-            <TouchableOpacity onPress={openPop}>
-              <View style={styles.addView}>
-                <Image source={Res.add} style={styles.addImg} />
-                <TYText style={styles.text14}>{i18n.getLang('add_model')}</TYText>
-              </View>
-            </TouchableOpacity>
-          )}
-        </View> */}
-
         <View style={styles.modeContainer}>
           <View style={styles.modeTop}>
             <TYText style={styles.text17Bold}>{i18n.getLang('music_clock')}</TYText>
@@ -245,13 +188,6 @@ function Home() {
           </View>
         </TouchableOpacity>
       </ScrollView>
-      {/* 编辑弹窗 */}
-      {/* <EditPopup
-        isVisiblePop={isVisiblePop}
-        onClose={() => {
-          setIsVisiblePop(false);
-        }}
-      /> */}
       <Alarm />
     </View>
   );
