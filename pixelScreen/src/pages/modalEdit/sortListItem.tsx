@@ -14,7 +14,7 @@ import i18n from '@i18n';
 import { cx } from '@config/styles';
 
 function Row(props) {
-  const { active, data, onDeleteItem } = props;
+  const { active, data, onDeleteItem, onClickItem, showDelete } = props;
 
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
@@ -123,23 +123,27 @@ function Row(props) {
   return (
     <Animated.View style={[styles.rowView, style]}>
       <Animated.View style={[styles.itemView, rowStyle]}>
-        <View style={styles.itemLeft}>
-          <TouchableOpacity activeOpacity={0.85} onPress={onDelete}>
-            <Image source={Res.delete_icon} style={styles.sortImage} />
-          </TouchableOpacity>
-          <Image source={data.icon} style={[styles.image]} />
-        </View>
+        <TouchableOpacity activeOpacity={0.85} onPress={() => onClickItem(data)}>
+          <View style={styles.itemLeft}>
+            {showDelete && (
+              <TouchableOpacity activeOpacity={0.85} onPress={handleDelete}>
+                <Image source={Res.delete_icon} style={styles.sortImage} />
+              </TouchableOpacity>
+            )}
+            <Image source={data.icon} style={[styles.image]} />
+          </View>
+        </TouchableOpacity>
 
         <Image source={Res.sort} style={styles.sortImage} />
       </Animated.View>
-      <View style={styles.operationView}>
+      {/* <View style={styles.operationView}>
         <TouchableOpacity activeOpacity={0.85} style={styles.deleteView} onPress={handleDelete}>
           <TYText style={styles.deleteText}>{i18n.getLang('delete')}</TYText>
         </TouchableOpacity>
         <TouchableOpacity activeOpacity={0.85} style={styles.cancelView} onPress={onCancel}>
           <TYText style={styles.deleteText}>{i18n.getLang('cancel')}</TYText>
         </TouchableOpacity>
-      </View>
+      </View> */}
     </Animated.View>
   );
 }

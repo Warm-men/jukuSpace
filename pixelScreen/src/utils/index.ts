@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable import/prefer-default-export */
-import { Utils } from 'tuya-panel-kit';
+import { Utils, TYSdk } from 'tuya-panel-kit';
+import { commonApi } from '@tuya/tuya-panel-api';
 import moment from 'moment';
 import Res from '@res';
 import { store } from '../models';
@@ -501,4 +502,78 @@ export const clockObject2String = (clock: ClockObject) => {
   const snoozeDuration = toString16(clock.snoozeDuration, 2);
   const snoozeClose = toString16(clock.snoozeClose, 2);
   return `${hour}${minute}${repeatStr}${music}${volume}${effect}${duration}${shake}${animation}${animationId}${snooze}${snoozeDuration}${snoozeClose}`;
+};
+
+export const getSleepLeftTime = (str: string) => {
+  if (str.length !== 10) return 0;
+  const time = parseInt(str.slice(0, 2), 16);
+  return time;
+};
+
+// Data[0] 保留（此位无效，统一置1）
+// Data[1] 伴睡音效（0x0--正常，0x01-渐强，0x2--渐弱）默认02-渐弱；
+// Data[2] 伴睡音乐（0-5范围）0-无音效 1-大海2-森林3-白噪声 4-山谷 5-FM收音机/）
+// Data[3] 伴睡音量（1-10范围）/
+// Data[4] 伴睡持续时长（范围10-120）/
+// Data[5] 是否支持伴睡动画
+// Data[6] 伴睡动画模板号
+// Data[7] 伴睡关闭（0-时间到达自动关闭 1-不自动关闭需要手动关闭）,默认0-时间到达自动关闭
+// APP下发，或者设备长按”伴睡“按键，进入伴睡设置，设置完成后，自动上传给APP；
+
+// export const sceneDataDefault = {
+//   mode: 1,
+//   music: 0,
+//   musicEffect: 0, // （0x0--正常，0x01-渐强，0x2--渐弱）默认02-渐弱；
+//   musicVolume: 5, // 1-10范围
+//   time: 5, // 伴睡时长 10 ～120
+//   enableAnimation: 1, // 0-关闭，1-开启
+//   animation: 0, // 动画序号
+//   manualClose: 0, // 0-自动关闭，1-手动关闭
+// };
+
+export const sleepStr2Object = (str: string) => {
+  if (str.length !== 16) return null;
+  return {
+    mode: parseInt(str.slice(0, 2), 16),
+    music: parseInt(str.slice(2, 4), 16),
+    musicEffect: parseInt(str.slice(4, 6), 16),
+    musicVolume: parseInt(str.slice(6, 8), 16),
+    time: parseInt(str.slice(8, 10), 16),
+    enableAnimation: parseInt(str.slice(10, 12), 16),
+    animation: parseInt(str.slice(12, 14), 16),
+    manualClose: parseInt(str.slice(14, 16), 16),
+  };
+};
+
+export const sleep2String = (sleep: any) => {
+  if (!sleep) return '';
+  const mode = toString16(sleep.mode, 2);
+  const music = toString16(sleep.music, 2);
+  const musicEffect = toString16(sleep.musicEffect, 2);
+  const musicVolume = toString16(sleep.musicVolume, 2);
+  const time = toString16(sleep.time, 2);
+  const enableAnimation = toString16(sleep.enableAnimation, 2);
+  const animation = toString16(sleep.animation, 2);
+  const manualClose = toString16(sleep.manualClose, 2);
+  return `${mode}${music}${musicEffect}${musicVolume}${time}${enableAnimation}${animation}${manualClose}`;
+};
+
+export const getSleepSmallImages = (sound: number, light: number) => {
+  if (!sound && !light) return [null, null];
+  const lightIndexStr = light < 9 ? `0${light}` : `${light + 1}`;
+  if (!sound) {
+    return [Res[`new_light_${lightIndexStr}`], null];
+  }
+  const soundIndexStr = sound < 10 ? `0${sound}` : sound;
+  if (!light) {
+    return [null, Res[`sleep_${soundIndexStr}`]];
+  }
+  return [Res[`new_light_${lightIndexStr}`], Res[`sleep_${soundIndexStr}`]];
+};
+
+export const getSoundOrLightString = (music: number, animation: number) => {
+  if (!music && !animation) return [Strings.getLang('music')];
+  if (!music) return [Strings.getLang('animation')];
+  if (!animation) [Strings.getLang('music')];
+  return [Strings.getLang('animation'), Strings.getLang('music')];
 };

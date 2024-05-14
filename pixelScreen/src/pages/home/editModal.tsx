@@ -1,11 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { View, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
-import { Utils, TYText, TYSdk } from 'tuya-panel-kit';
+import { Utils, TYText, TYSdk, TopBar } from 'tuya-panel-kit';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import _deepClone from 'lodash/cloneDeep';
 import { dpCodes } from '@config';
 import { useSelector } from 'react-redux';
-import { modelConfig } from '@config/common';
-import ModalPop from '@components/modalRender';
+import { commonColor } from '@config/styles';
+import {
+  modelConfig,
+  modalCategoryIds1,
+  modalCategoryIds2,
+  modalCategoryIds3,
+  modalCategoryIds4,
+  modalCategoryIds5,
+} from '@config/common';
 import i18n from '@i18n';
 import { playListString2Map, playListMap2String } from '@utils';
 
@@ -20,8 +29,8 @@ interface ModelConfig {
   isActive?: boolean;
 }
 
-const PopUp = (props: any) => {
-  const { isVisiblePop, onClose } = props;
+const EditModal = (props: any) => {
+  const navigation = useNavigation<StackNavigationProp<any, any>>();
 
   const { [playListCode]: playList } = useSelector(({ dpState }: any) => dpState);
 
@@ -40,7 +49,7 @@ const PopUp = (props: any) => {
       }
     });
     setModeData(newData);
-  }, [playList, isVisiblePop]);
+  }, [playList]);
 
   useEffect(() => {
     const data: ModelConfig[] = playListString2Map(playList);
@@ -78,56 +87,85 @@ const PopUp = (props: any) => {
     TYSdk.device.putDeviceData({
       [playListCode]: _data,
     });
-    onClose();
+  };
+
+  const splitArrayByCategory = (arr: ModelConfig[]) => {
+    // 按照类别分组，将modeData分成不同的数组
+    const data = _deepClone(arr);
+    const category1 = data.filter(item => modalCategoryIds1.includes(item.modeId));
+    const category2 = data.filter(item => modalCategoryIds2.includes(item.modeId));
+    const category3 = data.filter(item => modalCategoryIds3.includes(item.modeId));
+    const category4 = data.filter(item => modalCategoryIds4.includes(item.modeId));
+    const category5 = data.filter(item => modalCategoryIds5.includes(item.modeId));
+    return [category1, category2, category3, category4, category5];
   };
 
   return (
-    <ModalPop
-      visible={isVisiblePop}
-      onClose={onClose}
-      onConfirm={handleConfirm}
-      title={i18n.getLang('add_model_pop_title')}
-      hasBottom={true}
-    >
-      <ScrollView
-        style={styles.listView}
-        contentContainerStyle={{ paddingLeft: cx(22), paddingBottom: cx(16) }}
-      >
-        <View style={styles.popupViewEffect}>
-          {modeData.map(item => {
-            return (
-              <View key={item.modeId} style={styles.effectItem}>
-                <TouchableOpacity
-                  style={[
-                    styles.effectItemEffect,
-                    { borderColor: item.isActive ? '#fff' : 'transparent' },
-                  ]}
-                  activeOpacity={0.65}
-                  onPress={() => {
-                    handleSelect(item);
-                  }}
-                >
-                  <Image source={item.icon} style={styles.effectImage} />
-                </TouchableOpacity>
-                <TYText align="center" style={styles.text1}>
-                  {item.name}
-                </TYText>
+    <View style={{ flex: 1 }}>
+      <TopBar
+        color={commonColor.mainText}
+        title={i18n.getLang('add_screen')}
+        titleStyle={{ color: commonColor.mainText }}
+        background="transparent"
+        onBack={() => {
+          navigation.goBack();
+        }}
+      />
+      <ScrollView style={styles.listView} contentContainerStyle={styles.contentContainerStyle}>
+        {splitArrayByCategory(modeData).map(item => {
+          return (
+            <View key={item[0].modeId}>
+              <TYText style={styles.title}>{i18n.getLang('modal_0')}</TYText>
+              <View style={styles.popupViewEffect}>
+                {item.map(modal => {
+                  return (
+                    <View key={modal.modeId} style={styles.effectItem}>
+                      <TouchableOpacity
+                        style={[
+                          styles.effectItemEffect,
+                          { borderColor: modal.isActive ? '#fff' : 'transparent' },
+                        ]}
+                        activeOpacity={0.65}
+                        onPress={() => {
+                          handleSelect(modal);
+                        }}
+                      >
+                        <Image source={modal.icon} style={styles.effectImage} />
+                      </TouchableOpacity>
+                      {/* <TYText align="center" style={styles.text1}>
+                    {item.name}
+                  </TYText> */}
+                    </View>
+                  );
+                })}
               </View>
-            );
-          })}
-        </View>
+            </View>
+          );
+        })}
       </ScrollView>
-    </ModalPop>
+      <View style={styles.saveView}>
+        <TouchableOpacity onPress={handleConfirm} activeOpacity={0.85} style={styles.saveClick}>
+          <TYText style={styles.saveText}>{i18n.getLang('save')}</TYText>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 };
 
-export default PopUp;
+export default EditModal;
 
 const styles = StyleSheet.create({
-  text1: {
-    fontSize: cx(14),
-    color: '#C5C5C5',
-    lineHeight: cx(24),
+  title: {
+    fontSize: cx(16),
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+    marginTop: cx(12),
+    marginBottom: cx(14),
+  },
+  contentContainerStyle: {
+    paddingTop: cx(16),
+    paddingBottom: cx(100),
+    paddingLeft: cx(20),
   },
   popupViewEffect: {
     width: cx(375),
@@ -136,12 +174,11 @@ const styles = StyleSheet.create({
   },
   listView: {
     width: cx(372),
-    marginBottom: cx(16),
   },
   effectItem: {
     width: cx(154),
     marginRight: cx(18),
-    marginTop: cx(12),
+    marginBottom: cx(20),
   },
   effectItemEffect: {
     borderWidth: cx(3),
@@ -154,5 +191,28 @@ const styles = StyleSheet.create({
     width: cx(152),
     height: cx(77),
     borderRadius: cx(8),
+    borderWidth: cx(2),
+    borderColor: '#21202C',
+  },
+  saveView: {
+    width: cx(375),
+    height: cx(98),
+    backgroundColor: '#21202C',
+    alignItems: 'center',
+    position: 'absolute',
+    bottom: 0,
+  },
+  saveClick: {
+    marginTop: cx(16),
+    width: cx(343),
+    height: cx(42),
+    borderRadius: cx(21),
+    backgroundColor: '#6051FA',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  saveText: {
+    fontSize: cx(16),
+    color: '#FFFFFF',
   },
 });

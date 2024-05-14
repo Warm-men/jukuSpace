@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { TopBar, TYSdk, TYText } from 'tuya-panel-kit';
+import { TopBar, TYSdk, TYText, UnitText } from 'tuya-panel-kit';
 import { useSelector } from 'react-redux';
 import _deepClone from 'lodash/cloneDeep';
 import { commonStyles, cx, commonColor } from '@config/styles';
@@ -15,6 +15,8 @@ import EditPopup from './editModal';
 import Alarm from './alarm';
 import styles from './styles';
 import { clockString2Object, playListString2Map } from '../../utils';
+import Scene from './scene';
+import Modal from './modal';
 
 interface ClockObject {
   hour: number;
@@ -100,7 +102,8 @@ function Home() {
   };
 
   const goSetting = () => {
-    navigation.navigate('setting');
+    // navigation.navigate('setting');
+    navigation.navigate('dpChart');
   };
 
   const goClockDetail = clockIndex => {
@@ -141,6 +144,7 @@ function Home() {
     <View style={commonStyles.flexOne}>
       <TopBar
         color={commonColor.mainText}
+        title={name}
         titleStyle={{ color: commonColor.mainText }}
         background="transparent"
         onBack={() => TYSdk.native.back()}
@@ -155,7 +159,7 @@ function Home() {
         ]}
       />
       <ScrollView style={styles.containerStyle} contentContainerStyle={styles.contentStyle}>
-        <View style={styles.topView}>
+        {/* <View style={styles.topView}>
           <View style={styles.flexRow}>
             <Image source={Res.mode_0} style={styles.productImg} resizeMode="center" />
             <TYText style={styles.productText} numberOfLines={1}>
@@ -165,8 +169,9 @@ function Home() {
           <TouchableOpacity style={styles.settingView} onPress={goSetting}>
             <TYText style={styles.settingText}>{i18n.getLang('setting')}</TYText>
           </TouchableOpacity>
-        </View>
-        <View style={styles.modeContainer}>
+        </View> */}
+        <Modal />
+        {/* <View style={styles.modeContainer}>
           <View style={styles.modeTop}>
             <TYText style={styles.text17Bold}>{i18n.getLang('my_screen')}</TYText>
             {modeData.length ? (
@@ -201,7 +206,7 @@ function Home() {
               </View>
             </TouchableOpacity>
           )}
-        </View>
+        </View> */}
 
         <View style={styles.modeContainer}>
           <View style={styles.modeTop}>
@@ -209,14 +214,44 @@ function Home() {
           </View>
           {renderClock()}
         </View>
+        <Scene />
+
+        <View style={styles.modeContainer}>
+          <View style={styles.modeTop}>
+            <TYText style={styles.text17Bold}>{i18n.getLang('temp_hum')}</TYText>
+          </View>
+          <View style={styles.tempHumView}>
+            <View style={styles.tempHumLeft}>
+              <View style={styles.tempHumLeft}>
+                <TYText style={styles.text24BW}>{78}</TYText>
+                <TYText style={[styles.text12, { marginTop: cx(4), marginLeft: cx(4) }]}>%</TYText>
+              </View>
+              <View style={styles.temHumLine} />
+              <View style={styles.tempHumLeft}>
+                <TYText style={styles.text24BW}>{78}</TYText>
+                <TYText style={[styles.text12, { marginTop: cx(4), marginLeft: cx(4) }]}>%</TYText>
+              </View>
+            </View>
+
+            <TouchableOpacity onPress={goSetting} activeOpacity={0.85}>
+              <Image source={Res.setting} style={styles.temHumImage} />
+            </TouchableOpacity>
+          </View>
+        </View>
+        <TouchableOpacity onPress={goSetting} activeOpacity={0.85}>
+          <View style={styles.settingViewBottom}>
+            <TYText style={styles.text17Bold}>{i18n.getLang('setting')}</TYText>
+            <Image source={Res.arrow_right_bar} style={styles.settingViewBottomImage} />
+          </View>
+        </TouchableOpacity>
       </ScrollView>
       {/* 编辑弹窗 */}
-      <EditPopup
+      {/* <EditPopup
         isVisiblePop={isVisiblePop}
         onClose={() => {
           setIsVisiblePop(false);
         }}
-      />
+      /> */}
       <Alarm />
     </View>
   );

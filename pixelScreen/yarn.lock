@@ -1129,6 +1129,11 @@
   resolved "https://registry.npmmirror.com/@tsconfig/node16/-/node16-1.0.4.tgz#0b92dcc0cc1c81f6f306a381f28e31b1a56536e9"
   integrity sha512-vxhUy4J8lyeyinH7Azl1pdd43GJhZH/tP2weN8TntQblOY+A0XbT8DJk1/oCPuOOyg/Ja757rG0CgHcWC8OfMA==
 
+"@tuya/tuya-panel-api@^1.12.0":
+  version "1.12.0"
+  resolved "https://registry.yarnpkg.com/@tuya/tuya-panel-api/-/tuya-panel-api-1.12.0.tgz#1628ca17e28ad1c37c8510372ad33665663110b0"
+  integrity sha512-bjjBh9JQKZuk98SvGq2urKx3Cf8vznn+kRYP0kvuZxD9z8e40cxIrIIUnYvv8tse4ufQEPRcEPT67yeDDFk88A==
+
 "@tuya/tuya-panel-patches@^0.59.10":
   version "0.59.12"
   resolved "https://registry.npmmirror.com/@tuya/tuya-panel-patches/-/tuya-panel-patches-0.59.12.tgz#3fbf03cffccef337848c7449c8aa0108f2a146cf"

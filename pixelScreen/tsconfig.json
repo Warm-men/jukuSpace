@@ -63,6 +63,12 @@
       "@components/pickerView": [
         "./components/pickerView"
       ],
+      "@components/countdown": [
+        "./components/countdown"
+      ],
+      "@components/f2-chart": [
+        "./components/f2-chart"
+      ],
     }
   },
   "exclude": [

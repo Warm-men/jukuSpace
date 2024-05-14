@@ -18,4 +18,7 @@ export default {
   openPlanCode: 'mic_music_data',
   brightnessControlCode: 'brightness_control',
   hsColorSet: 'hs_color_set',
+  sleepAidStatusCode: 'sleep_aid_status',
+  switchFaSleepCode: 'switch_fasleep',
+  sleepSettingCode: 'sleep_setting',
 };

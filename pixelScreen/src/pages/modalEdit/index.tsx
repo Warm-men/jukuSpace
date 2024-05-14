@@ -51,6 +51,7 @@ function ModalEdit() {
   const [gradientColorType, setGradientColorType] = useState(0);
   const [screenBrightness, setScreenBrightness] = useState(0);
   const [extra, setExtra] = useState<Extra>({}); // 保存额外数据
+  const [showDelete, setShowDelete] = useState<boolean>(false); // 显示删除
 
   const brightnessRef = useRef(null);
   const textRef = useRef(null);
@@ -142,8 +143,21 @@ function ModalEdit() {
     return dataObject;
   };
 
+  const onClickItem = item => {
+    console.log('🚀 ~ file: index.tsx:146 ~ onClickItem ~ item:', item);
+    navigation.push('modalDetail', { item });
+  };
+
   const renderRow = ({ data, active }) => {
-    return <SortListItem data={data} active={active} onDeleteItem={onDeleteItem} />;
+    return (
+      <SortListItem
+        data={data}
+        active={active}
+        onDeleteItem={onDeleteItem}
+        onClickItem={onClickItem}
+        showDelete={showDelete}
+      />
+    );
   };
 
   const onChangeText = text => {
@@ -197,155 +211,156 @@ function ModalEdit() {
   ];
 
   const renderFooter = () => {
-    return (
-      <View style={styles.footerView}>
-        <View style={styles.optionView}>
-          <View
-            style={[styles.optionViewItem, { flexDirection: 'column', alignItems: 'flex-start' }]}
-          >
-            <View style={[commonStyles.flexRowBetween, { width: cx(295), height: cx(42) }]}>
-              <TYText size={cx(14)} color="#C5C5C5">
-                {i18n.getLang('time_text_color')}
-              </TYText>
-              <View style={[commonStyles.flexRowBetween, { width: cx(120) }]}>
-                {colorOptions.map(item => {
-                  return (
-                    <TouchableOpacity key={item.value} activeOpacity={0.85} onPress={item.onClick}>
-                      <View style={[commonStyles.flexRowCenter]}>
-                        <Image
-                          source={item.isActive ? Res.time_color_focus : Res.time_color_blur}
-                          style={styles.selectColor}
-                        />
-                        <TYText size={cx(14)} color={item.isActive ? '#fff' : '#78787A'}>
-                          {item.name}
-                        </TYText>
-                      </View>
-                    </TouchableOpacity>
-                  );
-                })}
-              </View>
-            </View>
+    return null;
+    // return (
+    //   <View style={styles.footerView}>
+    //     <View style={styles.optionView}>
+    //       <View
+    //         style={[styles.optionViewItem, { flexDirection: 'column', alignItems: 'flex-start' }]}
+    //       >
+    //         <View style={[commonStyles.flexRowBetween, { width: cx(295), height: cx(42) }]}>
+    //           <TYText size={cx(14)} color="#C5C5C5">
+    //             {i18n.getLang('time_text_color')}
+    //           </TYText>
+    //           <View style={[commonStyles.flexRowBetween, { width: cx(120) }]}>
+    //             {colorOptions.map(item => {
+    //               return (
+    //                 <TouchableOpacity key={item.value} activeOpacity={0.85} onPress={item.onClick}>
+    //                   <View style={[commonStyles.flexRowCenter]}>
+    //                     <Image
+    //                       source={item.isActive ? Res.time_color_focus : Res.time_color_blur}
+    //                       style={styles.selectColor}
+    //                     />
+    //                     <TYText size={cx(14)} color={item.isActive ? '#fff' : '#78787A'}>
+    //                       {item.name}
+    //                     </TYText>
+    //                   </View>
+    //                 </TouchableOpacity>
+    //               );
+    //             })}
+    //           </View>
+    //         </View>
 
-            {timeColorType === '1' && (
-              <View style={[commonStyles.flexRowBetween, styles.colorView]}>
-                {gradientColors1.map(item => {
-                  const isActive = item.value === gradientColorType;
-                  return (
-                    <TouchableOpacity
-                      activeOpacity={0.85}
-                      key={item.value}
-                      onPress={() => {
-                        setGradientColorType(item.value);
-                      }}
-                      style={[
-                        styles.gradientView,
-                        {
-                          borderWidth: isActive ? cx(2) : 0,
-                          borderColor: isActive ? '#fff' : '#21202C',
-                        },
-                      ]}
-                    >
-                      <View style={[{ backgroundColor: item.color }, styles.gradientImage]} />
-                    </TouchableOpacity>
-                  );
-                })}
-              </View>
-            )}
+    //         {timeColorType === '1' && (
+    //           <View style={[commonStyles.flexRowBetween, styles.colorView]}>
+    //             {gradientColors1.map(item => {
+    //               const isActive = item.value === gradientColorType;
+    //               return (
+    //                 <TouchableOpacity
+    //                   activeOpacity={0.85}
+    //                   key={item.value}
+    //                   onPress={() => {
+    //                     setGradientColorType(item.value);
+    //                   }}
+    //                   style={[
+    //                     styles.gradientView,
+    //                     {
+    //                       borderWidth: isActive ? cx(2) : 0,
+    //                       borderColor: isActive ? '#fff' : '#21202C',
+    //                     },
+    //                   ]}
+    //                 >
+    //                   <View style={[{ backgroundColor: item.color }, styles.gradientImage]} />
+    //                 </TouchableOpacity>
+    //               );
+    //             })}
+    //           </View>
+    //         )}
 
-            {timeColorType === '2' && (
-              <View style={[commonStyles.flexRowBetween, { width: cx(295) }]}>
-                {gradientColors2.map(item => {
-                  const isActive = item.value === gradientColorType;
-                  return (
-                    <TouchableOpacity
-                      activeOpacity={0.85}
-                      key={item.value}
-                      onPress={() => {
-                        setGradientColorType(item.value);
-                      }}
-                      style={[
-                        styles.gradientView,
-                        {
-                          borderWidth: isActive ? cx(2) : 0,
-                          borderColor: isActive ? '#fff' : '#21202C',
-                        },
-                      ]}
-                    >
-                      <Image source={item.image} style={styles.gradientImage} />
-                    </TouchableOpacity>
-                  );
-                })}
-              </View>
-            )}
-          </View>
-        </View>
+    //         {timeColorType === '2' && (
+    //           <View style={[commonStyles.flexRowBetween, { width: cx(295) }]}>
+    //             {gradientColors2.map(item => {
+    //               const isActive = item.value === gradientColorType;
+    //               return (
+    //                 <TouchableOpacity
+    //                   activeOpacity={0.85}
+    //                   key={item.value}
+    //                   onPress={() => {
+    //                     setGradientColorType(item.value);
+    //                   }}
+    //                   style={[
+    //                     styles.gradientView,
+    //                     {
+    //                       borderWidth: isActive ? cx(2) : 0,
+    //                       borderColor: isActive ? '#fff' : '#21202C',
+    //                     },
+    //                   ]}
+    //                 >
+    //                   <Image source={item.image} style={styles.gradientImage} />
+    //                 </TouchableOpacity>
+    //               );
+    //             })}
+    //           </View>
+    //         )}
+    //       </View>
+    //     </View>
 
-        <View style={styles.optionView}>
-          <View
-            style={[styles.optionViewItem, { flexDirection: 'column', alignItems: 'flex-start' }]}
-          >
-            <View style={[commonStyles.flexRowBetween, { width: cx(295), height: cx(34) }]}>
-              <TYText size={cx(14)} color="#C5C5C5">
-                {i18n.getLang('screen_brightness')}
-              </TYText>
-              <TYText size={cx(14)} color="#78787A" ref={brightnessRef}>
-                {screenBrightness}
-              </TYText>
-            </View>
-            <SliderHorizontal
-              width={cx(295)}
-              value={screenBrightness}
-              onValueChange={(v: number) => {
-                brightnessRef &&
-                  brightnessRef.current &&
-                  brightnessRef.current?.setText(Math.round(v));
-              }}
-              onSlidingComplete={setScreenBrightness}
-            />
-          </View>
-        </View>
+    //     <View style={styles.optionView}>
+    //       <View
+    //         style={[styles.optionViewItem, { flexDirection: 'column', alignItems: 'flex-start' }]}
+    //       >
+    //         <View style={[commonStyles.flexRowBetween, { width: cx(295), height: cx(34) }]}>
+    //           <TYText size={cx(14)} color="#C5C5C5">
+    //             {i18n.getLang('screen_brightness')}
+    //           </TYText>
+    //           <TYText size={cx(14)} color="#78787A" ref={brightnessRef}>
+    //             {screenBrightness}
+    //           </TYText>
+    //         </View>
+    //         <SliderHorizontal
+    //           width={cx(295)}
+    //           value={screenBrightness}
+    //           onValueChange={(v: number) => {
+    //             brightnessRef &&
+    //               brightnessRef.current &&
+    //               brightnessRef.current?.setText(Math.round(v));
+    //           }}
+    //           onSlidingComplete={setScreenBrightness}
+    //         />
+    //       </View>
+    //     </View>
 
-        <View style={styles.repeatView}>
-          <TYText size={cx(16)} color="rgba(255, 255, 255, 0.75)">
-            {i18n.getLang('screen_repeat_time')}
-          </TYText>
-          <View style={styles.timeView}>
-            {repeatTimeData.map((item, index) => {
-              const isActive = item === repeatTime;
-              return (
-                <TouchableOpacity
-                  key={item}
-                  activeOpacity={0.85}
-                  style={[styles.timeItem, { borderColor: isActive ? '#fff' : '#21202C' }]}
-                  onPress={() => {
-                    onSetRepeat(item);
-                  }}
-                >
-                  <TYText size={cx(14)} color={isActive ? '#fff' : '#747476'}>
-                    {item}
-                  </TYText>
-                </TouchableOpacity>
-              );
-            })}
-            <TouchableOpacity
-              activeOpacity={0.85}
-              style={[styles.timeItem, { borderColor: isCustomer ? '#fff' : '#21202C' }]}
-            >
-              <TextInput
-                value={isCustomer ? `${repeatTime}` : ''}
-                keyboardType="numeric"
-                placeholder={i18n.getLang('custom')}
-                placeholderTextColor="#747476"
-                onChangeText={onChangeText}
-                onBlur={onBlur}
-                style={styles.textInput}
-                ref={textRef}
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
-    );
+    //     <View style={styles.repeatView}>
+    //       <TYText size={cx(16)} color="rgba(255, 255, 255, 0.75)">
+    //         {i18n.getLang('screen_repeat_time')}
+    //       </TYText>
+    //       <View style={styles.timeView}>
+    //         {repeatTimeData.map((item, index) => {
+    //           const isActive = item === repeatTime;
+    //           return (
+    //             <TouchableOpacity
+    //               key={item}
+    //               activeOpacity={0.85}
+    //               style={[styles.timeItem, { borderColor: isActive ? '#fff' : '#21202C' }]}
+    //               onPress={() => {
+    //                 onSetRepeat(item);
+    //               }}
+    //             >
+    //               <TYText size={cx(14)} color={isActive ? '#fff' : '#747476'}>
+    //                 {item}
+    //               </TYText>
+    //             </TouchableOpacity>
+    //           );
+    //         })}
+    //         <TouchableOpacity
+    //           activeOpacity={0.85}
+    //           style={[styles.timeItem, { borderColor: isCustomer ? '#fff' : '#21202C' }]}
+    //         >
+    //           <TextInput
+    //             value={isCustomer ? `${repeatTime}` : ''}
+    //             keyboardType="numeric"
+    //             placeholder={i18n.getLang('custom')}
+    //             placeholderTextColor="#747476"
+    //             onChangeText={onChangeText}
+    //             onBlur={onBlur}
+    //             style={styles.textInput}
+    //             ref={textRef}
+    //           />
+    //         </TouchableOpacity>
+    //       </View>
+    //     </View>
+    //   </View>
+    // );
   };
 
   const renderHeader = () => {
@@ -354,6 +369,11 @@ function ModalEdit() {
         <TYText size={cx(16)} color="rgba(255, 255, 255, 0.75)">
           {i18n.getLang('screen_sort')}
         </TYText>
+        <TouchableOpacity onPress={() => setShowDelete(!showDelete)} activeOpacity={0.85}>
+          <TYText size={cx(16)} color="rgba(255, 255, 255, 0.75)">
+            {showDelete ? i18n.getLang('choose') : i18n.getLang('delete')}
+          </TYText>
+        </TouchableOpacity>
       </View>
     );
   };
@@ -433,6 +453,8 @@ const styles = StyleSheet.create({
   headerView: {
     marginTop: cx(20),
     marginBottom: cx(8),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   footerView: {
     marginTop: cx(24),

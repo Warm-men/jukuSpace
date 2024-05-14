@@ -21,6 +21,12 @@ interface ModelConfig {
   };
 }
 
+export const modalCategoryIds1 = [11, 12, 13, 14, 15, 16, 17];
+export const modalCategoryIds2 = [21, 22, 23, 24, 25, 26];
+export const modalCategoryIds3 = [41, 42, 43, 44];
+export const modalCategoryIds4 = [61, 62];
+export const modalCategoryIds5 = [81, 82, 83, 84];
+
 // Data[0]第1个列表序号要显示的模板编号，对应的模板参数；
 // Data[1] 背景色：黑底，对比色，5纯色；
 // Data[2] 边框：无，彩条1，彩条2，彩条3；
@@ -225,3 +231,14 @@ export const gradientColors2 = [
     value: 11,
   },
 ];
+
+export const sceneDataDefault = {
+  mode: 1,
+  music: 0,
+  musicEffect: 0, // （0x0--正常，0x01-渐强，0x2--渐弱）默认02-渐弱；
+  musicVolume: 5, // 1-10范围
+  time: 5, // 伴睡时长 10 ～120
+  enableAnimation: 1, // 0-关闭，1-开启
+  animation: 0, // 动画序号
+  manualClose: 0, // 0-自动关闭，1-手动关闭
+};
