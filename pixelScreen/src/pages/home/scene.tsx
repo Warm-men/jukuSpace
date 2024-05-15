@@ -111,7 +111,9 @@ function Scene() {
   return (
     <View style={styles.sceneView}>
       <View style={{ marginBottom: cx(12) }}>
-        <TYText style={[styles.blackText, styles.margin2HText, styles.marginBText]}>场景</TYText>
+        <TYText style={[styles.blackText, styles.margin2HText, styles.marginBText]}>
+          {i18n.getLang('scene')}
+        </TYText>
       </View>
       <TouchableOpacity
         onPress={onPressItem}
@@ -129,7 +131,9 @@ function Scene() {
           <View style={styles.row}>
             {renderImages()}
             <View style={[styles.itemMarginLText, { width: cx(150) }]}>
-              <TYText style={[styles.item14Text, { color: textColor }]}>伴睡</TYText>
+              <TYText style={[styles.item14Text, { color: textColor }]}>
+                {i18n.getLang('asleep')}
+              </TYText>
               <TYText
                 style={[styles.item12Text, { color: textColor, width: cx(150) }]}
                 numberOfLines={2}
@@ -139,16 +143,14 @@ function Scene() {
             </View>
           </View>
           <PlayButton
-            // onPress={toggleWorking}
-            // value={getLeftTime()}
-            // autoClose={sceneItem.autoClose}
-            // status={switchFaSleepCode}
-            // max={sceneItem.time}
             onPress={toggleWorking}
-            value={0}
-            autoClose={true}
-            status={false}
-            max={120}
+            value={getLeftTime()}
+            autoClose={!sceneItem.manualClose}
+            max={sceneItem.time}
+            // value={0}
+            // autoClose={true}
+            status={switchFaSleep}
+            // max={120}
           />
         </View>
       </TouchableOpacity>
@@ -161,7 +163,6 @@ export default Scene;
 const styles = StyleSheet.create({
   sceneView: {
     marginTop: cx(16),
-    // marginHorizontal: cx(20),
     backgroundColor: '#21202C',
     borderRadius: cx(16),
     paddingTop: cx(20),

@@ -66,11 +66,16 @@ const sleep_16 = require('./sleep_16.png');
 const sort = require('./sort.png');
 const sound_and_light = require('./sound_and_light.png');
 const start = require('./start.png');
+const stopScence = require('./stopScence.png');
 const stopScene = require('./stopScene.png');
 const time_color_blur = require('./time_color_blur.png');
 const time_color_focus = require('./time_color_focus.png');
 const volume = require('./volume.png');
+const clock_animate_0 = require('./clock_animate_0.gif');
+const clock_animate_1 = require('./clock_animate_1.gif');
+const clock_animate_2 = require('./clock_animate_2.gif');
+const clock_animate_3 = require('./clock_animate_3.gif');
 const mode_61 = require('./mode_61.gif');
 const mode_62 = require('./mode_62.gif');
 
-export default { add, add_plug, arrow_right, arrow_right_bar, auto_close_off, auto_close_on, clock_0, clock_1, clock_2, clock_3, clock_4, clock_5, clock_6, clock_7, clock_icon, close, close_1, color_slider_bg, delete_icon, done, gradient_color_0, gradient_color_1, gradient_color_2, gradient_color_3, lamp, loop1, loop, mode_0, mode_11, mode_12, mode_13, mode_14, mode_15, mode_16, mode_17, mode_1, mode_21, mode_22, mode_23, mode_24, mode_25, mode_26, mode_2, mode_3, mode_41, mode_42, mode_43, mode_44, mode_4, mode_81, mode_82, mode_83, mode_84, music_icon, next, pre, setting, sleep_09, sleep_10, sleep_11, sleep_12, sleep_13, sleep_14, sleep_15, sleep_16, sort, sound_and_light, start, stopScene, time_color_blur, time_color_focus, volume, mode_61, mode_62 };
+export default { add, add_plug, arrow_right, arrow_right_bar, auto_close_off, auto_close_on, clock_0, clock_1, clock_2, clock_3, clock_4, clock_5, clock_6, clock_7, clock_icon, close, close_1, color_slider_bg, delete_icon, done, gradient_color_0, gradient_color_1, gradient_color_2, gradient_color_3, lamp, loop1, loop, mode_0, mode_11, mode_12, mode_13, mode_14, mode_15, mode_16, mode_17, mode_1, mode_21, mode_22, mode_23, mode_24, mode_25, mode_26, mode_2, mode_3, mode_41, mode_42, mode_43, mode_44, mode_4, mode_81, mode_82, mode_83, mode_84, music_icon, next, pre, setting, sleep_09, sleep_10, sleep_11, sleep_12, sleep_13, sleep_14, sleep_15, sleep_16, sort, sound_and_light, start, stopScence, stopScene, time_color_blur, time_color_focus, volume, clock_animate_0, clock_animate_1, clock_animate_2, clock_animate_3, mode_61, mode_62 };

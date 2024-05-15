@@ -42,30 +42,30 @@ const musicList: Music[] = [
 ];
 
 const PopUp = (props: any) => {
-  const { isVisiblePop, onClose } = props;
+  const { isVisiblePop, onClose, onConfirm, value } = props;
 
   // const { [playListCode]: playList } = useSelector(({ dpState }: any) => dpState);
 
   // const [modeData, setModeData] = useState<ModelConfig[]>(modelConfig);
 
-  const [selectedAnimate, setSelectedAnimate] = useState<number>(-1);
+  const [selectedAnimate, setSelectedAnimate] = useState<number>(value);
 
   const handleSelect = (item: Music) => {
     setSelectedAnimate(item.id);
   };
 
   const handleConfirm = () => {
-    // const _data = playListMap2String(selectedMode);
-    // TYSdk.device.putDeviceData({
-    //   [playListCode]: _data,
-    // });
+    onConfirm(selectedAnimate);
     onClose();
   };
 
   return (
     <ModalPop
       visible={isVisiblePop}
-      onClose={onClose}
+      onClose={() => {
+        onClose();
+        setSelectedAnimate(value);
+      }}
       popupViewHeight={cx(420)}
       onConfirm={handleConfirm}
       title={i18n.getLang('add_model_pop_title')}

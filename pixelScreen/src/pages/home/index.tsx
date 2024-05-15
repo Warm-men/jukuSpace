@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { TopBar, TYSdk, TYText, UnitText } from 'tuya-panel-kit';
+import { TopBar, TYSdk, TYText } from 'tuya-panel-kit';
 import { useSelector } from 'react-redux';
 import _deepClone from 'lodash/cloneDeep';
 import { commonStyles, cx, commonColor } from '@config/styles';
@@ -10,11 +10,11 @@ import Res from '@res';
 import i18n from '@i18n';
 import SwitchView from '@components/switch';
 import { dpCodes } from '@config';
-import { modelConfig } from '@config/common';
-import EditPopup from './editModal';
+// import { modelConfig } from '@config/common';
+// import EditPopup from './editModal';
 import Alarm from './alarm';
 import styles from './styles';
-import { clockString2Object, playListString2Map } from '../../utils';
+import { clockString2Object } from '../../utils';
 import Scene from './scene';
 import Modal from './modal';
 
@@ -50,25 +50,25 @@ function Home() {
   const {
     [clock1SwitchCode]: clock1Switch,
     [clock2SwitchCode]: clock2Switch,
-    [playListCode]: playList,
+    // [playListCode]: playList,
     [alarm1SettingCode]: alarm1Setting,
     [alarm2SettingCode]: alarm2Setting,
   } = useSelector(({ dpState }: any) => dpState);
 
-  const [isVisiblePop, setIsVisiblePop] = useState(false);
-  const [modeData, setModeData] = useState<ModelConfig[]>([]);
+  // const [isVisiblePop, setIsVisiblePop] = useState(false);
+  // const [modeData, setModeData] = useState<ModelConfig[]>([]);
 
-  useEffect(() => {
-    const data: ModelConfig[] = playListString2Map(playList);
-    const newData: ModelConfig[] = [];
-    data.forEach(item => {
-      const _item = modelConfig.find(i => i.modeId === item.modeId);
-      if (_item) {
-        newData.push(_item);
-      }
-    });
-    setModeData(newData);
-  }, [playList]);
+  // useEffect(() => {
+  //   const data: ModelConfig[] = playListString2Map(playList);
+  //   const newData: ModelConfig[] = [];
+  //   data.forEach(item => {
+  //     const _item = modelConfig.find(i => i.modeId === item.modeId);
+  //     if (_item) {
+  //       newData.push(_item);
+  //     }
+  //   });
+  //   setModeData(newData);
+  // }, [playList]);
 
   const navigation = useNavigation<StackNavigationProp<any, any>>();
 
@@ -94,7 +94,7 @@ function Home() {
   ];
 
   const goSetting = () => {
-    navigation.navigate('dpChart');
+    navigation.navigate('setting');
   };
 
   const goClockDetail = clockIndex => {

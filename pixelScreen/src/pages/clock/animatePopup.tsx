@@ -25,11 +25,12 @@ const PopUp = (props: any) => {
         setValue(_value);
       }}
       onConfirm={handleConfirm}
+      popupViewHeight={cx(372)}
       title={i18n.getLang('set_clock_music')}
     >
       <ScrollView contentContainerStyle={{ paddingBottom: cx(28) }}>
         <View style={styles.musicBox}>
-          {_times(8).map((item: number, index: number) => {
+          {_times(4).map((item: number, index: number) => {
             const isActive = index === value;
             return (
               <View key={item} style={styles.musicItem}>
@@ -45,7 +46,7 @@ const PopUp = (props: any) => {
                     },
                   ]}
                 >
-                  <Image source={Res[`clock_${index}`]} style={styles.musicImage} />
+                  <Image source={Res[`clock_animate_${index}`]} style={styles.musicImage} />
                 </TouchableOpacity>
                 <TYText size={cx(14)} color="#F6F6F6" align="center">
                   {i18n.getLang(`music_${index}`)}
@@ -69,22 +70,21 @@ const styles = StyleSheet.create({
     paddingLeft: cx(16),
   },
   musicItem: {
-    width: cx(100),
+    width: cx(162),
     marginBottom: cx(22),
     borderRadius: cx(8),
     marginRight: cx(16),
   },
   imageView: {
-    width: cx(108),
-    height: cx(108),
-    borderRadius: cx(16),
+    width: cx(162),
+    height: cx(85),
+    // borderRadius: cx(16),
     borderWidth: cx(4),
     borderColor: 'transparent',
+    marginBottom: cx(8),
   },
   musicImage: {
-    width: cx(100),
-    height: cx(100),
-    // borderRadius: cx(8),
-    marginBottom: cx(8),
+    width: cx(154),
+    height: cx(77),
   },
 });

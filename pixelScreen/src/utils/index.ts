@@ -505,7 +505,7 @@ export const clockObject2String = (clock: ClockObject) => {
 };
 
 export const getSleepLeftTime = (str: string) => {
-  if (str.length !== 10) return 0;
+  if (!str || str.length !== 10) return 0;
   const time = parseInt(str.slice(0, 2), 16);
   return time;
 };
@@ -552,7 +552,7 @@ export const sleep2String = (sleep: any) => {
   const musicEffect = toString16(sleep.musicEffect, 2);
   const musicVolume = toString16(sleep.musicVolume, 2);
   const time = toString16(sleep.time, 2);
-  const enableAnimation = toString16(sleep.enableAnimation, 2);
+  const enableAnimation = sleep.animation !== undefined ? '01' : '00';
   const animation = toString16(sleep.animation, 2);
   const manualClose = toString16(sleep.manualClose, 2);
   return `${mode}${music}${musicEffect}${musicVolume}${time}${enableAnimation}${animation}${manualClose}`;

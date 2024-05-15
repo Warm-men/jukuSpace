@@ -111,6 +111,11 @@ export default {
     modal_4: 'Animation',
     choose: 'Please choose',
     temp_hum: 'Temperature and humidity',
+    clock_animation: 'Clock Animation',
+    clock_animation_0: 'Clock Animation1',
+    clock_animation_1: 'Clock Animation2',
+    clock_animation_2: 'Clock Animation3',
+    clock_animation_3: 'Clock Animation4',
   },
   zh: {
     asleep: '伴睡',
@@ -222,5 +227,10 @@ export default {
     modal_4: '动画',
     choose: ' 请选择',
     temp_hum: '温湿度',
+    clock_animation: '闹钟动画',
+    clock_animation_0: '闹钟动画1',
+    clock_animation_1: '闹钟动画2',
+    clock_animation_2: '闹钟动画3',
+    clock_animation_3: '闹钟动画4',
   },
 };

@@ -25,7 +25,10 @@ const PopUp = (props: any) => {
   return (
     <ModalPop
       visible={isVisiblePop}
-      onClose={onClose}
+      onClose={() => {
+        onClose();
+        setRepeat(value);
+      }}
       onConfirm={handleConfirm}
       title={i18n.getLang('set_repeat')}
       popupViewHeight={cx(170)}

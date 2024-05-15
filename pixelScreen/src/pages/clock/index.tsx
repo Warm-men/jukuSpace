@@ -21,6 +21,7 @@ import SliderHorizontal from '@components/sliderHorizontal';
 import DurationTimePopup from './durationTimePopup';
 import RepeatPopup from './repeatPopup';
 import MusicPopup from './musicPopup';
+import AnimatePopup from './animatePopup';
 import styles from './styles';
 
 const { alarm1SettingCode, alarm2SettingCode } = dpCodes;
@@ -98,6 +99,7 @@ function Clock() {
   const [isVisibleRepeatPop, setIsVisibleRepeatPop] = useState(false);
   const [isVisibleDurationPop, setIsVisibleDurationPop] = useState(false);
   const [isVisibleMusicPop, setIsVisibleMusicPop] = useState(false);
+  const [isVisibleAnimatePop, setIsVisibleAnimatePop] = useState(false);
   const [hour, setHour] = useState(getHour());
   const [minute, setMinute] = useState(clockData[clockIndex]?.minute ?? 0);
   const [amPm, setAmPm] = useState(getAmPm());
@@ -109,6 +111,14 @@ function Clock() {
 
   const handleOpenDuration = () => {
     setIsVisibleDurationPop(true);
+  };
+
+  const handleAnimate = () => {
+    setIsVisibleAnimatePop(true);
+  };
+
+  const handleOnCloseAnimate = () => {
+    setIsVisibleAnimatePop(false);
   };
 
   const handleOnCloseRepeat = () => {
@@ -126,6 +136,11 @@ function Clock() {
   const handleOnConfirmMusic = music => {
     setIsVisibleMusicPop(false);
     updateClockDataState('music', music);
+  };
+
+  const handleOnConfirmAnimate = animate => {
+    setIsVisibleAnimatePop(false);
+    updateClockDataState('animationId', animate);
   };
 
   const handleOnConfirmRepeat = repeat => {
@@ -180,6 +195,11 @@ function Clock() {
   const getDurationText = () => {
     const { duration } = clockDataState;
     return `${duration} ${i18n.getLang('minute')}`;
+  };
+
+  const getAnimationText = () => {
+    const { animationId } = clockDataState;
+    return i18n.getLang(`clock_animation_${animationId}`);
   };
 
   const goBack = () => {
@@ -264,6 +284,11 @@ function Clock() {
             onPress={handleOpenDuration}
             text={getDurationText()}
           />
+          <RowItem
+            title={i18n.getLang('clock_animation')}
+            onPress={handleAnimate}
+            text={getAnimationText()}
+          />
         </View>
 
         <View style={styles.optionView}>
@@ -306,6 +331,13 @@ function Clock() {
         onConfirm={handleOnConfirmMusic}
         isVisiblePop={isVisibleMusicPop}
         value={clockDataState.music}
+      />
+
+      <AnimatePopup
+        onClose={handleOnCloseAnimate}
+        onConfirm={handleOnConfirmAnimate}
+        isVisiblePop={isVisibleAnimatePop}
+        value={clockDataState.animationId}
       />
     </View>
   );

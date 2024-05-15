@@ -33,7 +33,7 @@ interface SceneData {
 function Scene() {
   const {
     [sleepAidStatusCode]: sleepAidStatus,
-    [switchFaSleepCode]: switchFaSleep,
+    [switchFaSleepCode]: switchFaSleep, // 伴睡开关
     [sleepSettingCode]: sleepSetting,
   } = useSelector(({ dpState }: any) => dpState);
 
@@ -51,6 +51,7 @@ function Scene() {
   useEffect(() => {
     if (sleepSetting) {
       const _sceneItem = sleepStr2Object(sleepSetting) || sceneDataDefault;
+      console.log('🚀 ~ file: index.tsx:54 ~ useEffect ~ _sceneItem:', _sceneItem);
       setSceneData(_sceneItem);
     }
   }, [sleepSetting, switchFaSleep, sleepAidStatus]);
@@ -61,15 +62,14 @@ function Scene() {
     return +time;
   };
 
-  const save = () => {
-    console.log('save');
-  };
-
   const updateSceneState = (id: string, value: number | string | boolean) => {
-    setSceneData({
+    const _sceneData = {
       ...sceneData,
       [id]: value,
-    });
+    };
+    setSceneData(_sceneData);
+    const dpData = sleep2String(_sceneData);
+    TYSdk.device.putDeviceData({ [sleepSettingCode]: dpData });
   };
 
   const toggleWorking = () => {
@@ -86,6 +86,10 @@ function Scene() {
     TYSdk.device.putDeviceData({ [switchFaSleepCode]: !isWorking });
   };
 
+  const toggleCountdown = () => {
+    updateSceneState('manualClose', !sceneData.manualClose);
+  };
+
   const renderSceneCountDown = () => {
     const { manualClose, time } = sceneData;
     const leftTime = getLeftTime();
@@ -100,8 +104,7 @@ function Scene() {
           backColor="rgba(255,255,255,0.2)"
           foreColor="#fff"
           style={styles.sceneProgressStyle}
-          // value={progressValue}
-          value={90}
+          value={progressValue}
           startDegree={0}
           andDegree={360}
           disabled={true}
@@ -116,7 +119,7 @@ function Scene() {
         <Countdown
           value={sceneData.time}
           onValueChange={(value: number) => {
-            // updateSceneState('continueTime', value);
+            updateSceneState('time', value);
           }}
         />
       );
@@ -138,7 +141,7 @@ function Scene() {
     const soundOrLight = getSoundOrLightString(sceneData.animation, sceneData.music);
     const { manualClose } = sceneData;
     const leftTime = getLeftTime();
-    const hint = manualClose ? `${leftTime}${i18n.getLang('min')}` : i18n.getLang('manual_close');
+    const hint = !manualClose ? `${leftTime}${i18n.getLang('min')}` : i18n.getLang('manual_close');
     if (sceneImages.length > 1) {
       return (
         <View style={styles.renderReadingView}>
@@ -173,9 +176,6 @@ function Scene() {
   };
 
   const countdownImage = sceneData.manualClose ? Res.auto_close_off : Res.auto_close_on;
-  const toggleCountdown = () => {
-    updateSceneState('manualClose', !sceneData.manualClose);
-  };
 
   return (
     <View style={styles.flex1}>
@@ -224,7 +224,6 @@ function Scene() {
             <TouchableOpacity
               activeOpacity={0.8}
               onPress={() => {
-                // this.goSettingScene('lightScene');
                 setShowAnimate(true);
               }}
             >
@@ -239,8 +238,6 @@ function Scene() {
               activeOpacity={0.8}
               onPress={() => {
                 setShowMusic(true);
-
-                // this.goSettingScene('soundScene');
               }}
             >
               <View style={styles.effectViewWrap}>
@@ -278,15 +275,25 @@ function Scene() {
       </ScrollView>
       <AnimateModal
         isVisiblePop={showAnimate}
+        onConfirm={(value: number) => {
+          updateSceneState('animation', value);
+          setShowAnimate(false);
+        }}
         onClose={() => {
           setShowAnimate(false);
         }}
+        value={sceneData.animation}
       />
       <MusicModal
         isVisiblePop={showMusic}
+        onConfirm={(value: number) => {
+          updateSceneState('music', value);
+          setShowMusic(false);
+        }}
         onClose={() => {
           setShowMusic(false);
         }}
+        value={sceneData.music}
       />
     </View>
   );

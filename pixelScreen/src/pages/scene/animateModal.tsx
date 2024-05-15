@@ -1,16 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { View, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
-import { Utils, TYText, TYSdk } from 'tuya-panel-kit';
+import { Utils, TYText } from 'tuya-panel-kit';
 import _deepClone from 'lodash/cloneDeep';
-import { dpCodes } from '@config';
-// import { useSelector } from 'react-redux';
 import ModalPop from '@components/modalRender';
 import i18n from '@i18n';
 import Res from '@res';
-// import { playListString2Map, playListMap2String } from '@utils';
 
 const { convertX: cx } = Utils.RatioUtils;
-// const { playListCode } = dpCodes;
 
 interface AnimateItem {
   name?: string;
@@ -42,30 +38,25 @@ const animateList: AnimateItem[] = [
 ];
 
 const PopUp = (props: any) => {
-  const { isVisiblePop, onClose } = props;
-
-  // const { [playListCode]: playList } = useSelector(({ dpState }: any) => dpState);
-
-  // const [modeData, setModeData] = useState<AnimateItem[]>(modelConfig);
-
-  const [selectedAnimate, setSelectedAnimate] = useState<number>(-1);
+  const { isVisiblePop, onClose, onConfirm, value } = props;
+  const [selectedAnimate, setSelectedAnimate] = useState<number>(value);
 
   const handleSelect = (item: AnimateItem) => {
     setSelectedAnimate(item.id);
   };
 
   const handleConfirm = () => {
-    // const _data = playListMap2String(selectedMode);
-    // TYSdk.device.putDeviceData({
-    //   [playListCode]: _data,
-    // });
+    onConfirm(selectedAnimate);
     onClose();
   };
 
   return (
     <ModalPop
       visible={isVisiblePop}
-      onClose={onClose}
+      onClose={() => {
+        onClose();
+        setSelectedAnimate(value);
+      }}
       popupViewHeight={cx(372)}
       onConfirm={handleConfirm}
       title={i18n.getLang('add_model_pop_title')}
