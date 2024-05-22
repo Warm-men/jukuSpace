@@ -13,12 +13,12 @@ function PlayButton(props) {
         <View>
           <Progress
             foreColor={{
-              '0%': '#1381FB',
-              '100%': '#1381FB',
+              '0%': '#6051FA',
+              '100%': '#6051FA',
             }}
             style={styles.progressStyle}
             needMaxCircle={true}
-            startColor="#1381FB"
+            startColor="#6051FA"
             thumbRadius={0}
             scaleHeight={cx(2)}
             value={value}
@@ -28,7 +28,7 @@ function PlayButton(props) {
             andDegree={360}
             disabled={true}
           />
-          <Image source={Res.stopScence} style={styles.itemIcon} />
+          <Image source={Res.stopScence} style={[styles.itemIcon, { tintColor: '#6051FA' }]} />
         </View>
       </TouchableOpacity>
     );
@@ -36,7 +36,7 @@ function PlayButton(props) {
   const icon = status ? Res.stopScence : Res.start;
   return (
     <TouchableOpacity onPress={onPress} activeOpacity={0.85} style={styles.playView}>
-      <Image source={icon} style={styles.itemIcon1} />
+      <Image source={icon} style={[styles.itemIcon1]} />
     </TouchableOpacity>
   );
 }

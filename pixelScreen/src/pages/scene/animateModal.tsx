@@ -16,23 +16,23 @@ interface AnimateItem {
 
 const animateList: AnimateItem[] = [
   {
-    name: i18n.getLang('animate_0'),
-    icon: Res.mode_11,
+    name: i18n.getLang('sleep_animate_0'),
+    icon: Res.sleep_animate_0,
     id: 0,
   },
   {
-    name: i18n.getLang('animate_1'),
-    icon: Res.mode_12,
+    name: i18n.getLang('sleep_animate_1'),
+    icon: Res.sleep_animate_1,
     id: 1,
   },
   {
-    name: i18n.getLang('animate_2'),
-    icon: Res.mode_13,
+    name: i18n.getLang('sleep_animate_2'),
+    icon: Res.sleep_animate_2,
     id: 2,
   },
   {
-    name: i18n.getLang('animate_3'),
-    icon: Res.mode_14,
+    name: i18n.getLang('sleep_animate_3'),
+    icon: Res.sleep_animate_3,
     id: 3,
   },
 ];

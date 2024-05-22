@@ -13,6 +13,7 @@ import {
   getMinuteData,
   clockString2Object,
   clockObject2String,
+  get24HourData,
 } from '@utils';
 import { cx, commonColor } from '@config/styles';
 import { dpCodes } from '@config';
@@ -24,7 +25,7 @@ import MusicPopup from './musicPopup';
 import AnimatePopup from './animatePopup';
 import styles from './styles';
 
-const { alarm1SettingCode, alarm2SettingCode } = dpCodes;
+const { alarm1SettingCode, alarm2SettingCode, timeModeCode } = dpCodes;
 
 interface ClockObject {
   hour: number;
@@ -35,7 +36,7 @@ interface ClockObject {
   effect: number;
   duration: number;
   shake: number;
-  animation: number;
+  animationSwitch: number;
   animationId: number;
   snooze: number;
   snoozeDuration: number;
@@ -46,12 +47,22 @@ function RowItem(props) {
   const { title, onPress, text } = props;
   return (
     <View style={styles.optionViewItem}>
-      <TYText size={cx(14)} color="#C5C5C5">
+      <TYText
+        size={cx(14)}
+        color="#C5C5C5"
+        style={{ width: cx(150), textAlign: 'left' }}
+        numberOfLines={1}
+      >
         {title}
       </TYText>
       <TouchableOpacity activeOpacity={0.8} onPress={onPress}>
         <View style={styles.clickView}>
-          <TYText size={cx(14)} color="#C5C5C5">
+          <TYText
+            size={cx(14)}
+            color="#C5C5C5"
+            style={{ width: cx(100), textAlign: 'right' }}
+            numberOfLines={1}
+          >
             {text}
           </TYText>
           <Image style={styles.arrowImage} source={Res.arrow_right} />
@@ -62,9 +73,11 @@ function RowItem(props) {
 }
 
 function Clock() {
-  const { [alarm1SettingCode]: alarm1Setting, [alarm2SettingCode]: alarm2Setting } = useSelector(
-    ({ dpState }: any) => dpState
-  );
+  const {
+    [alarm1SettingCode]: alarm1Setting,
+    [alarm2SettingCode]: alarm2Setting,
+    [timeModeCode]: timeMode,
+  } = useSelector(({ dpState }: any) => dpState);
 
   // 在路由中获取参数
   const route = useRoute();
@@ -82,7 +95,10 @@ function Clock() {
 
   const navigation = useNavigation<StackNavigationProp<any, any>>();
 
+  const is24h = timeMode === '24h';
+
   const getAmPm = () => {
+    if (is24h) return 'AM';
     const data = clockData[clockIndex];
     const { hour } = data;
     return hour < 12 ? 'AM' : 'PM';
@@ -165,7 +181,7 @@ function Clock() {
   const handleOnChange = (value: any, type: string) => {
     if (type === 'hour') {
       setHour(value);
-      const _hour = amPm === 'AM' ? value : value + 12;
+      const _hour = is24h || amPm === 'AM' ? value : value + 12;
       updateClockDataState('hour', _hour);
     } else if (type === 'amPm') {
       setAmPm(value);
@@ -246,19 +262,21 @@ function Clock() {
       />
       <ScrollView style={{ flex: 1 }}>
         <View style={styles.pickerView}>
-          <PickerView
-            value={amPm}
-            onChange={value => {
-              handleOnChange(value, 'amPm');
-            }}
-            data={getAmPmData()}
-          />
+          {!is24h && (
+            <PickerView
+              value={amPm}
+              onChange={value => {
+                handleOnChange(value, 'amPm');
+              }}
+              data={getAmPmData()}
+            />
+          )}
           <PickerView
             value={hour}
             onChange={value => {
               handleOnChange(value, 'hour');
             }}
-            data={getHourData()}
+            data={is24h ? get24HourData() : getHourData()}
           />
           <View style={styles.pickerMiddle}>
             <TYText style={styles.pickerText}>:</TYText>

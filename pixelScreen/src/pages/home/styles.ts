@@ -105,6 +105,17 @@ const styles = StyleSheet.create({
     color: commonColor.mainText,
     opacity: 0.75,
   },
+  text14w: {
+    fontSize: cx(14),
+    color: '#fff',
+    marginBottom: cx(4),
+  },
+  text12w: {
+    fontSize: cx(12),
+    color: '#fff',
+    opacity: 0.75,
+    width: cx(120)
+  },
   text16B: {
     fontSize: cx(16),
     color: commonColor.mainColor,
@@ -163,6 +174,9 @@ const styles = StyleSheet.create({
   },
   clockItem: {
     height: cx(54),
+  },
+  clockItemText: {
+    marginLeft: cx(16),
   },
   line: {
     width: cx(287),
@@ -268,6 +282,11 @@ const styles = StyleSheet.create({
   blackText: {
     fontSize: cx(16),
     color: '#fff',
+  },
+  sceneItemViewImg: {
+    width: cx(50),
+    height: cx(50),
+    borderRadius: cx(8),
   },
 });
 

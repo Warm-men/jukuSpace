@@ -248,7 +248,18 @@ export const getHourData = () => {
   const range = Utils.NumberUtils.range(1, 13, 1);
   const timerRange = range.map((item: number) => {
     return {
-      label: `${item}`,
+      label: padStart2(item),
+      value: item,
+    };
+  });
+  return timerRange;
+};
+
+export const get24HourData = () => {
+  const range = Utils.NumberUtils.range(0, 24, 1);
+  const timerRange = range.map((item: number) => {
+    return {
+      label: padStart2(item),
       value: item,
     };
   });
@@ -259,7 +270,7 @@ export const getMinuteData = () => {
   const range = Utils.NumberUtils.range(0, 60, 1);
   const timerRange = range.map((item: number) => {
     return {
-      label: `${item}`,
+      label: padStart2(item),
       value: item,
     };
   });
@@ -423,7 +434,7 @@ const clockDefault = {
   effect: 1,
   duration: 30,
   shake: 0,
-  animation: 0,
+  animationSwitch: 0,
   animationId: 0,
   snooze: 1,
   snoozeDuration: 9,
@@ -460,7 +471,7 @@ export const clockString2Object = (clockStr: string) => {
     effect: parseInt(clockStr.slice(10, 12), 16),
     duration: parseInt(clockStr.slice(12, 14), 16),
     shake: parseInt(clockStr.slice(14, 16), 16),
-    animation: parseInt(clockStr.slice(16, 18), 16),
+    animationSwitch: parseInt(clockStr.slice(16, 18), 16),
     animationId: parseInt(clockStr.slice(18, 20), 16),
     snooze: parseInt(clockStr.slice(20, 22), 16),
     snoozeDuration: parseInt(clockStr.slice(22, 24), 16),
@@ -477,7 +488,7 @@ interface ClockObject {
   effect: number;
   duration: number;
   shake: number;
-  animation: number;
+  animationSwitch: number;
   animationId: number;
   snooze: number;
   snoozeDuration: number;
@@ -491,21 +502,22 @@ export const clockObject2String = (clock: ClockObject) => {
   const minute = toString16(clock.minute, 2);
   const repeat = parseInt(clock.repeat.join(''), 2);
   const repeatStr = toString16(repeat, 2);
+  console.log("🚀 ~ file: index.ts:505 ~ clockObject2String ~ repeatStr:", repeatStr)
   const music = toString16(clock.music, 2);
   const volume = toString16(clock.volume, 2);
   const effect = toString16(clock.effect, 2);
   const duration = toString16(clock.duration, 2);
   const shake = toString16(clock.shake, 2);
-  const animation = toString16(clock.animation, 2);
+  const animationSwitch = toString16(clock.animationSwitch, 2);
   const animationId = toString16(clock.animationId, 2);
   const snooze = toString16(clock.snooze, 2);
   const snoozeDuration = toString16(clock.snoozeDuration, 2);
   const snoozeClose = toString16(clock.snoozeClose, 2);
-  return `${hour}${minute}${repeatStr}${music}${volume}${effect}${duration}${shake}${animation}${animationId}${snooze}${snoozeDuration}${snoozeClose}`;
+  return `${hour}${minute}${repeatStr}${music}${volume}${effect}${duration}${shake}${animationSwitch}${animationId}${snooze}${snoozeDuration}${snoozeClose}`;
 };
 
 export const getSleepLeftTime = (str: string) => {
-  if (!str || str.length !== 10) return 0;
+  if (!str || str.length !== 8) return 0;
   const time = parseInt(str.slice(0, 2), 16);
   return time;
 };
@@ -596,6 +608,6 @@ export const decodePlayString = (str: string) => {
     total: parseInt(str.slice(0, 2), 16),
     current: parseInt(str.slice(2, 4), 16),
     modeId: parseInt(str.slice(4, 6), 16),
-    loop: parseInt(str.slice(6, 8), 16),
+    loop: parseInt(str.slice(6, 8), 16) === 0,
   };
 };

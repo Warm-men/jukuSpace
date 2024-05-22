@@ -9,9 +9,21 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   clickView: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end',
+  },
+  clickTextTitle: {
+    fontSize: cx(14),
+    color: '#C5C5C5',
+    width: cx(100),
+  },
+  clickText: {
+    fontSize: cx(14),
+    color: '#78787A',
+    width: cx(180),
+    textAlign: 'right',
   },
   pickerText: {
     marginLeft: cx(64),

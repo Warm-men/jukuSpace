@@ -14,7 +14,7 @@ import { dpCodes } from '@config';
 // import EditPopup from './editModal';
 import Alarm from './alarm';
 import styles from './styles';
-import { clockString2Object } from '../../utils';
+import { clockString2Object, repeat2Text } from '../../utils';
 import Scene from './scene';
 import Modal from './modal';
 
@@ -34,8 +34,16 @@ interface ClockObject {
   snoozeClose: number;
 }
 
-const { playListCode, clock1SwitchCode, clock2SwitchCode, alarm1SettingCode, alarm2SettingCode } =
-  dpCodes;
+const {
+  tempDataCode,
+  tempCFCode,
+  humDataCode,
+  clock1SwitchCode,
+  clock2SwitchCode,
+  alarm1SettingCode,
+  alarm2SettingCode,
+  timeModeCode,
+} = dpCodes;
 interface ModelConfig {
   name?: string;
   icon?: any;
@@ -50,9 +58,12 @@ function Home() {
   const {
     [clock1SwitchCode]: clock1Switch,
     [clock2SwitchCode]: clock2Switch,
-    // [playListCode]: playList,
+    [tempDataCode]: tempData,
+    [humDataCode]: humData,
+    [tempCFCode]: tempCF,
     [alarm1SettingCode]: alarm1Setting,
     [alarm2SettingCode]: alarm2Setting,
+    [timeModeCode]: timeMode,
   } = useSelector(({ dpState }: any) => dpState);
 
   // const [isVisiblePop, setIsVisiblePop] = useState(false);
@@ -97,22 +108,75 @@ function Home() {
     navigation.navigate('setting');
   };
 
+  const goChart = () => {
+    navigation.navigate('dpChart');
+  };
+
   const goClockDetail = clockIndex => {
     navigation.navigate('clock', { clockIndex });
   };
 
   const getTime = (data: ClockObject) => {
     const { hour, minute } = data;
-    const h = hour > 12 ? hour - 12 : hour;
+    const is24 = timeMode === '24h';
+    const h = is24 ? hour : hour > 12 ? hour - 12 : hour;
     const _hour = h < 10 ? `0${h}` : `${h}`;
     const _minute = minute < 10 ? `0${minute}` : minute;
-    const ampm = hour < 12 ? 'AM' : 'PM';
+    const ampm = is24 ? '' : hour < 12 ? 'AM' : 'PM';
     return `${_hour}:${_minute} ${ampm}`;
+  };
+
+  const getSleepSmallImages = data => {
+    const { animationId, music } = data || {};
+    if (!data || (data.animationId === undefined && data.music === undefined)) return [null, null];
+    if (animationId === undefined) {
+      return [Res[`clock_animate_${music}`], null];
+    }
+    if (music === undefined) {
+      return [null, Res[`clock_${animationId}`]];
+    }
+    return [Res[`clock_animate_${animationId}`], Res[`clock_${music}`]];
+  };
+
+  const renderImages = data => {
+    const images = getSleepSmallImages(data);
+    return images.map((item: any, index: number) => {
+      const is2 = index > 0;
+      if (item === null)
+        return (
+          <View
+            key={item}
+            style={[
+              styles.sceneItemViewImg,
+              {
+                marginLeft: is2 ? -cx(18) : 0,
+                zIndex: is2 ? -1 : 1,
+                marginBottom: is2 ? cx(14) : 0,
+              },
+            ]}
+          />
+        );
+      return (
+        <Image
+          source={item}
+          key={item}
+          style={[
+            styles.sceneItemViewImg,
+            {
+              marginLeft: is2 ? -cx(18) : 0,
+              zIndex: is2 ? -1 : 1,
+              marginBottom: is2 ? cx(14) : 0,
+            },
+          ]}
+        />
+      );
+    });
   };
 
   const renderClock = () => {
     return clockData.map((item, index) => {
       const time = getTime(item.data);
+      const loop = item.data.repeat ? repeat2Text(item.data.repeat, true) : '';
       return (
         <View key={index}>
           <TouchableOpacity
@@ -121,7 +185,15 @@ function Home() {
             }}
           >
             <View style={[styles.flexRowSp, styles.clockItem]}>
-              <TYText style={styles.text14}>{time}</TYText>
+              <View style={styles.flexRow}>
+                {renderImages(item.data)}
+                <View style={styles.clockItemText}>
+                  <TYText style={styles.text14w}>{time}</TYText>
+                  <TYText style={styles.text12w} numberOfLines={1}>
+                    {loop}
+                  </TYText>
+                </View>
+              </View>
               <SwitchView value={item.switch} onValueChange={item.onSwitchChange} />
             </View>
           </TouchableOpacity>
@@ -166,18 +238,20 @@ function Home() {
           <View style={styles.tempHumView}>
             <View style={styles.tempHumLeft}>
               <View style={styles.tempHumLeft}>
-                <TYText style={styles.text24BW}>{78}</TYText>
-                <TYText style={[styles.text12, { marginTop: cx(4), marginLeft: cx(4) }]}>%</TYText>
+                <TYText style={styles.text24BW}>{tempData / 10}</TYText>
+                <TYText style={[styles.text12, { marginTop: cx(4), marginLeft: cx(4) }]}>
+                  {i18n.getDpLang(tempCFCode, tempCF)}
+                </TYText>
               </View>
               <View style={styles.temHumLine} />
               <View style={styles.tempHumLeft}>
-                <TYText style={styles.text24BW}>{78}</TYText>
+                <TYText style={styles.text24BW}>{humData}</TYText>
                 <TYText style={[styles.text12, { marginTop: cx(4), marginLeft: cx(4) }]}>%</TYText>
               </View>
             </View>
 
-            <TouchableOpacity onPress={goSetting} activeOpacity={0.85}>
-              <Image source={Res.setting} style={styles.temHumImage} />
+            <TouchableOpacity onPress={goChart} activeOpacity={0.85}>
+              <Image source={Res.chart} style={styles.temHumImage} />
             </TouchableOpacity>
           </View>
         </View>

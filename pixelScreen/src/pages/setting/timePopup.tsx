@@ -1,18 +1,25 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Platform } from 'react-native';
 import { Utils } from 'tuya-panel-kit';
 import i18n from '@i18n';
-import { getAmPmData, getHourData, getMinuteData } from '@utils';
+import { getAmPmData, getHourData, getMinuteData, get24HourData } from '@utils';
 import ModalPop from '@components/modalRender';
 import PickerView from '@components/pickerView';
 
 const { convertX: cx } = Utils.RatioUtils;
 
 const PopUp = (props: any) => {
-  const { isVisiblePop, onClose, onConfirm, value: _value } = props;
+  const { isVisiblePop, onClose, onConfirm, value: _value, is24 } = props;
+
   const [hour, setHour] = useState(_value.hour || 0);
   const [minute, setMinute] = useState(_value.minute || 0);
   const [amPm, setAmPm] = useState(_value.amPm || 'AM');
+
+  useEffect(() => {
+    setHour(_value.hour);
+    setMinute(_value.minute);
+    setAmPm(_value.amPm);
+  }, [_value.hour, _value.minute, _value.amPm]);
 
   const handleOnChange = (value: any, type: string) => {
     if (type === 'hour') {
@@ -43,7 +50,7 @@ const PopUp = (props: any) => {
           onChange={value => {
             handleOnChange(value, 'hour');
           }}
-          data={getHourData()}
+          data={is24 ? get24HourData() : getHourData()}
         />
         <View style={styles.pickerMiddle} />
         <PickerView
@@ -53,13 +60,15 @@ const PopUp = (props: any) => {
           }}
           data={getMinuteData()}
         />
-        <PickerView
-          value={amPm}
-          onChange={value => {
-            handleOnChange(value, 'amPm');
-          }}
-          data={getAmPmData()}
-        />
+        {!is24 && (
+          <PickerView
+            value={amPm}
+            onChange={value => {
+              handleOnChange(value, 'amPm');
+            }}
+            data={getAmPmData()}
+          />
+        )}
       </View>
     </ModalPop>
   );

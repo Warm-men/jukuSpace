@@ -187,7 +187,12 @@ function Scene() {
         leftActions={[
           {
             children: (
-              <TouchableOpacity style={styles.backView} onPress={navigation.goBack}>
+              <TouchableOpacity
+                style={styles.backView}
+                onPress={() => {
+                  navigation.goBack();
+                }}
+              >
                 <Image source={Res.close_1} style={styles.backImage} />
               </TouchableOpacity>
             ),

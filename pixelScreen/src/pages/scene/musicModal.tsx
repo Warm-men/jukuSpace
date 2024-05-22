@@ -20,23 +20,33 @@ interface Music {
 
 const musicList: Music[] = [
   {
-    name: i18n.getLang('animate_0'),
+    name: i18n.getLang('scene_music_0'),
     icon: Res.sleep_09,
     id: 0,
   },
   {
-    name: i18n.getLang('animate_1'),
+    name: i18n.getLang('scene_music_1'),
     icon: Res.sleep_10,
     id: 1,
   },
   {
-    name: i18n.getLang('animate_2'),
+    name: i18n.getLang('scene_music_2'),
     icon: Res.sleep_11,
     id: 2,
   },
   {
-    name: i18n.getLang('animate_3'),
+    name: i18n.getLang('scene_music_3'),
     icon: Res.sleep_12,
+    id: 3,
+  },
+  {
+    name: i18n.getLang('scene_music_4'),
+    icon: Res.sleep_13,
+    id: 3,
+  },
+  {
+    name: i18n.getLang('scene_music_4'),
+    icon: Res.sleep_14,
     id: 3,
   },
 ];

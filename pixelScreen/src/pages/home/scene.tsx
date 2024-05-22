@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, TouchableOpacity, Modal, Image, StyleSheet } from 'react-native';
-import { TYText, TYSdk } from 'tuya-panel-kit';
+import { TYText, TYSdk, GlobalToast } from 'tuya-panel-kit';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { commonColor, cx } from '@config/styles';
@@ -36,6 +36,17 @@ function Scene() {
   }, [sleepSetting, switchFaSleep, sleepAidStatus]);
 
   const toggleWorking = () => {
+    if (!sceneItem.manualClose && sceneItem.time === 0) {
+      return GlobalToast.show({
+        text: i18n.getLang('set_time_hint'),
+        showIcon: false,
+        contentStyle: {},
+        onFinish: () => {
+          console.log('Toast结束');
+          GlobalToast.hide();
+        },
+      });
+    }
     const sleepDpStr = sleep2String(sceneItem);
     const data = {};
     if (!_isEqual(sleepSetting, sleepDpStr)) {
@@ -62,18 +73,25 @@ function Scene() {
   };
 
   const onPressItem = () => {
-    // this.props.navigator.push({
-    //   id: 'scene',
-    //   sceneData: item,
-    //   index,
-    // });
     navigation.navigate('scene');
   };
-  const textColor = switchFaSleep ? '#0379D1' : '#fff';
+  const textColor = switchFaSleep ? commonColor.mainColor : '#fff';
+
+  const getSmallImages = () => {
+    const { animation, music } = sceneItem || {};
+    if (!sceneItem || (sceneItem.animation === undefined && sceneItem.music === undefined))
+      return [null, null];
+    if (animation === undefined) {
+      return [Res[`sleep_animate_${music}`], null];
+    }
+    if (music === undefined) {
+      return [null, Res[`clock_${animation}`]];
+    }
+    return [Res[`sleep_animate_${animation}`], Res[`clock_${music}`]];
+  };
 
   const renderImages = () => {
-    // const images = getSleepSmallImages(sceneItem.animation, sceneItem.music);
-    const images = [Res.sleep_09, Res.sleep_10];
+    const images = getSmallImages();
 
     return images.map((item: any, index: number) => {
       const is2 = index > 0;
@@ -82,7 +100,7 @@ function Scene() {
           <View
             key={item}
             style={[
-              styles.sceneItemViewImgs,
+              styles.sceneItemViewImg,
               {
                 marginLeft: is2 ? -cx(18) : 0,
                 zIndex: is2 ? -1 : 1,
@@ -96,7 +114,7 @@ function Scene() {
           source={item}
           key={item}
           style={[
-            styles.sceneItemViewImgs,
+            styles.sceneItemViewImg,
             {
               marginLeft: is2 ? -cx(18) : 0,
               zIndex: is2 ? -1 : 1,
@@ -121,9 +139,9 @@ function Scene() {
         style={[
           styles.sceneItemView,
           {
-            backgroundColor: switchFaSleep ? 'rgba(3,121,209, 0.05)' : 'transparent',
+            backgroundColor: switchFaSleep ? 'rgba(96, 81, 250, 0.15)' : 'transparent',
             borderLeftWidth: cx(4),
-            borderLeftColor: switchFaSleep ? '#0379D1' : 'transparent',
+            borderLeftColor: switchFaSleep ? commonColor.mainColor : 'transparent',
           },
         ]}
       >
@@ -146,7 +164,7 @@ function Scene() {
             onPress={toggleWorking}
             value={getLeftTime()}
             autoClose={!sceneItem.manualClose}
-            max={sceneItem.time}
+            max={sceneItem.time || 120}
             // value={0}
             // autoClose={true}
             status={switchFaSleep}
@@ -184,9 +202,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: cx(20),
     marginBottom: cx(0),
   },
-  sceneItemViewImgs: {
-    width: cx(48),
-    height: cx(48),
+  sceneItemViewImg: {
+    width: cx(50),
+    height: cx(50),
+    borderRadius: cx(8),
   },
   row: {
     flexDirection: 'row',
@@ -201,6 +220,7 @@ const styles = StyleSheet.create({
   item14Text: {
     fontSize: cx(14),
     color: '#FFF',
+    marginBottom: cx(4),
   },
   item12Text: {
     fontSize: cx(12),

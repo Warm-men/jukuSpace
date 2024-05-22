@@ -25,4 +25,11 @@ export default {
   playListUpCode: 'play_list_up',
   playListDownCode: 'play_list_down',
   playModeCode: 'play_mode',
+  timeModeCode: 'time_mode',
+  backlightEnumCode: 'backlight_enum',
+  tempCFCode: 'temp_cf',
+  tempDataCode: 'temp_data',
+  humDataCode: 'hum_data',
+  getDisplayTemplateCode: 'get_display_template',
+  uploadAndDownloadTemplate: 'updown_load_n_template',
 };

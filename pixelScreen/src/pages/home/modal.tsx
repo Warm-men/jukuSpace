@@ -45,7 +45,7 @@ function Modal(props) {
   }, [playList]);
 
   useEffect(() => {
-    const playData = decodePlayString('04011001');
+    const playData = decodePlayString(playListState);
     setPlayId(playData.modeId);
     setLoop(playData.loop);
   }, [playListState]);
@@ -75,7 +75,7 @@ function Modal(props) {
     },
     {
       name: 'loop',
-      icon: loop ? Res.loop1 : Res.loop,
+      icon: loop ? Res.loop : Res.loop1,
       onPress: () => {
         TYSdk.device.putDeviceData({
           [playModeCode]: loop ? 'Continuous' : 'Loop',
