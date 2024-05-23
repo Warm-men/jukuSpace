@@ -1,6 +1,5 @@
-import { StyleSheet, Platform } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { Utils } from 'tuya-panel-kit';
-import { commonColor } from '@config/styles';
 
 export const { convertX: cx, convertY: cy } = Utils.RatioUtils;
 
@@ -10,8 +9,11 @@ const styles = StyleSheet.create({
   },
   tabView: {
     paddingHorizontal: cx(0),
-  }
-  
+  },
+  tabsStyle: {
+    borderBottomColor: '#2C2C2F',
+    borderBottomWidth: 1,
+  },
 });
 
 export default styles;

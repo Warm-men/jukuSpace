@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { TopBar, Tab } from 'tuya-panel-kit';
+import { TopBar, Tabs } from 'tuya-panel-kit';
 import i18n from '@i18n';
 import { cx, commonColor } from '@config/styles';
 import styles from './styles';
@@ -10,22 +10,17 @@ import WorkRecord from './workRecord';
 
 function DpChart() {
   const navigation = useNavigation<StackNavigationProp<any, any>>();
-  const tabPaneArr = [i18n.getLang('temperature'), i18n.getLang('humidity')];
-  const [tab, setTab] = useState(tabPaneArr[0]);
+  const tabPaneArr = [
+    { value: 'temperature', label: i18n.getLang('temperature') },
+    { value: 'humidity', label: i18n.getLang('humidity') },
+  ];
+  const [tab, setTab] = useState('temperature');
 
   const dpIds = ['106', '102'];
 
-  const tabPanes = tabPaneArr.map((item, index) => (
-    <Tab.TabPane key={item} tab={item}>
-      <View>
-        <WorkRecord dpId={dpIds[index]} />
-      </View>
-    </Tab.TabPane>
-  ));
-
   const themeColor = {
-    [tabPaneArr[0]]: '#6051FA',
-    [tabPaneArr[1]]: '#F4B900',
+    temperature: '#6051FA',
+    humidity: '#F4B900',
   };
 
   return (
@@ -39,37 +34,27 @@ function DpChart() {
           navigation.goBack();
         }}
       />
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingTop: cx(24) }}>
-        <View style={styles.tabView}>
-          <Tab
-            activeKey={tab}
-            animated={true}
-            onChange={value => setTab(`${value}`)}
-            tabBarBackgroundColor="transparent"
-            tabBarStyle={{
-              borderBottomColor: '#78787A',
-              borderBottomWidth: StyleSheet.hairlineWidth,
-              marginLeft: cx(20),
-              width: cx(335),
-            }}
-            tabTextStyle={{ fontSize: cx(16), color: '#2C2C2F' }}
-            tabStyle={{
-              height: cx(40),
-            }}
-            tabActiveTextStyle={{
-              color: themeColor[tab],
-            }}
-            tabBarUnderlineStyle={{
-              backgroundColor: themeColor[tab],
-              height: cx(3),
-              width: cx(24),
-              marginLeft: cx(72),
-              borderRadius: cx(1.5),
-            }}
-          >
-            {tabPanes}
-          </Tab>
-        </View>
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ paddingTop: cx(24), paddingHorizontal: cx(8) }}
+      >
+        <Tabs
+          activeKey={tab}
+          dataSource={tabPaneArr}
+          swipeable={true}
+          onChange={tab => setTab(tab.value)}
+          style={styles.tabsStyle}
+          maxItem={2}
+          background="#0D0C10"
+          activeColor={themeColor[tab]}
+        >
+          <Tabs.TabPanel>
+            <WorkRecord dpId={dpIds[0]} />
+          </Tabs.TabPanel>
+          <Tabs.TabPanel>
+            <WorkRecord dpId={dpIds[1]} />
+          </Tabs.TabPanel>
+        </Tabs>
       </ScrollView>
     </View>
   );

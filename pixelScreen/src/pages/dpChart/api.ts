@@ -21,7 +21,11 @@ export const getDayLog = async (dpId: string) => {
       value: res[key] === '#' ? 0 : toFixed(res[key]),
     }));
 
-    return list;
+    const _h = moment().format('HH');
+    // 判断今天的奇偶
+    const isOdd = +_h % 2 === 1;
+    // 超过15条时，只取今天的奇数点
+    return list.length > 16 ? list.filter((_, index) => index % 2 === (isOdd ? 1 : 0)) : list;
   } catch (error) {
     return [];
   }
@@ -105,7 +109,7 @@ export const renderChart = (data: []) => {
   return `
   chart.source(${JSON.stringify(data)}, ${JSON.stringify(getDefs(data))});
   chart.axis('time',  {
-    labelOffset: 15,
+    labelOffset: 10,
     position:'bottom',
     tickLine:{
       length:1,
@@ -126,7 +130,7 @@ export const renderChart = (data: []) => {
     }
   })
   chart.axis('value', {
-    labelOffset: 15,
+    labelOffset: 10,
     position:'left',
     tickLine:{
       length:1,
@@ -208,7 +212,7 @@ export const renderChart2 = (data: []) => {
   return `
   chart.source(${JSON.stringify(data)}, ${JSON.stringify(getDefs(data))});
   chart.axis('time',  {
-    labelOffset: 15,
+    labelOffset: 10,
     position:'bottom',
     tickLine:{
       length:1,
@@ -229,7 +233,7 @@ export const renderChart2 = (data: []) => {
     }
   })
   chart.axis('value', {
-    labelOffset: 15,
+    labelOffset: 10,
     position:'left',
     tickLine:{
       length:1,

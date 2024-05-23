@@ -86,31 +86,31 @@ const WorkRecord: React.FC = (props: MainProps) => {
       <View style={styles.listView}>
         {tabRadio === '0' && (
           <F2Chart
-            width={cx(375)}
-            height={cx(330)}
+            width={cx(360)}
+            height={cx(359)}
             data={chartDayList}
             renderer={dpId === dpIds[0] ? renderChart : renderChart2}
           />
         )}
         {tabRadio === '1' && (
           <F2Chart
-            width={cx(375)}
-            height={cx(330)}
+            width={cx(360)}
+            height={cx(359)}
             data={chartWeekList}
             renderer={dpId === dpIds[0] ? renderChart : renderChart2}
           />
         )}
         {tabRadio === '2' && (
           <F2Chart
-            width={cx(375)}
-            height={cx(330)}
+            width={cx(360)}
+            height={cx(359)}
             data={chartMonthList}
             renderer={dpId === dpIds[0] ? renderChart : renderChart2}
           />
         )}
         {tabRadio === '3' && (
           <F2Chart
-            width={cx(375)}
+            width={cx(360)}
             height={cx(330)}
             data={chartYearList}
             renderer={dpId === dpIds[0] ? renderChart : renderChart2}
