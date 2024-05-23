@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import { Utils, TabBar } from 'tuya-panel-kit';
 import i18n from '@i18n';
 import F2Chart from '@components/f2-chart';
-import { getDayLog, getWeekLog, getMonthLog, getYearLog, renderChart } from './api';
+import { getDayLog, getWeekLog, getMonthLog, getYearLog, renderChart, renderChart2 } from './api';
 
 const { convertX: cx } = Utils.RatioUtils;
 
@@ -11,7 +11,7 @@ interface MainProps {
   dpId: string;
 }
 
-const dpIds = ['111', '222'];
+const dpIds = ['106', '102'];
 
 const themeColor = {
   [dpIds[0]]: '#6051FA',
@@ -22,7 +22,10 @@ const WorkRecord: React.FC = (props: MainProps) => {
   const { dpId } = props;
   const [tabRadio, setTabRadio] = useState('0');
 
-  const [chartList, setChartList] = useState([]);
+  const [chartDayList, setChartDayList] = useState<any[]>([]);
+  const [chartWeekList, setChartWeekList] = useState<any[]>([]);
+  const [chartMonthList, setChartMonthList] = useState<any[]>([]);
+  const [chartYearList, setChartYearList] = useState<any[]>([]);
 
   useEffect(() => {
     updateData();
@@ -45,11 +48,13 @@ const WorkRecord: React.FC = (props: MainProps) => {
   });
 
   const updateData = async () => {
-    const actions = [getDayLog, getWeekLog, getMonthLog, getYearLog];
-    const res = await actions[Number(tabRadio)](dpId);
-    if (!res || !res?.dps.length) return;
-    const list = res.dps;
-    setChartList(list);
+    try {
+      const actions = [getDayLog, getWeekLog, getMonthLog, getYearLog];
+      const res = (await actions[Number(tabRadio)](dpId)) as any[];
+      if (!res || !res.length) return;
+      const setAction = [setChartDayList, setChartWeekList, setChartMonthList, setChartYearList];
+      setAction[tabRadio](res);
+    } catch (error) {}
   };
 
   return (
@@ -79,12 +84,38 @@ const WorkRecord: React.FC = (props: MainProps) => {
       </View>
 
       <View style={styles.listView}>
-        <F2Chart
-          width={cx(335)}
-          height={cx(263)}
-          data={chartList}
-          renderer={data => renderChart(data, themeColor[dpId])}
-        />
+        {tabRadio === '0' && (
+          <F2Chart
+            width={cx(375)}
+            height={cx(330)}
+            data={chartDayList}
+            renderer={dpId === dpIds[0] ? renderChart : renderChart2}
+          />
+        )}
+        {tabRadio === '1' && (
+          <F2Chart
+            width={cx(375)}
+            height={cx(330)}
+            data={chartWeekList}
+            renderer={dpId === dpIds[0] ? renderChart : renderChart2}
+          />
+        )}
+        {tabRadio === '2' && (
+          <F2Chart
+            width={cx(375)}
+            height={cx(330)}
+            data={chartMonthList}
+            renderer={dpId === dpIds[0] ? renderChart : renderChart2}
+          />
+        )}
+        {tabRadio === '3' && (
+          <F2Chart
+            width={cx(375)}
+            height={cx(330)}
+            data={chartYearList}
+            renderer={dpId === dpIds[0] ? renderChart : renderChart2}
+          />
+        )}
       </View>
     </View>
   );

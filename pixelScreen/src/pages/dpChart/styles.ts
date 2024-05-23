@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   tabView: {
-    paddingHorizontal: cx(20),
+    paddingHorizontal: cx(0),
   }
   
 });

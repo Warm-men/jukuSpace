@@ -13,7 +13,7 @@ function DpChart() {
   const tabPaneArr = [i18n.getLang('temperature'), i18n.getLang('humidity')];
   const [tab, setTab] = useState(tabPaneArr[0]);
 
-  const dpIds = ['111', '222'];
+  const dpIds = ['106', '102'];
 
   const tabPanes = tabPaneArr.map((item, index) => (
     <Tab.TabPane key={item} tab={item}>
@@ -49,6 +49,8 @@ function DpChart() {
             tabBarStyle={{
               borderBottomColor: '#78787A',
               borderBottomWidth: StyleSheet.hairlineWidth,
+              marginLeft: cx(20),
+              width: cx(335),
             }}
             tabTextStyle={{ fontSize: cx(16), color: '#2C2C2F' }}
             tabStyle={{
