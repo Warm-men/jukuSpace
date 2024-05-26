@@ -51,7 +51,7 @@ function Modal(props) {
   }, [playListState]);
 
   const goEdit = () => {
-    navigation.navigate('homeEditModal');
+    navigation.navigate('modalList');
   };
 
   const playButtons = [

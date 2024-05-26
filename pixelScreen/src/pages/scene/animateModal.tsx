@@ -59,7 +59,7 @@ const PopUp = (props: any) => {
       }}
       popupViewHeight={cx(372)}
       onConfirm={handleConfirm}
-      title={i18n.getLang('add_model_pop_title')}
+      title={i18n.getLang('scene_animate')}
     >
       <ScrollView
         style={styles.listView}

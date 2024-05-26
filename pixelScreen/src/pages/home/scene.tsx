@@ -36,7 +36,7 @@ function Scene() {
   }, [sleepSetting, switchFaSleep, sleepAidStatus]);
 
   const toggleWorking = () => {
-    if (!sceneItem.manualClose && sceneItem.time === 0) {
+    if (!sceneItem.manualClose && sceneItem.time === 0 && !switchFaSleep) {
       return GlobalToast.show({
         text: i18n.getLang('set_time_hint'),
         showIcon: false,
@@ -85,9 +85,9 @@ function Scene() {
       return [Res[`sleep_animate_${music}`], null];
     }
     if (music === undefined) {
-      return [null, Res[`clock_${animation}`]];
+      return [null, Res[`scene_music_${animation}`]];
     }
-    return [Res[`sleep_animate_${animation}`], Res[`clock_${music}`]];
+    return [Res[`sleep_animate_${animation}`], Res[`scene_music_${music}`]];
   };
 
   const renderImages = () => {

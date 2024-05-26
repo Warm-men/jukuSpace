@@ -215,6 +215,7 @@ function Clock() {
 
   const getAnimationText = () => {
     const { animationId } = clockDataState;
+    console.log('🚀 ~ file: index.tsx:218 ~ getAnimationText ~ animationId:', animationId);
     return i18n.getLang(`clock_animation_${animationId}`);
   };
 

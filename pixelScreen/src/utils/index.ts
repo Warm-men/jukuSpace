@@ -410,7 +410,7 @@ interface Extra {
 
 // 将playListString转成playListMap, 每个item的dpValue长度为18，每个data的长度是2
 export const playListString2Map = (playListStr: string) => {
-  // 判断是否是18的倍数
+  // 判断是否是22的倍数
   if (playListStr.length % 22 !== 0) return [];
   const playList: { modeId: number; dpValue: string; extra: Extra }[] = [];
   for (let i = 0; i < playListStr.length; i += 22) {

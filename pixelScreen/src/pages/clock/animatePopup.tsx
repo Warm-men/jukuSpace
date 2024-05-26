@@ -49,7 +49,7 @@ const PopUp = (props: any) => {
                   <Image source={Res[`clock_animate_${index}`]} style={styles.musicImage} />
                 </TouchableOpacity>
                 <TYText size={cx(14)} color="#F6F6F6" align="center">
-                  {i18n.getLang(`music_${index}`)}
+                  {i18n.getLang(`clock_animation_${index}`)}
                 </TYText>
               </View>
             );

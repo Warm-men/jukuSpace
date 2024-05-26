@@ -2,7 +2,7 @@ import i18n from '@i18n';
 import Res from '../res';
 
 interface ModelConfig {
-  name: string;
+  name?: string;
   icon: any;
   modeId: number;
   dpValue: string;
@@ -21,11 +21,12 @@ interface ModelConfig {
   };
 }
 
-export const modalCategoryIds1 = [11, 12, 13, 14, 15, 16, 17];
-export const modalCategoryIds2 = [21, 22, 23, 24, 25, 26];
-export const modalCategoryIds3 = [41, 42, 43, 44];
-export const modalCategoryIds4 = [61, 62];
-export const modalCategoryIds5 = [81, 82, 83, 84];
+export const modalCategoryIds1 = [11, 12];
+export const modalCategoryIds2 = [21, 22, 23, 24];
+export const modalCategoryIds3 = [31, 32];
+export const modalCategoryIds4 = [41, 42];
+export const modalCategoryIds5 = [51, 52, 53, 54];
+export const modalCategoryIds6 = [61, 62, 63, 64, 65];
 
 // Data[0]第1个列表序号要显示的模板编号，对应的模板参数；
 // Data[1] 背景色：黑底，对比色，5纯色；
@@ -37,144 +38,114 @@ export const modalCategoryIds5 = [81, 82, 83, 84];
 // Data[7-8]停留时长：进场完成后，显示内容的停留时间，5秒-1800秒；
 // Data[9]颜色：显示内容的颜色（6纯色+5种彩色带）；
 // Data[10]整体亮度：亮度（1-10级）
+
+// const defaultData = {
+//   modeId: 0,
+//   background: 1,
+//   borderColor: 1,
+//   enterEffect: 1,
+//   stayEffect: 1,
+//   showEffect: 1,
+//   speed: 5,
+//   stayTime: 300,
+//   textColor: 0,
+//   brightness: 50,
+// };
 export const modelConfig: ModelConfig[] = [
   {
-    name: i18n.getLang('model_11'),
     icon: Res.mode_11,
     modeId: 11,
-    dpValue: '0b00000000000000000000',
+    dpValue: '0b00000000000001050030',
   },
   {
-    name: i18n.getLang('model_11'),
     icon: Res.mode_12,
     modeId: 12,
     dpValue: '0c00000000000000000000',
   },
   {
-    name: i18n.getLang('model_11'),
-    icon: Res.mode_13,
-    modeId: 13,
-    dpValue: '0d00000000000000000000',
-  },
-  {
-    name: i18n.getLang('model_11'),
-    icon: Res.mode_14,
-    modeId: 14,
-    dpValue: '0e00000000000000000000',
-  },
-  {
-    name: i18n.getLang('model_11'),
-    icon: Res.mode_15,
-    modeId: 15,
-    dpValue: '0f00000000000000000000',
-  },
-  {
-    name: i18n.getLang('model_11'),
-    icon: Res.mode_16,
-    modeId: 16,
-    dpValue: '100000000000000000',
-  },
-  {
-    name: i18n.getLang('model_11'),
-    icon: Res.mode_17,
-    modeId: 17,
-    dpValue: '110000000000000000',
-  },
-  {
-    name: i18n.getLang('model_21'),
     icon: Res.mode_21,
     modeId: 21,
     dpValue: '150000000000000000',
   },
   {
-    name: i18n.getLang('model_21'),
     icon: Res.mode_22,
     modeId: 22,
     dpValue: '160000000000000000',
   },
   {
-    name: i18n.getLang('model_21'),
     icon: Res.mode_23,
     modeId: 23,
     dpValue: '170000000000000000',
   },
   {
-    name: i18n.getLang('model_21'),
     icon: Res.mode_24,
     modeId: 24,
     dpValue: '180000000000000000',
   },
   {
-    name: i18n.getLang('model_21'),
-    icon: Res.mode_25,
-    modeId: 25,
-    dpValue: '190000000000000000',
+    icon: Res.mode_31,
+    modeId: 31,
+    dpValue: '1f0000000000000000',
   },
   {
-    name: i18n.getLang('model_21'),
-    icon: Res.mode_26,
-    modeId: 26,
+    icon: Res.mode_32,
+    modeId: 32,
     dpValue: '200000000000000000',
   },
   {
-    name: i18n.getLang('model_41'),
     icon: Res.mode_41,
     modeId: 41,
     dpValue: '290000000000000000',
   },
   {
-    name: i18n.getLang('model_41'),
     icon: Res.mode_42,
     modeId: 42,
     dpValue: '2a0000000000000000',
   },
   {
-    name: i18n.getLang('model_41'),
-    icon: Res.mode_43,
-    modeId: 43,
-    dpValue: '2b0000000000000000',
+    icon: Res.mode_51,
+    modeId: 51,
+    dpValue: '330000000000000000',
   },
   {
-    name: i18n.getLang('model_41'),
-    icon: Res.mode_44,
-    modeId: 44,
-    dpValue: '2c0000000000000000',
+    icon: Res.mode_52,
+    modeId: 52,
+    dpValue: '340000000000000000',
   },
   {
-    name: i18n.getLang('model_61'),
+    icon: Res.mode_53,
+    modeId: 53,
+    dpValue: '350000000000000000',
+  },
+  {
+    icon: Res.mode_54,
+    modeId: 54,
+    dpValue: '360000000000000000',
+  },
+  {
     icon: Res.mode_61,
     modeId: 61,
     dpValue: '3d0000000000000000',
   },
   {
-    name: i18n.getLang('model_61'),
     icon: Res.mode_62,
     modeId: 62,
     dpValue: '3e0000000000000000',
   },
   {
-    name: i18n.getLang('model_81'),
-    icon: Res.mode_81,
-    modeId: 81,
-    dpValue: '510000000000000000',
+    icon: Res.mode_63,
+    modeId: 63,
+    dpValue: '3f0000000000000000',
   },
   {
-    name: i18n.getLang('model_81'),
-    icon: Res.mode_82,
-    modeId: 82,
-    dpValue: '520000000000000000',
+    icon: Res.mode_64,
+    modeId: 64,
+    dpValue: '400000000000000000',
   },
   {
-    name: i18n.getLang('model_81'),
-    icon: Res.mode_83,
-    modeId: 83,
-    dpValue: '530000000000000000',
-  },
-  {
-    name: i18n.getLang('model_81'),
-    icon: Res.mode_84,
-    modeId: 84,
-    dpValue: '540000000000000000',
+    icon: Res.mode_65,
+    modeId: 65,
+    dpValue: '410000000000000000',
   },
 ];
 

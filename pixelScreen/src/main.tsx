@@ -1,10 +1,10 @@
 import React from 'react';
-import { createNavigator, GlobalTheme, NavigationRoute, TransitionPresets } from 'tuya-panel-kit';
+import { createNavigator, GlobalTheme, NavigationRoute } from 'tuya-panel-kit';
 import { StatusBar } from 'react-native';
 import composeLayout from './composeLayout';
 import { store } from './models';
 import Home from './pages/home';
-import HomeEditModal from './pages/home/editModal';
+import ModalList from './pages/home/modalList';
 import Setting from './pages/setting';
 import Clock from './pages/clock';
 import Scene from './pages/scene';
@@ -68,8 +68,8 @@ const router: NavigationRoute[] = [
     },
   },
   {
-    name: 'homeEditModal',
-    component: HomeEditModal,
+    name: 'modalList',
+    component: ModalList,
     options: {
       ...commonStyles,
     },

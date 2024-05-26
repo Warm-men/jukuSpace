@@ -21,33 +21,33 @@ interface Music {
 const musicList: Music[] = [
   {
     name: i18n.getLang('scene_music_0'),
-    icon: Res.sleep_09,
+    icon: Res.scene_music_0,
     id: 0,
   },
   {
     name: i18n.getLang('scene_music_1'),
-    icon: Res.sleep_10,
+    icon: Res.scene_music_1,
     id: 1,
   },
   {
     name: i18n.getLang('scene_music_2'),
-    icon: Res.sleep_11,
+    icon: Res.scene_music_2,
     id: 2,
   },
   {
     name: i18n.getLang('scene_music_3'),
-    icon: Res.sleep_12,
+    icon: Res.scene_music_3,
     id: 3,
   },
   {
     name: i18n.getLang('scene_music_4'),
-    icon: Res.sleep_13,
-    id: 3,
+    icon: Res.scene_music_4,
+    id: 4,
   },
   {
-    name: i18n.getLang('scene_music_4'),
-    icon: Res.sleep_14,
-    id: 3,
+    name: i18n.getLang('scene_music_5'),
+    icon: Res.scene_music_5,
+    id: 5,
   },
 ];
 
@@ -78,7 +78,7 @@ const PopUp = (props: any) => {
       }}
       popupViewHeight={cx(420)}
       onConfirm={handleConfirm}
-      title={i18n.getLang('add_model_pop_title')}
+      title={i18n.getLang('scene_music')}
     >
       <ScrollView
         style={styles.listView}

@@ -51,7 +51,6 @@ function Scene() {
   useEffect(() => {
     if (sleepSetting) {
       const _sceneItem = sleepStr2Object(sleepSetting) || sceneDataDefault;
-      console.log('🚀 ~ file: index.tsx:54 ~ useEffect ~ _sceneItem:', _sceneItem);
       setSceneData(_sceneItem);
     }
   }, [sleepSetting, switchFaSleep, sleepAidStatus]);
@@ -134,10 +133,21 @@ function Scene() {
     );
   };
 
+  const getSmallImages = () => {
+    const { animation, music } = sceneData || {};
+    if (!sceneData || (sceneData.animation === undefined && sceneData.music === undefined))
+      return [null, null];
+    if (animation === undefined) {
+      return [Res[`sleep_animate_${music}`], null];
+    }
+    if (music === undefined) {
+      return [null, Res[`scene_music_${animation}`]];
+    }
+    return [Res[`sleep_animate_${animation}`], Res[`scene_music_${music}`]];
+  };
+
   const renderSceneWorking = () => {
-    // const { sceneData } = this.state;
-    // const sceneImages = getSleepSmallImages(sceneData.sound, sceneData.light).filter(i => !!i);
-    const sceneImages = [Res.sleep_09, Res.sleep_10];
+    const sceneImages = getSmallImages().filter(i => !!i);
     const soundOrLight = getSoundOrLightString(sceneData.animation, sceneData.music);
     const { manualClose } = sceneData;
     const leftTime = getLeftTime();
@@ -233,7 +243,7 @@ function Scene() {
               }}
             >
               <View style={styles.effectViewWrap}>
-                <Image source={Res.lamp} style={styles.effectIcon} />
+                <Image source={Res.xing} style={styles.effectIcon} />
                 <TYText style={styles.effectViewText}>
                   {i18n.getLang(`animation${sceneData.animation}`)}
                 </TYText>

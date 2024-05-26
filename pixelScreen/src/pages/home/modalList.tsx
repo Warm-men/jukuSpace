@@ -14,6 +14,7 @@ import {
   modalCategoryIds3,
   modalCategoryIds4,
   modalCategoryIds5,
+  modalCategoryIds6,
 } from '@config/common';
 import i18n from '@i18n';
 import { playListString2Map, playListMap2String } from '@utils';
@@ -29,7 +30,7 @@ interface ModelConfig {
   isActive?: boolean;
 }
 
-const EditModal = (props: any) => {
+const ModalList = (props: any) => {
   const navigation = useNavigation<StackNavigationProp<any, any>>();
 
   const { [playListCode]: playList } = useSelector(({ dpState }: any) => dpState);
@@ -83,7 +84,10 @@ const EditModal = (props: any) => {
   };
 
   const handleConfirm = () => {
-    const _data = playListMap2String(selectedMode);
+    const _list = selectedMode.map((item: ModelConfig) => {
+      return { ...item, extra: {} };
+    });
+    const _data = playListMap2String(_list);
     TYSdk.device.putDeviceData({
       [playListCode]: _data,
     });
@@ -97,7 +101,8 @@ const EditModal = (props: any) => {
     const category3 = data.filter(item => modalCategoryIds3.includes(item.modeId));
     const category4 = data.filter(item => modalCategoryIds4.includes(item.modeId));
     const category5 = data.filter(item => modalCategoryIds5.includes(item.modeId));
-    return [category1, category2, category3, category4, category5];
+    const category6 = data.filter(item => modalCategoryIds6.includes(item.modeId));
+    return [category1, category2, category3, category4, category5, category6];
   };
 
   return (
@@ -112,10 +117,11 @@ const EditModal = (props: any) => {
         }}
       />
       <ScrollView style={styles.listView} contentContainerStyle={styles.contentContainerStyle}>
-        {splitArrayByCategory(modeData).map(item => {
+        {splitArrayByCategory(modeData).map((item, index) => {
+          if (item.length === 0) return null;
           return (
             <View key={item[0].modeId}>
-              <TYText style={styles.title}>{i18n.getLang('modal_0')}</TYText>
+              <TYText style={styles.title}>{i18n.getLang(`modal_category_${index}`)}</TYText>
               <View style={styles.popupViewEffect}>
                 {item.map(modal => {
                   return (
@@ -132,9 +138,6 @@ const EditModal = (props: any) => {
                       >
                         <Image source={modal.icon} style={styles.effectImage} />
                       </TouchableOpacity>
-                      {/* <TYText align="center" style={styles.text1}>
-                    {item.name}
-                  </TYText> */}
                     </View>
                   );
                 })}
@@ -152,7 +155,7 @@ const EditModal = (props: any) => {
   );
 };
 
-export default EditModal;
+export default ModalList;
 
 const styles = StyleSheet.create({
   title: {
