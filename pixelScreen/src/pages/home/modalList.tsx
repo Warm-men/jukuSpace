@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
-import { Utils, TYText, TYSdk, TopBar } from 'tuya-panel-kit';
+import { Utils, TYText, TYSdk, TopBar, GlobalToast } from 'tuya-panel-kit';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import _deepClone from 'lodash/cloneDeep';
@@ -71,15 +71,26 @@ const ModalList = (props: any) => {
       }
       return i;
     });
-    setModeData(newData);
 
     const _selectedMode: ModelConfig[] = _deepClone(selectedMode);
     const _index = _selectedMode.findIndex((i: ModelConfig) => i.modeId === item.modeId);
     if (_index > -1) {
       _selectedMode.splice(_index, 1);
     } else {
+      if (_selectedMode.length >= 19) {
+        return GlobalToast.show({
+          text: i18n.getLang('max_list_tip'),
+          showIcon: false,
+          contentStyle: {},
+          onFinish: () => {
+            GlobalToast.hide();
+          },
+        });
+      }
       _selectedMode.push(item);
     }
+
+    setModeData(newData);
     setSelectedMode(_selectedMode);
   };
 

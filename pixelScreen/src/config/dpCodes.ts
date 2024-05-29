@@ -32,4 +32,5 @@ export default {
   humDataCode: 'hum_data',
   getDisplayTemplateCode: 'get_display_template',
   uploadAndDownloadTemplate: 'updown_load_n_template',
+  volumeSetCode: 'volume_set',
 };

@@ -1,16 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
-import { Utils, TYText, TYSdk } from 'tuya-panel-kit';
+import { Utils, TYText } from 'tuya-panel-kit';
 import _deepClone from 'lodash/cloneDeep';
-import { dpCodes } from '@config';
-// import { useSelector } from 'react-redux';
 import ModalPop from '@components/modalRender';
 import i18n from '@i18n';
 import Res from '@res';
-// import { playListString2Map, playListMap2String } from '@utils';
 
 const { convertX: cx } = Utils.RatioUtils;
-// const { playListCode } = dpCodes;
 
 interface Music {
   name?: string;
@@ -53,10 +49,6 @@ const musicList: Music[] = [
 
 const PopUp = (props: any) => {
   const { isVisiblePop, onClose, onConfirm, value } = props;
-
-  // const { [playListCode]: playList } = useSelector(({ dpState }: any) => dpState);
-
-  // const [modeData, setModeData] = useState<ModelConfig[]>(modelConfig);
 
   const [selectedAnimate, setSelectedAnimate] = useState<number>(value);
 
@@ -137,13 +129,12 @@ const styles = StyleSheet.create({
   effectItemEffect: {
     borderWidth: cx(3),
     borderColor: 'transparent',
-    borderRadius: cx(8),
+    borderRadius: cx(12),
     marginBottom: cx(4),
     overflow: 'hidden',
   },
   effectImage: {
     width: cx(98),
     height: cx(98),
-    // borderRadius: cx(8),
   },
 });

@@ -72,18 +72,18 @@ const styles = StyleSheet.create({
   musicItem: {
     width: cx(162),
     marginBottom: cx(22),
-    borderRadius: cx(8),
     marginRight: cx(16),
   },
   imageView: {
     width: cx(162),
     height: cx(85),
-    // borderRadius: cx(16),
     borderWidth: cx(4),
+    borderRadius: cx(12),
     borderColor: 'transparent',
     marginBottom: cx(8),
   },
   musicImage: {
+    borderRadius: cx(12),
     width: cx(154),
     height: cx(77),
   },

@@ -137,6 +137,7 @@ export default {
     scene_music_5: 'Radio',
     scene_animate: 'Scene animation',
     scene_music: 'Scene music',
+    max_list_tip: 'You can select up to 19 templates, please delete and add',
   },
   zh: {
     asleep: '伴睡',
@@ -274,5 +275,6 @@ export default {
     scene_music_5: '收音机',
     scene_animate: '场景动画',
     scene_music: '场景音乐',
+    max_list_tip: '最多可以选择19个模版，请删除后再添加',
   },
 };

@@ -99,14 +99,12 @@ function Modal(props) {
     <View style={styles.modeView}>
       {modeData.length ? (
         <View style={styles.modalListView}>
-          {modeData.length < 10 ? (
-            <View style={styles.modalListTitle}>
-              <TYText style={styles.text16BW}>{i18n.getLang('my_screen')}</TYText>
-              <TouchableOpacity onPress={goEdit}>
-                <Image source={Res.add_plug} style={[styles.addImg, { tintColor: '#C7C7CA' }]} />
-              </TouchableOpacity>
-            </View>
-          ) : null}
+          <View style={styles.modalListTitle}>
+            <TYText style={styles.text16BW}>{i18n.getLang('my_screen')}</TYText>
+            <TouchableOpacity onPress={goEdit}>
+              <Image source={Res.add_plug} style={[styles.addImg, { tintColor: '#C7C7CA' }]} />
+            </TouchableOpacity>
+          </View>
           <View style={styles.modalList}>
             {modeData.map(item => {
               const isPLaying = playId === item.modeId;

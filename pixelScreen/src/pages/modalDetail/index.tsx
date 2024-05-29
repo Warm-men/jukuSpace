@@ -45,14 +45,13 @@ function ModalEdit() {
   const repeatTimeData = [30, 60, 120];
 
   const [modeData, setModeData] = useState<ModelConfig[]>([]);
-  const [repeatTime, setRepeatTime] = useState(repeatTimeData[2]);
+  const [repeatTime, setRepeatTime] = useState<number>();
   const [timeColorType, setTimeColorType] = useState('0');
   const [gradientColorType, setGradientColorType] = useState(0);
   const [screenBrightness, setScreenBrightness] = useState(0);
   const [extra, setExtra] = useState<Extra>({}); // 保存额外数据
 
   const brightnessRef = useRef(null);
-  const textRef = useRef(null);
 
   // 从路由参数中获取模版数据
   const modalItem = route?.params?.item;
@@ -68,6 +67,7 @@ function ModalEdit() {
     });
     setModeData(newData);
     const _extra = newData.find(item => item.modeId === modalItem.modeId)?.extra; // 目前版本模版的参数是统一配置的，但是参数分配到每组dp片段中，所以只取第一个即可
+
     if (_extra) {
       setExtra(_extra);
       const _timeColorType =
@@ -75,7 +75,6 @@ function ModalEdit() {
       const _gradientColorType = _extra.textColor ? _extra.textColor : 0;
       const _screenBrightness = _extra.brightness ? _extra.brightness : 0;
       const _repeatTime = _extra.stayTime ? _extra.stayTime : repeatTimeData[2];
-
       setTimeColorType(_timeColorType);
       setGradientColorType(_gradientColorType);
       setScreenBrightness(_screenBrightness);
@@ -112,8 +111,6 @@ function ModalEdit() {
   };
 
   const onSetRepeat = item => {
-    textRef?.current?.blur();
-    textRef?.current?.clear();
     setRepeatTime(item);
   };
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
 import { Utils, TYText } from 'tuya-panel-kit';
 import _deepClone from 'lodash/cloneDeep';
@@ -118,13 +118,13 @@ const styles = StyleSheet.create({
   effectItemEffect: {
     borderWidth: cx(3),
     borderColor: 'transparent',
-    borderRadius: cx(8),
+    borderRadius: cx(12),
     marginBottom: cx(4),
     overflow: 'hidden',
   },
   effectImage: {
     width: cx(152),
     height: cx(77),
-    borderRadius: cx(8),
+    borderRadius: cx(12),
   },
 });

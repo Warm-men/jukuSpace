@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, TouchableOpacity, Modal, Image, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { TYText, TYSdk, GlobalToast } from 'tuya-panel-kit';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -11,7 +11,7 @@ import _isEmpty from 'lodash/isEmpty';
 import Res from '@res';
 import i18n from '@i18n';
 import { dpCodes } from '@config';
-import { getSleepLeftTime, sleepStr2Object, sleep2String, getSleepSmallImages } from '@utils';
+import { getSleepLeftTime, sleepStr2Object, sleep2String } from '@utils';
 import { sceneDataDefault } from '@config/common';
 import PlayButton from './PlayButton';
 
@@ -165,10 +165,7 @@ function Scene() {
             value={getLeftTime()}
             autoClose={!sceneItem.manualClose}
             max={sceneItem.time || 120}
-            // value={0}
-            // autoClose={true}
             status={switchFaSleep}
-            // max={120}
           />
         </View>
       </TouchableOpacity>

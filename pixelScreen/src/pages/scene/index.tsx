@@ -18,7 +18,7 @@ import SliderView from '../../components/sliderView';
 import AnimateModal from './animateModal';
 import MusicModal from './musicModal';
 
-const { sleepAidStatusCode, switchFaSleepCode, sleepSettingCode } = dpCodes;
+const { sleepAidStatusCode, switchFaSleepCode, sleepSettingCode, volumeSetCode } = dpCodes;
 
 interface SceneData {
   mode: number;
@@ -35,6 +35,7 @@ function Scene() {
     [sleepAidStatusCode]: sleepAidStatus,
     [switchFaSleepCode]: switchFaSleep, // 伴睡开关
     [sleepSettingCode]: sleepSetting,
+    [volumeSetCode]: volumeSet,
   } = useSelector(({ dpState }: any) => dpState);
 
   const navigation = useNavigation<StackNavigationProp<any, any>>();
@@ -187,6 +188,14 @@ function Scene() {
 
   const countdownImage = sceneData.manualClose ? Res.auto_close_off : Res.auto_close_on;
 
+  const updateVolume = (value: number) => {
+    if (isWorking) {
+      TYSdk.device.putDeviceData({ [volumeSetCode]: value * 10 });
+    } else {
+      updateSceneState('musicVolume', value);
+    }
+  };
+
   return (
     <View style={styles.flex1}>
       <TopBar
@@ -245,7 +254,7 @@ function Scene() {
               <View style={styles.effectViewWrap}>
                 <Image source={Res.xing} style={styles.effectIcon} />
                 <TYText style={styles.effectViewText}>
-                  {i18n.getLang(`animation${sceneData.animation}`)}
+                  {i18n.getLang(`sleep_animate_${sceneData.animation}`)}
                 </TYText>
               </View>
             </TouchableOpacity>
@@ -258,7 +267,7 @@ function Scene() {
               <View style={styles.effectViewWrap}>
                 <Image source={Res.music_icon} style={styles.effectIcon} />
                 <TYText style={styles.effectViewText}>
-                  {i18n.getLang(`music${sceneData.music}`)}
+                  {i18n.getLang(`scene_music_${sceneData.music}`)}
                 </TYText>
               </View>
             </TouchableOpacity>
@@ -270,17 +279,18 @@ function Scene() {
             <View>
               <View style={[styles.row, styles.spaceBt]}>
                 <TYText style={styles.sliderText}>{i18n.getLang('volume_setting')}</TYText>
-                <TYText style={styles.sliderText1}>{sceneData.musicVolume}</TYText>
+                <TYText style={styles.sliderText1}>{volumeSet / 10}</TYText>
               </View>
               <SliderView
-                value={sceneData.musicVolume}
+                value={volumeSet / 10}
                 style={styles.sliderView}
                 img={Res.volume}
                 min={1}
                 max={10}
                 step={1}
                 onComplete={(value: number) => {
-                  updateSceneState('musicVolume', value);
+                  // updateSceneState('musicVolume', value);
+                  updateVolume(value);
                 }}
                 showValue={false}
               />

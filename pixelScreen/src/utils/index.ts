@@ -502,7 +502,6 @@ export const clockObject2String = (clock: ClockObject) => {
   const minute = toString16(clock.minute, 2);
   const repeat = parseInt(clock.repeat.join(''), 2);
   const repeatStr = toString16(repeat, 2);
-  console.log("🚀 ~ file: index.ts:505 ~ clockObject2String ~ repeatStr:", repeatStr)
   const music = toString16(clock.music, 2);
   const volume = toString16(clock.volume, 2);
   const effect = toString16(clock.effect, 2);
@@ -547,8 +546,8 @@ export const sleepStr2Object = (str: string) => {
   if (str.length !== 16) return null;
   return {
     mode: parseInt(str.slice(0, 2), 16),
-    music: parseInt(str.slice(2, 4), 16),
-    musicEffect: parseInt(str.slice(4, 6), 16),
+    musicEffect: parseInt(str.slice(2, 4), 16),
+    music: parseInt(str.slice(4, 6), 16),
     musicVolume: parseInt(str.slice(6, 8), 16),
     time: parseInt(str.slice(8, 10), 16),
     enableAnimation: parseInt(str.slice(10, 12), 16),
@@ -567,7 +566,7 @@ export const sleep2String = (sleep: any) => {
   const enableAnimation = sleep.animation !== undefined ? '01' : '00';
   const animation = toString16(sleep.animation, 2);
   const manualClose = toString16(sleep.manualClose, 2);
-  return `${mode}${music}${musicEffect}${musicVolume}${time}${enableAnimation}${animation}${manualClose}`;
+  return `${mode}${musicEffect}${music}${musicVolume}${time}${enableAnimation}${animation}${manualClose}`;
 };
 
 export const getSleepSmallImages = (sound: number, light: number) => {
