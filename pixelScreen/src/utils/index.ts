@@ -351,7 +351,7 @@ const defaultData = {
   stayEffect: 1,
   showEffect: 1,
   speed: 5,
-  stayTime: 300,
+  stayTime: 30,
   textColor: 0,
   brightness: 50,
 };

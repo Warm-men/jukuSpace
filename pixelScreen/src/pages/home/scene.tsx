@@ -57,7 +57,8 @@ function Scene() {
   };
 
   const getHint = () => {
-    if (!sceneItem.autoClose) return i18n.getLang('manual_close'); // 已开启，自动关闭未开启，需要手动关闭
+
+    if (sceneItem.manualClose === 1) return i18n.getLang('manual_close'); // 已开启，自动关闭未开启，需要手动关闭
 
     const leftTime = getSleepLeftTime(sleepAidStatus);
 
