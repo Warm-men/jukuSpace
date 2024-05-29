@@ -11,7 +11,7 @@ import i18n from '@i18n';
 import { sceneDataDefault } from '@config/common';
 import { getSleepLeftTime, sleepStr2Object, sleep2String, getSoundOrLightString } from '@utils';
 
-import { TYText, TopBar, Progress, TYSdk } from 'tuya-panel-kit';
+import { TYText, TopBar, Progress, TYSdk, GlobalToast } from 'tuya-panel-kit';
 import _ from 'lodash';
 import Countdown from '@components/countdown';
 import SliderView from '../../components/sliderView';
@@ -73,6 +73,18 @@ function Scene() {
   };
 
   const toggleWorking = () => {
+    if (!sceneData.manualClose && sceneData.time === 0 && !switchFaSleep) {
+      return GlobalToast.show({
+        text: i18n.getLang('set_time_hint'),
+        showIcon: false,
+        contentStyle: {},
+        onFinish: () => {
+          console.log('Toast结束');
+          GlobalToast.hide();
+        },
+      });
+    }
+
     const newItem = _.cloneDeep(sceneData);
     const sleepDpStr = sleep2String(newItem);
     const data = {};

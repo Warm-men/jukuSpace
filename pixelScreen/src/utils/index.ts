@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable import/prefer-default-export */
-import { Utils, TYSdk } from 'tuya-panel-kit';
-import { commonApi } from '@tuya/tuya-panel-api';
+import { Utils } from 'tuya-panel-kit';
 import moment from 'moment';
 import Res from '@res';
 import { store } from '../models';
