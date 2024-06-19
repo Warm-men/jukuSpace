@@ -102,6 +102,7 @@ const ModalList = (props: any) => {
     TYSdk.device.putDeviceData({
       [playListCode]: _data,
     });
+    navigation.goBack();
   };
 
   const splitArrayByCategory = (arr: ModelConfig[]) => {

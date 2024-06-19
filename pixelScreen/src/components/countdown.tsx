@@ -38,7 +38,9 @@ const PopUp = (props: MainProps) => {
   };
 
   const getMinData = () => {
-    const range = Utils.NumberUtils.range(0, 60, 1);
+    const range0 = Utils.NumberUtils.range(5, 60, 1);
+    const range1 = Utils.NumberUtils.range(0, 60, 1);
+    const range = hour === 0 ? range0 : range1;
     const timerRange = range.map((item: number) => {
       return {
         label: item > 9 ? `${item}` : `0${item}`,

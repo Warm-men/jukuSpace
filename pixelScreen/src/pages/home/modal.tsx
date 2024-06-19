@@ -51,7 +51,7 @@ function Modal(props) {
   }, [playListState]);
 
   const goEdit = () => {
-    navigation.navigate('modalList');
+    navigation.navigate('modalEdit');
   };
 
   const playButtons = [
@@ -82,13 +82,13 @@ function Modal(props) {
         });
       },
     },
-    {
-      name: 'setting',
-      icon: Res.setting,
-      onPress: () => {
-        navigation.navigate('modalEdit');
-      },
-    },
+    // {
+    //   name: 'setting',
+    //   icon: Res.setting,
+    //   onPress: () => {
+    //     navigation.navigate('modalEdit');
+    //   },
+    // },
   ];
 
   const goDetail = item => {
@@ -102,7 +102,7 @@ function Modal(props) {
           <View style={styles.modalListTitle}>
             <TYText style={styles.text16BW}>{i18n.getLang('my_screen')}</TYText>
             <TouchableOpacity onPress={goEdit}>
-              <Image source={Res.add_plug} style={[styles.addImg, { tintColor: '#C7C7CA' }]} />
+              <Image source={Res.setting} style={[styles.addImg, { tintColor: '#C7C7CA' }]} />
             </TouchableOpacity>
           </View>
           <View style={styles.modalList}>
@@ -111,7 +111,7 @@ function Modal(props) {
               return (
                 <TouchableOpacity
                   key={item.modeId}
-                  onPress={() => {
+                  onLongPress={() => {
                     goDetail(item);
                   }}
                   activeOpacity={0.85}

@@ -161,7 +161,6 @@ function Scene() {
 
   const renderSceneWorking = () => {
     const sceneImages = getSmallImages().filter(i => !!i);
-    const soundOrLight = getSoundOrLightString(sceneData.animation, sceneData.music);
     const { manualClose } = sceneData;
     const leftTime = getLeftTime();
     const hint = !manualClose ? `${leftTime}${i18n.getLang('min')}` : i18n.getLang('manual_close');
@@ -171,12 +170,12 @@ function Scene() {
           <View style={{ flexDirection: 'row' }}>
             <View style={{ alignItems: 'center' }}>
               <Image source={sceneImages[0]} style={styles.lightImage} />
-              <TYText style={styles.lightName}>{soundOrLight[0]}</TYText>
+              <TYText style={styles.lightName}>{i18n.getLang('animation')}</TYText>
             </View>
             <Image source={Res.sound_and_light} style={styles.soundAndLight} />
             <View style={{ alignItems: 'center' }}>
               <Image source={sceneImages[1]} style={styles.lightImage} />
-              <TYText style={styles.lightName}>{soundOrLight[1]}</TYText>
+              <TYText style={styles.lightName}>{i18n.getLang('music')}</TYText>
             </View>
           </View>
           <TYText style={styles.endText}>{hint}</TYText>
@@ -189,7 +188,7 @@ function Scene() {
           <View style={{ flexDirection: 'row' }}>
             <View style={{ alignItems: 'center' }}>
               <Image source={sceneImages[0]} style={styles.lightImage} />
-              <TYText style={styles.lightName}>{soundOrLight[0]}</TYText>
+              <TYText style={styles.lightName}>{i18n.getLang('animation')}</TYText>
             </View>
           </View>
           <TYText style={styles.endText}>{hint}</TYText>
@@ -384,6 +383,7 @@ const styles = StyleSheet.create({
     width: cx(68),
     height: cx(68),
     marginBottom: cx(10),
+    borderRadius: cx(8),
   },
   lightName: {
     fontSize: cx(12),

@@ -210,6 +210,10 @@ function ModalEdit() {
     },
   ];
 
+  const add = () => {
+    navigation.navigate('modalList');
+  };
+
   const renderFooter = () => {
     return null;
     // return (
@@ -369,11 +373,18 @@ function ModalEdit() {
         <TYText size={cx(16)} color="rgba(255, 255, 255, 0.75)">
           {i18n.getLang('screen_sort')}
         </TYText>
-        <TouchableOpacity onPress={() => setShowDelete(!showDelete)} activeOpacity={0.85}>
-          <TYText size={cx(16)} color="rgba(255, 255, 255, 0.75)">
-            {showDelete ? i18n.getLang('choose') : i18n.getLang('delete')}
-          </TYText>
-        </TouchableOpacity>
+        <View style={styles.rowSp}>
+          <TouchableOpacity onPress={add} activeOpacity={0.85} style={styles.addMode}>
+            <TYText size={cx(16)} color="#797AFF">
+              {i18n.getLang('add')}
+            </TYText>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setShowDelete(!showDelete)} activeOpacity={0.85}>
+            <TYText size={cx(16)} color="rgba(255, 255, 255, 0.75)">
+              {showDelete ? i18n.getLang('choose') : i18n.getLang('delete')}
+            </TYText>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   };
@@ -455,6 +466,13 @@ const styles = StyleSheet.create({
     marginBottom: cx(8),
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  rowSp: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  addMode: {
+    marginRight: cx(12),
   },
   footerView: {
     marginTop: cx(24),

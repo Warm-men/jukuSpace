@@ -173,6 +173,7 @@ const styles = StyleSheet.create({
     width: cx(138),
     height: cx(69),
     marginRight: cx(12),
+    borderRadius: cx(8),
   },
   itemLeft: {
     flexDirection: 'row',
