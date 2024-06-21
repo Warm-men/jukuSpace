@@ -31,6 +31,12 @@ const PopUp = (props: any) => {
   }, [visible]);
 
   useEffect(() => {
+    if (!visible) {
+      setIsVisiblePop(false);
+    }
+  }, [visible]);
+
+  useEffect(() => {
     Animated.timing(animatedValue, {
       toValue: isVisiblePop ? 1 : 0,
       duration: 450,
@@ -70,14 +76,18 @@ const PopUp = (props: any) => {
           <Image source={Res.close} style={styles.buttonImage} />
         </TouchableOpacity>
         <TYText style={styles.title}>{title}</TYText>
-        <TouchableOpacity
-          onPress={() => {
-            setIsVisiblePop(false);
-            onConfirm();
-          }}
-        >
-          <Image source={Res.done} style={styles.buttonImage} />
-        </TouchableOpacity>
+        {onConfirm ? (
+          <TouchableOpacity
+            onPress={() => {
+              setIsVisiblePop(false);
+              onConfirm();
+            }}
+          >
+            <Image source={Res.done} style={styles.buttonImage} />
+          </TouchableOpacity>
+        ) : (
+          <View />
+        )}
       </View>
     );
   };

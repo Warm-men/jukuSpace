@@ -193,8 +193,8 @@ const styles = StyleSheet.create({
     borderWidth: cx(3),
   },
   modalItemImage: {
-    width: cx(138),
-    height: cx(69),
+    width: cx(88),
+    height: cx(44),
     borderRadius: cx(8),
   },
   modalListView: {

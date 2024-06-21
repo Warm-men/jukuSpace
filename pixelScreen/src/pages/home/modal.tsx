@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, TouchableOpacity, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useSelector } from 'react-redux';
 import { dpCodes } from '@config';
-import { TYSdk, TYText } from 'tuya-panel-kit';
+import { TYSdk, TYText, GlobalToast } from 'tuya-panel-kit';
 import { modelConfig } from '@config/common';
 import Res from '@res';
 import i18n from '@i18n';
@@ -23,13 +23,16 @@ interface ModelConfig {
 function Modal(props) {
   const navigation = useNavigation<StackNavigationProp<any, any>>();
 
-  const { [playListStateCode]: playListState, [playListCode]: playList } = useSelector(
-    ({ dpState }: any) => dpState
-  );
+  const {
+    [playListStateCode]: playListState,
+    [playListCode]: playList,
+    [playModeCode]: playMode,
+  } = useSelector(({ dpState }: any) => dpState);
 
   const [modeData, setModeData] = useState<ModelConfig[]>([]);
   const [playId, setPlayId] = useState(-1);
   const [loop, setLoop] = useState(0);
+  const isClick = useRef(false);
 
   useEffect(() => {
     const data: ModelConfig[] = playListString2Map(playList);
@@ -49,6 +52,20 @@ function Modal(props) {
     setPlayId(playData.modeId);
     setLoop(playData.loop);
   }, [playListState]);
+
+  useEffect(() => {
+    if (isClick.current) {
+      isClick.current = false;
+      const string =
+        playMode === 'Loop' ? i18n.getLang('loop_play') : i18n.getLang('continue_play');
+      GlobalToast.show({
+        text: string,
+        onFinish: () => {
+          GlobalToast.hide();
+        },
+      });
+    }
+  }, [playMode]);
 
   const goEdit = () => {
     navigation.navigate('modalEdit');
@@ -75,10 +92,11 @@ function Modal(props) {
     },
     {
       name: 'loop',
-      icon: loop ? Res.loop : Res.loop1,
+      icon: playMode === 'Loop' ? Res.loop : Res.loop1,
       onPress: () => {
+        isClick.current = true;
         TYSdk.device.putDeviceData({
-          [playModeCode]: loop ? 'Continuous' : 'Loop',
+          [playModeCode]: playMode === 'Loop' ? 'Continuous' : 'Loop',
         });
       },
     },

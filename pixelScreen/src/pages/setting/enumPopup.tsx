@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { Utils, TYText, TYSdk } from 'tuya-panel-kit';
 import { useSelector } from 'react-redux';
 import ModalPop from '@components/modalRender';
 import i18n from '@i18n';
+import Res from '@res';
+
 const { convertX: cx } = Utils.RatioUtils;
 
 const PopUp = (props: any) => {
@@ -17,9 +19,9 @@ const PopUp = (props: any) => {
     setMode(dpValue);
   }, [dpValue]);
 
-  const handleConfirm = () => {
+  const handleConfirm = value => {
     TYSdk.device.putDeviceData({
-      [dpCode]: mode,
+      [dpCode]: value,
     });
     onClose();
   };
@@ -44,7 +46,7 @@ const PopUp = (props: any) => {
       onClose={() => {
         onClose();
       }}
-      onConfirm={handleConfirm}
+      onConfirm={false}
       title={title}
       popupViewHeight={cx(height)}
       outputRangeStart={300}
@@ -55,14 +57,16 @@ const PopUp = (props: any) => {
           return (
             <TouchableOpacity
               key={item}
-              style={[styles.itemView, { backgroundColor: isActive ? '#403D53' : 'transparent' }]}
               onPress={() => {
-                setMode(item);
+                handleConfirm(item);
               }}
             >
-              <TYText size={cx(16)} color={isActive ? '#fff' : '#78787A'}>
-                {i18n.getDpLang(dpCode, item)}
-              </TYText>
+              <View style={[styles.itemView]}>
+                <TYText size={cx(16)} color={isActive ? '#6051FA' : '#78787A'}>
+                  {i18n.getDpLang(dpCode, item)}
+                </TYText>
+                {isActive ? <Image source={Res.chooesed} style={styles.checkImage} /> : null}
+              </View>
             </TouchableOpacity>
           );
         })}
@@ -81,11 +85,15 @@ const styles = StyleSheet.create({
     marginHorizontal: cx(16),
   },
   itemView: {
-    width: cx(194),
+    width: cx(335),
     height: cx(50),
-    borderRadius: cx(8),
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#403D53',
+    flexDirection: 'row',
+    paddingHorizontal: cx(4),
+  },
+  checkImage: {
+    width: cx(24),
+    height: cx(24),
   },
 });

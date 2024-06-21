@@ -29,8 +29,9 @@ const PopUp = (props: any) => {
     >
       <ScrollView contentContainerStyle={{ paddingBottom: cx(28) }}>
         <View style={styles.musicBox}>
-          {_times(8).map((item: number, index: number) => {
+          {_times(9).map((item: number, index: number) => {
             const isActive = index === value;
+            const img = index === 0 ? Res.scene_music_0 : Res[`clock_${index - 1}`];
             return (
               <View key={item} style={styles.musicItem}>
                 <TouchableOpacity
@@ -45,7 +46,7 @@ const PopUp = (props: any) => {
                     },
                   ]}
                 >
-                  <Image source={Res[`clock_${index}`]} style={styles.musicImage} />
+                  <Image source={img} style={styles.musicImage} />
                 </TouchableOpacity>
                 <TYText size={cx(14)} color="#F6F6F6" align="center">
                   {i18n.getLang(`music_${index}`)}

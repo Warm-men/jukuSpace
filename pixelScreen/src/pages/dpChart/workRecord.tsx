@@ -9,6 +9,7 @@ const { convertX: cx } = Utils.RatioUtils;
 
 interface MainProps {
   dpId: string;
+  tab: string | number;
 }
 
 const dpIds = ['106', '102'];
@@ -18,8 +19,8 @@ const themeColor = {
   [dpIds[1]]: '#F4B900',
 };
 
-const WorkRecord: React.FC = (props: MainProps) => {
-  const { dpId } = props;
+const WorkRecord: React.FC<MainProps> = (props: MainProps) => {
+  const { dpId, tab } = props;
   const [tabRadio, setTabRadio] = useState('0');
 
   const [chartDayList, setChartDayList] = useState<any[]>([]);
@@ -29,7 +30,7 @@ const WorkRecord: React.FC = (props: MainProps) => {
 
   useEffect(() => {
     updateData();
-  }, [tabRadio]);
+  }, [tabRadio, tab]);
 
   const TabsText = [
     i18n.getLang('day'),

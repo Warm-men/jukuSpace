@@ -3,9 +3,10 @@ import { View, TouchableOpacity, Image, StyleSheet, TextInput, ScrollView } from
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import _deepClone from 'lodash/cloneDeep';
-import { TYText, TYSdk, TopBar, Dialog } from 'tuya-panel-kit';
+import { TYText, TYSdk, TopBar, Dialog, Notification } from 'tuya-panel-kit';
 import { useSelector } from 'react-redux';
 import Res from '@res';
+import _times from 'lodash/times';
 import SliderHorizontal from '@components/sliderHorizontal';
 import i18n from '@i18n';
 import { cx, commonColor, width, commonStyles } from '@config/styles';
@@ -45,13 +46,14 @@ function ModalEdit() {
   const repeatTimeData = [30, 60, 120];
 
   const [modeData, setModeData] = useState<ModelConfig[]>([]);
-  const [repeatTime, setRepeatTime] = useState<number>();
+  const [repeatTime, setRepeatTime] = useState<string>('0');
   const [timeColorType, setTimeColorType] = useState('0');
   const [gradientColorType, setGradientColorType] = useState(0);
   const [screenBrightness, setScreenBrightness] = useState(0);
   const [extra, setExtra] = useState<Extra>({}); // 保存额外数据
+  const [borderColor, setBorderColor] = useState(0); // 边框颜色
 
-  const brightnessRef = useRef(null);
+  const textRef = useRef(null);
 
   // 从路由参数中获取模版数据
   const modalItem = route?.params?.item;
@@ -75,16 +77,39 @@ function ModalEdit() {
       const _gradientColorType = _extra.textColor ? _extra.textColor : 0;
       const _screenBrightness = _extra.brightness ? _extra.brightness : 0;
       const _repeatTime = _extra.stayTime ? _extra.stayTime : repeatTimeData[2];
+      const _borderColor = _extra.borderColor ? _extra.borderColor : 0;
+      setBorderColor(_borderColor);
       setTimeColorType(_timeColorType);
       setGradientColorType(_gradientColorType);
       setScreenBrightness(_screenBrightness);
-      setRepeatTime(_repeatTime);
+      setRepeatTime(`${_repeatTime}`);
     }
   }, [playList]);
 
   const save = () => {
+    if (!repeatTime || +repeatTime > 1800 || +repeatTime < 5) {
+      const tip =
+        +repeatTime > 1800
+          ? i18n.getLang('screen_repeat_time_max_tip')
+          : i18n.getLang('screen_repeat_time_min_tip');
+      Notification.show({
+        message: tip,
+        onClose: () => {
+          Notification.hide();
+        },
+        theme: {
+          warningIcon: 'black',
+        },
+      });
+      setTimeout(() => {
+        Notification.hide();
+      }, 2000);
+      return;
+    }
+
     const _extra = {
       ...extra,
+      borderColor,
       stayTime: repeatTime,
       textColor: gradientColorType,
       brightness: screenBrightness,
@@ -147,6 +172,10 @@ function ModalEdit() {
         Dialog.close();
       },
     });
+  };
+
+  const onChangeText = value => {
+    setRepeatTime(value);
   };
 
   const renderFooter = () => {
@@ -228,7 +257,7 @@ function ModalEdit() {
             </View>
           )}
         </View>
-        <View style={[styles.optionViewItem]}>
+        {/* <View style={[styles.optionViewItem]}>
           <View style={[commonStyles.flexRowBetween, styles.optionViewWidth]}>
             <TYText size={cx(14)} color="#C5C5C5">
               {i18n.getLang('screen_brightness')}
@@ -247,6 +276,33 @@ function ModalEdit() {
             }}
             onSlidingComplete={setScreenBrightness}
           />
+        </View> */}
+
+        <View style={[styles.optionViewItem]}>
+          <View style={[commonStyles.flexRowBetween, styles.optionViewWidth]}>
+            <TYText size={cx(14)} color="#C5C5C5">
+              {i18n.getLang('border_style')}
+            </TYText>
+          </View>
+          <View style={styles.timeView}>
+            {_times(3).map(item => {
+              const isActive = item === borderColor;
+              return (
+                <TouchableOpacity
+                  key={item}
+                  activeOpacity={0.85}
+                  style={[styles.timeItem, { borderColor: isActive ? '#fff' : '#2E2C3D' }]}
+                  onPress={() => {
+                    setBorderColor(item);
+                  }}
+                >
+                  <TYText size={cx(14)} color={isActive ? '#fff' : '#6D6C78'}>
+                    {i18n.getLang(`border_style_${item}`)}
+                  </TYText>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
         </View>
 
         <View style={[styles.optionViewItem]}>
@@ -255,26 +311,19 @@ function ModalEdit() {
               {i18n.getLang('screen_repeat_time')}
             </TYText>
           </View>
-          <View style={styles.timeView}>
-            {repeatTimeData.map(item => {
-              const isActive = item === repeatTime;
-              return (
-                <TouchableOpacity
-                  key={item}
-                  activeOpacity={0.85}
-                  style={[styles.timeItem, { borderColor: isActive ? '#fff' : '#2E2C3D' }]}
-                  onPress={() => {
-                    onSetRepeat(item);
-                  }}
-                >
-                  <TYText size={cx(14)} color={isActive ? '#fff' : '#6D6C78'}>
-                    {item}
-                  </TYText>
-                </TouchableOpacity>
-              );
-            })}
+          <View style={[styles.timeView, styles.timeViewBorder]}>
+            <TextInput
+              value={repeatTime}
+              onChangeText={onChangeText}
+              style={styles.timeInput}
+              ref={textRef}
+              placeholder={i18n.getLang('screen_repeat_time_tip')}
+              placeholderTextColor="rgba(255, 255, 255, 0.7)"
+            />
+            <TYText style={styles.timeInputUnit}>{i18n.getLang('second')}</TYText>
           </View>
         </View>
+
         <TouchableOpacity activeOpacity={0.85} onPress={onDelete}>
           <View style={[styles.optionViewItem, { alignItems: 'center' }]}>
             <TYText size={cx(14)} color="#E64049">
@@ -372,7 +421,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: cx(295),
     justifyContent: 'space-between',
+    alignItems: 'center',
     marginTop: cx(10),
+  },
+  timeViewBorder: {
+    borderBottomColor: 'rgba(255, 255, 255, 0.1)',
+    borderBottomWidth: cx(1),
+  },
+  timeInput: {
+    flex: 1,
+    height: cx(48),
+    color: 'rgba(255, 255, 255, 0.7)',
+    fontSize: cx(14),
+  },
+  timeInputUnit: {
+    fontSize: cx(14),
+    color: 'rgba(255, 255, 255, 0.7)',
   },
   timeItem: {
     width: cx(89),

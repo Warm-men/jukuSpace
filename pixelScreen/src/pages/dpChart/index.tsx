@@ -49,10 +49,10 @@ function DpChart() {
           activeColor={themeColor[tab]}
         >
           <Tabs.TabPanel>
-            <WorkRecord dpId={dpIds[0]} />
+            <WorkRecord dpId={dpIds[0]} tab={tab} />
           </Tabs.TabPanel>
           <Tabs.TabPanel>
-            <WorkRecord dpId={dpIds[1]} />
+            <WorkRecord dpId={dpIds[1]} tab={tab} />
           </Tabs.TabPanel>
         </Tabs>
       </ScrollView>
