@@ -5,9 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { commonColor, cx } from '@config/styles';
 import { useSelector } from 'react-redux';
-import _deepClone from 'lodash/cloneDeep';
 import _isEqual from 'lodash/isEqual';
-import _isEmpty from 'lodash/isEmpty';
 import Res from '@res';
 import i18n from '@i18n';
 import { dpCodes } from '@config';
@@ -57,7 +55,6 @@ function Scene() {
   };
 
   const getHint = () => {
-
     if (sceneItem.manualClose === 1) return i18n.getLang('manual_close'); // 已开启，自动关闭未开启，需要手动关闭
 
     const leftTime = getSleepLeftTime(sleepAidStatus);
@@ -96,16 +93,20 @@ function Scene() {
 
     return images.map((item: any, index: number) => {
       const is2 = index > 0;
+      const marginLeft = is2 ? -cx(18) : 0;
+      const zIndex = is2 ? -1 : 1;
+      const marginBottom = is2 ? cx(14) : 0;
+      const uniqueKey = `image_${index}`; // Generate a unique key
       if (item === null)
         return (
           <View
-            key={item}
+            key={uniqueKey}
             style={[
               styles.sceneItemViewImg,
               {
-                marginLeft: is2 ? -cx(18) : 0,
-                zIndex: is2 ? -1 : 1,
-                marginBottom: is2 ? cx(14) : 0,
+                marginLeft,
+                zIndex,
+                marginBottom,
               },
             ]}
           />
@@ -113,13 +114,13 @@ function Scene() {
       return (
         <Image
           source={item}
-          key={item}
+          key={uniqueKey}
           style={[
             styles.sceneItemViewImg,
             {
-              marginLeft: is2 ? -cx(18) : 0,
-              zIndex: is2 ? -1 : 1,
-              marginBottom: is2 ? cx(14) : 0,
+              marginLeft,
+              zIndex,
+              marginBottom,
             },
           ]}
         />

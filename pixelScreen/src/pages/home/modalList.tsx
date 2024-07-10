@@ -191,9 +191,9 @@ const styles = StyleSheet.create({
     width: cx(372),
   },
   effectItem: {
-    width: cx(154),
+    width: cx(90),
     marginRight: cx(18),
-    marginBottom: cx(20),
+    marginBottom: cx(16),
   },
   effectItemEffect: {
     borderWidth: cx(3),
@@ -203,8 +203,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   effectImage: {
-    width: cx(152),
-    height: cx(77),
+    width: cx(88),
+    height: cx(44),
     borderRadius: cx(8),
     borderWidth: cx(2),
     borderColor: '#21202C',

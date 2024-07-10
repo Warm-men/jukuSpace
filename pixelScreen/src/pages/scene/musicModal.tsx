@@ -1,54 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
 import { Utils, TYText } from 'tuya-panel-kit';
-import _deepClone from 'lodash/cloneDeep';
 import ModalPop from '@components/modalRender';
 import i18n from '@i18n';
-import Res from '@res';
+import { sceneMusicList, Music } from '@config/common';
 
 const { convertX: cx } = Utils.RatioUtils;
 
-interface Music {
-  name?: string;
-  icon?: any;
-  id: number;
-}
-
-const musicList: Music[] = [
-  {
-    name: i18n.getLang('scene_music_0'),
-    icon: Res.scene_music_0,
-    id: 0,
-  },
-  {
-    name: i18n.getLang('scene_music_1'),
-    icon: Res.scene_music_1,
-    id: 1,
-  },
-  {
-    name: i18n.getLang('scene_music_2'),
-    icon: Res.scene_music_2,
-    id: 2,
-  },
-  {
-    name: i18n.getLang('scene_music_3'),
-    icon: Res.scene_music_3,
-    id: 3,
-  },
-  {
-    name: i18n.getLang('scene_music_4'),
-    icon: Res.scene_music_4,
-    id: 4,
-  },
-  {
-    name: i18n.getLang('scene_music_5'),
-    icon: Res.scene_music_5,
-    id: 5,
-  },
-];
-
 const PopUp = (props: any) => {
   const { isVisiblePop, onClose, onConfirm, value } = props;
+
+  useEffect(() => {
+    setSelectedAnimate(value);
+  }, [value]);
 
   const [selectedAnimate, setSelectedAnimate] = useState<number>(value);
 
@@ -68,7 +32,7 @@ const PopUp = (props: any) => {
         onClose();
         setSelectedAnimate(value);
       }}
-      popupViewHeight={cx(420)}
+      popupViewHeight={cx(534)}
       onConfirm={handleConfirm}
       title={i18n.getLang('scene_music')}
     >
@@ -77,7 +41,7 @@ const PopUp = (props: any) => {
         contentContainerStyle={{ paddingLeft: cx(22), paddingBottom: cx(16) }}
       >
         <View style={styles.popupViewEffect}>
-          {musicList.map(item => {
+          {sceneMusicList.map(item => {
             return (
               <View key={item.id} style={styles.effectItem}>
                 <TouchableOpacity
@@ -119,22 +83,22 @@ const styles = StyleSheet.create({
   },
   listView: {
     width: cx(372),
-    marginBottom: cx(16),
+    marginBottom: cx(18),
   },
   effectItem: {
-    width: cx(100),
-    marginRight: cx(18),
+    width: cx(96),
+    marginRight: cx(21),
     marginTop: cx(12),
   },
   effectItemEffect: {
     borderWidth: cx(3),
     borderColor: 'transparent',
     borderRadius: cx(12),
-    marginBottom: cx(4),
+    marginBottom: cx(10),
     overflow: 'hidden',
   },
   effectImage: {
-    width: cx(98),
-    height: cx(98),
+    width: cx(94),
+    height: cx(94),
   },
 });

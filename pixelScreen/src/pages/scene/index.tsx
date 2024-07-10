@@ -9,8 +9,7 @@ import Res from '@res';
 import { dpCodes } from '@config';
 import i18n from '@i18n';
 import { sceneDataDefault } from '@config/common';
-import { getSleepLeftTime, sleepStr2Object, sleep2String, getSoundOrLightString } from '@utils';
-
+import { getSleepLeftTime, sleepStr2Object, sleep2String } from '@utils';
 import { TYText, TopBar, Progress, TYSdk, GlobalToast } from 'tuya-panel-kit';
 import _ from 'lodash';
 import Countdown from '@components/countdown';
@@ -68,8 +67,12 @@ function Scene() {
       [id]: value,
     };
     setSceneData(_sceneData);
-    const dpData = sleep2String(_sceneData);
+  };
+
+  const save = () => {
+    const dpData = sleep2String(sceneData);
     TYSdk.device.putDeviceData({ [sleepSettingCode]: dpData });
+    navigation.goBack();
   };
 
   const toggleWorking = () => {
@@ -200,12 +203,38 @@ function Scene() {
   const countdownImage = sceneData.manualClose ? Res.auto_close_off : Res.auto_close_on;
 
   const updateVolume = (value: number) => {
-    if (isWorking) {
-      TYSdk.device.putDeviceData({ [volumeSetCode]: value * 10 });
-    } else {
-      updateSceneState('musicVolume', value);
-    }
+    TYSdk.device.putDeviceData({ [volumeSetCode]: value * 10 });
+    updateSceneState('musicVolume', value);
+    // if (isWorking) {
+    //   TYSdk.device.putDeviceData({ [volumeSetCode]: value * 10 });
+    // } else {
+    //   updateSceneState('musicVolume', value);
+    // }
   };
+
+  const offWorkingBottom = [
+    {
+      text: i18n.getLang('countdown'),
+      onPress: () => {
+        toggleCountdown();
+      },
+      image: countdownImage,
+    },
+    {
+      text: i18n.getLang(`sleep_animate_${sceneData.animation}`),
+      onPress: () => {
+        setShowAnimate(true);
+      },
+      image: Res.xing,
+    },
+    {
+      text: i18n.getLang(`scene_music_${sceneData.music}`),
+      onPress: () => {
+        setShowMusic(true);
+      },
+      image: Res.music_icon,
+    },
+  ];
 
   return (
     <View style={styles.flex1}>
@@ -226,6 +255,18 @@ function Scene() {
                 <Image source={Res.close_1} style={styles.backImage} />
               </TouchableOpacity>
             ),
+          },
+        ]}
+        actions={[
+          {
+            children: (
+              <TouchableOpacity style={styles.saveView} onPress={save}>
+                <TYText style={styles.saveText}>{i18n.getLang('save')}</TYText>
+              </TouchableOpacity>
+            ),
+            style: {
+              marginRight: cx(24),
+            },
           },
         ]}
       />
@@ -250,7 +291,20 @@ function Scene() {
         </View>
         {!isWorking ? (
           <View style={styles.effectView}>
-            <TouchableOpacity activeOpacity={0.8} onPress={toggleCountdown}>
+            {offWorkingBottom.map((item, index) => {
+              return (
+                <TouchableOpacity
+                  key={item.text}
+                  activeOpacity={0.8}
+                  onPress={item.onPress}
+                  style={styles.effectViewWrap}
+                >
+                  <Image source={item.image} style={styles.effectIcon} />
+                  <TYText style={styles.effectViewText}>{item.text}</TYText>
+                </TouchableOpacity>
+              );
+            })}
+            {/* <TouchableOpacity activeOpacity={0.8} onPress={toggleCountdown}>
               <View style={styles.effectViewWrap}>
                 <Image source={countdownImage} style={styles.effectIcon} />
                 <TYText style={styles.effectViewText}>{i18n.getLang('countdown')}</TYText>
@@ -281,33 +335,31 @@ function Scene() {
                   {i18n.getLang(`scene_music_${sceneData.music}`)}
                 </TYText>
               </View>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         ) : null}
 
-        {isWorking ? (
-          <View style={{ marginTop: cx(34), marginBottom: cx(50) }}>
-            <View>
-              <View style={[styles.row, styles.spaceBt]}>
-                <TYText style={styles.sliderText}>{i18n.getLang('volume_setting')}</TYText>
-                <TYText style={styles.sliderText1}>{volumeSet / 10}</TYText>
-              </View>
-              <SliderView
-                value={volumeSet / 10}
-                style={styles.sliderView}
-                img={Res.volume}
-                min={1}
-                max={10}
-                step={1}
-                onComplete={(value: number) => {
-                  // updateSceneState('musicVolume', value);
-                  updateVolume(value);
-                }}
-                showValue={false}
-              />
+        <View style={{ marginTop: cx(34), marginBottom: cx(50) }}>
+          <View>
+            <View style={[styles.row, styles.spaceBt]}>
+              <TYText style={styles.sliderText}>{i18n.getLang('volume_setting')}</TYText>
+              <TYText style={styles.sliderText1}>{volumeSet / 10}</TYText>
             </View>
+            <SliderView
+              value={volumeSet / 10}
+              style={styles.sliderView}
+              img={Res.volume}
+              min={1}
+              max={10}
+              step={1}
+              onComplete={(value: number) => {
+                // updateSceneState('musicVolume', value);
+                updateVolume(value);
+              }}
+              showValue={false}
+            />
           </View>
-        ) : null}
+        </View>
       </ScrollView>
       <AnimateModal
         isVisiblePop={showAnimate}
@@ -481,5 +533,17 @@ const styles = StyleSheet.create({
     color: '#fff',
     lineHeight: cx(20),
     width: cx(160),
+  },
+  saveView: {
+    width: cx(52),
+    height: cx(26),
+    backgroundColor: commonColor.mainColor,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: cx(12),
+  },
+  saveText: {
+    fontSize: cx(14),
+    color: commonColor.mainText,
   },
 });

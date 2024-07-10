@@ -1,18 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { View, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { TopBar, TYSdk, TYText } from 'tuya-panel-kit';
 import { useSelector } from 'react-redux';
-import _deepClone from 'lodash/cloneDeep';
 import { commonStyles, cx, commonColor } from '@config/styles';
 import Res from '@res';
 import i18n from '@i18n';
 import SwitchView from '@components/switch';
 import { dpCodes } from '@config';
-// import { modelConfig } from '@config/common';
-// import EditPopup from './editModal';
-import Alarm from './alarm';
+import Clock from './clock';
 import styles from './styles';
 import { clockString2Object, repeat2Text } from '../../utils';
 import Scene from './scene';
@@ -44,13 +41,6 @@ const {
   alarm2SettingCode,
   timeModeCode,
 } = dpCodes;
-interface ModelConfig {
-  name?: string;
-  icon?: any;
-  modeId: number;
-  dpValue: string;
-  isActive?: boolean;
-}
 
 function Home() {
   const { name } = useSelector(({ devInfo }: any) => devInfo);
@@ -65,21 +55,6 @@ function Home() {
     [alarm2SettingCode]: alarm2Setting,
     [timeModeCode]: timeMode,
   } = useSelector(({ dpState }: any) => dpState);
-
-  // const [isVisiblePop, setIsVisiblePop] = useState(false);
-  // const [modeData, setModeData] = useState<ModelConfig[]>([]);
-
-  // useEffect(() => {
-  //   const data: ModelConfig[] = playListString2Map(playList);
-  //   const newData: ModelConfig[] = [];
-  //   data.forEach(item => {
-  //     const _item = modelConfig.find(i => i.modeId === item.modeId);
-  //     if (_item) {
-  //       newData.push(_item);
-  //     }
-  //   });
-  //   setModeData(newData);
-  // }, [playList]);
 
   const navigation = useNavigation<StackNavigationProp<any, any>>();
 
@@ -262,7 +237,7 @@ function Home() {
           </View>
         </TouchableOpacity>
       </ScrollView>
-      <Alarm />
+      <Clock />
     </View>
   );
 }

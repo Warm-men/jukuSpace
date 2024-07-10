@@ -213,3 +213,211 @@ export const sceneDataDefault = {
   animation: 0, // 动画序号
   manualClose: 0, // 0-自动关闭，1-手动关闭
 };
+
+export type Music = {
+  name?: string;
+  icon?: any;
+  id: number;
+};
+
+export const sceneMusicList: Music[] = [
+  {
+    name: i18n.getLang('scene_music_0'),
+    icon: Res.mute,
+    id: 0,
+  },
+  {
+    name: i18n.getLang('scene_music_1'),
+    icon: Res.scene_music_1,
+    id: 1,
+  },
+  {
+    name: i18n.getLang('scene_music_2'),
+    icon: Res.scene_music_2,
+    id: 2,
+  },
+  {
+    name: i18n.getLang('scene_music_3'),
+    icon: Res.scene_music_3,
+    id: 3,
+  },
+  {
+    name: i18n.getLang('scene_music_4'),
+    icon: Res.scene_music_4,
+    id: 4,
+  },
+  {
+    name: i18n.getLang('scene_music_5'),
+    icon: Res.scene_music_5,
+    id: 5,
+  },
+  {
+    name: i18n.getLang('scene_music_6'),
+    icon: Res.scene_music_6,
+    id: 6,
+  },
+  {
+    name: i18n.getLang('scene_music_7'),
+    icon: Res.scene_music_7,
+    id: 7,
+  },
+  {
+    name: i18n.getLang('scene_music_8'),
+    icon: Res.scene_music_8,
+    id: 8,
+  },
+  {
+    name: i18n.getLang('scene_music_9'),
+    icon: Res.scene_music_9,
+    id: 9,
+  },
+  {
+    name: i18n.getLang('scene_music_10'),
+    icon: Res.scene_music_10,
+    id: 10,
+  },
+  {
+    name: i18n.getLang('scene_music_11'),
+    icon: Res.scene_music_11,
+    id: 11,
+  },
+];
+
+export const clockMusicList: Music[] = [
+  {
+    name: i18n.getLang('music_0'),
+    icon: Res.mute,
+    id: 0,
+  },
+  {
+    name: i18n.getLang('music_1'),
+    icon: Res.clock_1,
+    id: 1,
+  },
+  {
+    name: i18n.getLang('music_2'),
+    icon: Res.clock_2,
+    id: 2,
+  },
+  {
+    name: i18n.getLang('music_3'),
+    icon: Res.clock_3,
+    id: 3,
+  },
+  {
+    name: i18n.getLang('music_4'),
+    icon: Res.clock_4,
+    id: 4,
+  },
+  {
+    name: i18n.getLang('music_5'),
+    icon: Res.clock_5,
+    id: 5,
+  },
+  {
+    name: i18n.getLang('music_6'),
+    icon: Res.clock_6,
+    id: 6,
+  },
+  {
+    name: i18n.getLang('music_7'),
+    icon: Res.clock_7,
+    id: 7,
+  },
+];
+
+export const clockAnimationList: Music[] = [
+  {
+    name: i18n.getLang('clock_animation_0'),
+    icon: Res.no_animation,
+    id: 0,
+  },
+  {
+    name: i18n.getLang('clock_animation_1'),
+    icon: Res.clock_animate_1,
+    id: 1,
+  },
+  {
+    name: i18n.getLang('clock_animation_2'),
+    icon: Res.clock_animate_2,
+    id: 2,
+  },
+  {
+    name: i18n.getLang('clock_animation_3'),
+    icon: Res.clock_animate_3,
+    id: 3,
+  },
+  {
+    name: i18n.getLang('clock_animation_4'),
+    icon: Res.clock_animate_4,
+    id: 4,
+  },
+  {
+    name: i18n.getLang('clock_animation_5'),
+    icon: Res.clock_animate_5,
+    id: 5,
+  },
+  {
+    name: i18n.getLang('clock_animation_6'),
+    icon: Res.clock_animate_6,
+    id: 6,
+  },
+  {
+    name: i18n.getLang('clock_animation_7'),
+    icon: Res.clock_animate_7,
+    id: 7,
+  },
+  {
+    name: i18n.getLang('clock_animation_8'),
+    icon: Res.clock_animate_8,
+    id: 8,
+  },
+];
+
+export const sceneAnimationList: Music[] = [
+  {
+    name: i18n.getLang('sleep_animate_0'),
+    icon: Res.no_animation,
+    id: 0,
+  },
+  {
+    name: i18n.getLang('sleep_animate_1'),
+    icon: Res.sleep_animate_1,
+    id: 1,
+  },
+  {
+    name: i18n.getLang('sleep_animate_2'),
+    icon: Res.sleep_animate_2,
+    id: 2,
+  },
+  {
+    name: i18n.getLang('sleep_animate_3'),
+    icon: Res.sleep_animate_3,
+    id: 3,
+  },
+  {
+    name: i18n.getLang('sleep_animate_4'),
+    icon: Res.sleep_animate_4,
+    id: 4,
+  },
+  {
+    name: i18n.getLang('sleep_animate_5'),
+    icon: Res.sleep_animate_5,
+    id: 5,
+  },
+  {
+    name: i18n.getLang('sleep_animate_6'),
+    icon: Res.sleep_animate_6,
+    id: 6,
+  },
+  {
+    name: i18n.getLang('sleep_animate_7'),
+    icon: Res.sleep_animate_7,
+    id: 7,
+  },
+  {
+    name: i18n.getLang('sleep_animate_8'),
+    icon: Res.sleep_animate_8,
+    id: 8,
+  },
+];

@@ -215,7 +215,6 @@ function Clock() {
 
   const getAnimationText = () => {
     const { animationId } = clockDataState;
-    console.log('🚀 ~ file: index.tsx:218 ~ getAnimationText ~ animationId:', animationId);
     return i18n.getLang(`clock_animation_${animationId}`);
   };
 
@@ -258,6 +257,9 @@ function Clock() {
                 <TYText style={styles.saveText}>{i18n.getLang('save')}</TYText>
               </TouchableOpacity>
             ),
+            style: {
+              marginRight: cx(24),
+            },
           },
         ]}
       />
@@ -324,7 +326,13 @@ function Clock() {
               {i18n.getLang('clock_volume')}
             </TYText>
             <View style={styles.sliderView}>
-              <SliderHorizontal value={musicVolume} onValueChange={onChangeVolume} />
+              <SliderHorizontal
+                value={musicVolume}
+                onValueChange={onChangeVolume}
+                step={1}
+                min={1}
+                max={10}
+              />
               <TYText size={cx(14)} color="#C5C5C5">
                 {musicVolume}
               </TYText>

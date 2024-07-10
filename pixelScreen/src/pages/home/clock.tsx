@@ -3,7 +3,6 @@ import { View, TouchableOpacity, Modal, Image } from 'react-native';
 import { TYText, TYSdk } from 'tuya-panel-kit';
 import { commonColor, cx } from '@config/styles';
 import { useSelector } from 'react-redux';
-import _deepClone from 'lodash/cloneDeep';
 import Res from '@res';
 import i18n from '@i18n';
 import { dpCodes } from '@config';
@@ -13,7 +12,7 @@ import { clockString2Object } from '../../utils';
 const { clockStatusCode, alarmStopCode, alarm1SettingCode, alarm2SettingCode, snoozeCode } =
   dpCodes;
 
-function Alarm() {
+function Clock() {
   const {
     [clockStatusCode]: clockStatusData,
     [alarm1SettingCode]: alarm1Setting,
@@ -147,4 +146,4 @@ function Alarm() {
   );
 }
 
-export default Alarm;
+export default Clock;

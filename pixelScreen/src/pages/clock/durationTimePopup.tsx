@@ -14,7 +14,7 @@ const PopUp = (props: any) => {
   const [value, setValue] = useState(_value);
 
   const getPickerData = () => {
-    const range = Utils.NumberUtils.range(1, 121, 1);
+    const range = Utils.NumberUtils.range(5, 35, 5);
     const timerRange = range.map((item: number) => {
       return {
         label: `${item}`,

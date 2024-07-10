@@ -278,7 +278,7 @@ function ModalEdit() {
           />
         </View> */}
 
-        <View style={[styles.optionViewItem]}>
+        {/* <View style={[styles.optionViewItem]}>
           <View style={[commonStyles.flexRowBetween, styles.optionViewWidth]}>
             <TYText size={cx(14)} color="#C5C5C5">
               {i18n.getLang('border_style')}
@@ -303,7 +303,7 @@ function ModalEdit() {
               );
             })}
           </View>
-        </View>
+        </View> */}
 
         <View style={[styles.optionViewItem]}>
           <View style={[commonStyles.flexRowBetween, styles.optionViewWidth]}>
@@ -366,6 +366,9 @@ function ModalEdit() {
                 <TYText style={styles.saveText}>{i18n.getLang('save')}</TYText>
               </TouchableOpacity>
             ),
+            style: {
+              marginRight: cx(24),
+            },
           },
         ]}
       />
@@ -397,7 +400,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: cx(12),
-    marginRight: cx(52),
   },
   saveText: {
     fontSize: cx(14),

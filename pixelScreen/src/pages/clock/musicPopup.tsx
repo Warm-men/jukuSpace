@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { View, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native';
 import { Utils, TYText } from 'tuya-panel-kit';
-import _times from 'lodash/times';
-import _deepClone from 'lodash/cloneDeep';
-import Res from '@res';
 import i18n from '@i18n';
 import ModalPop from '@components/modalRender';
+import { clockMusicList, Music } from '@config/common';
 
 const { convertX: cx } = Utils.RatioUtils;
 
@@ -29,14 +27,13 @@ const PopUp = (props: any) => {
     >
       <ScrollView contentContainerStyle={{ paddingBottom: cx(28) }}>
         <View style={styles.musicBox}>
-          {_times(9).map((item: number, index: number) => {
-            const isActive = index === value;
-            const img = index === 0 ? Res.scene_music_0 : Res[`clock_${index - 1}`];
+          {clockMusicList.map((item: Music, index: number) => {
+            const isActive = item.id === value;
             return (
-              <View key={item} style={styles.musicItem}>
+              <View key={index} style={styles.musicItem}>
                 <TouchableOpacity
                   onPress={() => {
-                    setValue(index);
+                    setValue(item.id);
                   }}
                   activeOpacity={0.8}
                   style={[
@@ -46,10 +43,10 @@ const PopUp = (props: any) => {
                     },
                   ]}
                 >
-                  <Image source={img} style={styles.musicImage} />
+                  <Image source={item.icon} style={styles.musicImage} />
                 </TouchableOpacity>
                 <TYText size={cx(14)} color="#F6F6F6" align="center">
-                  {i18n.getLang(`music_${index}`)}
+                  {item.name}
                 </TYText>
               </View>
             );
@@ -67,25 +64,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
-    paddingLeft: cx(16),
+    paddingLeft: cx(18),
   },
   musicItem: {
-    width: cx(100),
+    width: cx(96),
     marginBottom: cx(22),
-    borderRadius: cx(12),
-    marginRight: cx(16),
+    marginRight: cx(21),
   },
   imageView: {
-    width: cx(108),
-    height: cx(108),
+    width: cx(102),
+    height: cx(102),
     borderRadius: cx(12),
     borderWidth: cx(4),
     borderColor: 'transparent',
+    marginBottom: cx(10),
   },
   musicImage: {
-    width: cx(100),
-    height: cx(100),
-    // borderRadius: cx(8),
-    marginBottom: cx(8),
+    width: cx(94),
+    height: cx(94),
   },
 });
