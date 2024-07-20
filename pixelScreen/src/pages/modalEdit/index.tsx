@@ -403,6 +403,9 @@ function ModalEdit() {
                 <Image source={Res.close_1} style={styles.backImage} />
               </TouchableOpacity>
             ),
+            style: {
+              marginLeft: cx(24),
+            },
           },
         ]}
         actions={[
@@ -436,7 +439,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   backView: {
-    marginLeft: cx(24),
     width: cx(24),
     height: cx(24),
   },

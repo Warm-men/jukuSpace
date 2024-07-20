@@ -50,7 +50,7 @@ function RowItem(props) {
       <TYText
         size={cx(14)}
         color="#C5C5C5"
-        style={{ width: cx(150), textAlign: 'left' }}
+        style={{ width: cx(130), textAlign: 'left' }}
         numberOfLines={1}
       >
         {title}
@@ -60,7 +60,7 @@ function RowItem(props) {
           <TYText
             size={cx(14)}
             color="#C5C5C5"
-            style={{ width: cx(100), textAlign: 'right' }}
+            style={{ width: cx(150), textAlign: 'right' }}
             numberOfLines={1}
           >
             {text}
@@ -248,6 +248,9 @@ function Clock() {
                 <Image source={Res.close_1} style={styles.backImage} />
               </TouchableOpacity>
             ),
+            style: {
+              marginLeft: cx(24),
+            },
           },
         ]}
         actions={[

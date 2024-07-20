@@ -2,7 +2,6 @@ import React from 'react';
 import { View, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { Progress } from 'tuya-panel-kit';
 import { cx } from '@config/styles';
-// import _deepClone from 'lodash/cloneDeep';
 import Res from '@res';
 
 function PlayButton(props) {

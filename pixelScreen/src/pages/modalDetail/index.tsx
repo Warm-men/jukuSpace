@@ -182,15 +182,22 @@ function ModalEdit() {
     return (
       <View style={styles.footerView}>
         <View style={[styles.optionViewItem]}>
-          <View style={[commonStyles.flexRowBetween, styles.optionViewWidth]}>
+          <View style={[commonStyles.flexRowBetween]}>
             <TYText size={cx(14)} color="#C5C5C5">
               {i18n.getLang('time_text_color')}
             </TYText>
-            <View style={[commonStyles.flexRowBetween, { width: cx(120) }]}>
-              {colorOptions.map(item => {
+          </View>
+          <View style={[commonStyles.flexRowBetween, styles.optionViewWidth]}>
+            <View style={styles.colorOptionView}>
+              {colorOptions.map((item, index) => {
                 return (
                   <TouchableOpacity key={item.value} activeOpacity={0.85} onPress={item.onClick}>
-                    <View style={[commonStyles.flexRowCenter]}>
+                    <View
+                      style={[
+                        commonStyles.flexRowCenter,
+                        { marginRight: index === 0 ? cx(10) : 0 },
+                      ]}
+                    >
                       <Image
                         source={item.isActive ? Res.time_color_focus : Res.time_color_blur}
                         style={styles.selectColor}
@@ -357,6 +364,9 @@ function ModalEdit() {
                 <Image source={Res.close_1} style={styles.backImage} />
               </TouchableOpacity>
             ),
+            style: {
+              marginLeft: cx(24),
+            },
           },
         ]}
         actions={[
@@ -385,7 +395,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   backView: {
-    marginLeft: cx(24),
     width: cx(24),
     height: cx(24),
   },
@@ -453,6 +462,12 @@ const styles = StyleSheet.create({
   optionViewWidth: {
     width: cx(295),
     height: cx(42),
+  },
+  colorOptionView: {
+    width: cx(180),
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    flexDirection: 'row',
   },
   optionViewItem: {
     borderRadius: cx(16),

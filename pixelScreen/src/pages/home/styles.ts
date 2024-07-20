@@ -183,6 +183,7 @@ const styles = StyleSheet.create({
     height: StyleSheet.hairlineWidth,
     backgroundColor: '#3B394A',
     marginVertical: cx(8),
+    marginBottom: cx(16),
   },
   modalItemView: {
     borderRadius: cx(8),

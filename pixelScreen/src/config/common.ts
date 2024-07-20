@@ -324,6 +324,16 @@ export const clockMusicList: Music[] = [
     icon: Res.clock_7,
     id: 7,
   },
+  {
+    name: i18n.getLang('scene_music_4'),
+    icon: Res.scene_music_4,
+    id: 4,
+  },
+  {
+    name: i18n.getLang('scene_music_5'),
+    icon: Res.scene_music_5,
+    id: 5,
+  },
 ];
 
 export const clockAnimationList: Music[] = [

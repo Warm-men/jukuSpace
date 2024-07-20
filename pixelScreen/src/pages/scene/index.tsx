@@ -142,7 +142,7 @@ function Scene() {
     return (
       <View style={[styles.center, styles.flex1]}>
         <Image source={Res.auto_close_off} style={styles.autoClose} />
-        <TYText style={styles.autoCloseText} align="center" numberOfLines={2}>
+        <TYText style={styles.autoCloseText} align="center" numberOfLines={4}>
           {i18n.getLang('auto_close_off')}
         </TYText>
       </View>
@@ -255,6 +255,9 @@ function Scene() {
                 <Image source={Res.close_1} style={styles.backImage} />
               </TouchableOpacity>
             ),
+            style: {
+              marginLeft: cx(24),
+            },
           },
         ]}
         actions={[
@@ -391,7 +394,6 @@ export default Scene;
 
 const styles = StyleSheet.create({
   backView: {
-    marginLeft: cx(24),
     width: cx(24),
     height: cx(24),
   },
@@ -532,7 +534,7 @@ const styles = StyleSheet.create({
     fontSize: cx(16),
     color: '#fff',
     lineHeight: cx(20),
-    width: cx(160),
+    width: cx(180),
   },
   saveView: {
     width: cx(52),

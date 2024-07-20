@@ -209,6 +209,7 @@ function Setting() {
         onConfirm={() => setShowLightPop(false)}
         isVisiblePop={showLightPop}
         dpCode={backlightEnumCode}
+        hasClosed={true}
         title={i18n.getDpLang(backlightEnumCode)}
       />
     </View>

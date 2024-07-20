@@ -73,7 +73,6 @@ const styles = StyleSheet.create({
   backView: {
     width: cx(24),
     height: cx(24),
-    marginLeft: cx(24),
   },
   backImage: {
     width: cx(24),

@@ -11,7 +11,7 @@ import i18n from '@i18n';
 import { dpCodes } from '@config';
 import { getSleepLeftTime, sleepStr2Object, sleep2String } from '@utils';
 import { sceneDataDefault } from '@config/common';
-import PlayButton from './PlayButton';
+import PlayButton from '@components/playButton';
 
 const { sleepAidStatusCode, switchFaSleepCode, sleepSettingCode } = dpCodes;
 
@@ -85,7 +85,9 @@ function Scene() {
     if (music === undefined) {
       return [null, Res[`scene_music_${animation}`]];
     }
-    return [Res[`sleep_animate_${animation}`], Res[`scene_music_${music}`]];
+    const musicImg = music === 0 ? Res.mute : Res[`scene_music_${music}`];
+    const animationImg = animation === 0 ? Res.no_animation : Res[`sleep_animate_${animation}`];
+    return [animationImg, musicImg];
   };
 
   const renderImages = () => {
@@ -96,7 +98,7 @@ function Scene() {
       const marginLeft = is2 ? -cx(18) : 0;
       const zIndex = is2 ? -1 : 1;
       const marginBottom = is2 ? cx(14) : 0;
-      const uniqueKey = `image_${index}`; // Generate a unique key
+      const uniqueKey = `image_${index}`;
       if (item === null)
         return (
           <View

@@ -2,7 +2,7 @@ import React from 'react';
 import { View, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { TopBar, TYSdk, TYText } from 'tuya-panel-kit';
+import { TopBar, TYSdk, TYText, Utils } from 'tuya-panel-kit';
 import { useSelector } from 'react-redux';
 import { commonStyles, cx, commonColor } from '@config/styles';
 import Res from '@res';
@@ -110,7 +110,9 @@ function Home() {
     if (music === undefined) {
       return [null, Res[`clock_${animationId}`]];
     }
-    return [Res[`clock_animate_${animationId}`], Res[`clock_${music}`]];
+    const musicImg = music === 0 ? Res.mute : Res[`clock_${music}`];
+    const animationImg = animationId === 0 ? Res.no_animation : Res[`clock_animate_${animationId}`];
+    return [animationImg, musicImg];
   };
 
   const renderImages = data => {
@@ -178,6 +180,12 @@ function Home() {
     });
   };
 
+  const getTemperature = () => {
+    const isC = tempCF === 'c';
+    const fTem = Utils.TemperatureUtils.c2f(tempData / 10);
+    return isC ? tempData / 10 : fTem;
+  };
+
   return (
     <View style={commonStyles.flexOne}>
       <TopBar
@@ -213,7 +221,7 @@ function Home() {
           <View style={styles.tempHumView}>
             <View style={styles.tempHumLeft}>
               <View style={styles.tempHumLeft}>
-                <TYText style={styles.text24BW}>{tempData / 10}</TYText>
+                <TYText style={styles.text24BW}>{getTemperature()}</TYText>
                 <TYText style={[styles.text12, { marginTop: cx(4), marginLeft: cx(4) }]}>
                   {i18n.getDpLang(tempCFCode, tempCF)}
                 </TYText>

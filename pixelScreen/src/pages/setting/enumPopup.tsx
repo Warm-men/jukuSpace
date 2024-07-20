@@ -9,7 +9,7 @@ import Res from '@res';
 const { convertX: cx } = Utils.RatioUtils;
 
 const PopUp = (props: any) => {
-  const { isVisiblePop, onClose, dpCode, title } = props;
+  const { isVisiblePop, onClose, dpCode, title, hasClosed = false } = props;
 
   const { [dpCode]: dpValue } = useSelector(({ dpState }: any) => dpState);
 
@@ -32,7 +32,7 @@ const PopUp = (props: any) => {
     return null;
   }
 
-  const dpRange = dpSchema.range;
+  const dpRange = hasClosed ? dpSchema.range?.filter(item => item !== 'closed') : dpSchema.range;
 
   if (!dpRange) {
     return null;

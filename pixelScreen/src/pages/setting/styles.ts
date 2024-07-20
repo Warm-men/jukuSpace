@@ -17,12 +17,12 @@ const styles = StyleSheet.create({
   clickTextTitle: {
     fontSize: cx(14),
     color: '#C5C5C5',
-    width: cx(100),
+    width: cx(160),
   },
   clickText: {
     fontSize: cx(14),
     color: '#78787A',
-    width: cx(180),
+    width: cx(170),
     textAlign: 'right',
   },
   pickerText: {
