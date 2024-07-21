@@ -111,10 +111,7 @@ const ModalList = (props: any) => {
     const category1 = data.filter(item => modalCategoryIds1.includes(item.modeId));
     const category2 = data.filter(item => modalCategoryIds2.includes(item.modeId));
     const category3 = data.filter(item => modalCategoryIds3.includes(item.modeId));
-    const category4 = data.filter(item => modalCategoryIds4.includes(item.modeId));
-    const category5 = data.filter(item => modalCategoryIds5.includes(item.modeId));
-    const category6 = data.filter(item => modalCategoryIds6.includes(item.modeId));
-    return [category1, category2, category3, category4, category5, category6];
+    return [category1, category2, category3];
   };
 
   return (

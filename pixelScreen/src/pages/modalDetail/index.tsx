@@ -7,7 +7,7 @@ import { TYText, TYSdk, TopBar, Dialog, Notification } from 'tuya-panel-kit';
 import { useSelector } from 'react-redux';
 import Res from '@res';
 import _times from 'lodash/times';
-import SliderHorizontal from '@components/sliderHorizontal';
+// import SliderHorizontal from '@components/sliderHorizontal';
 import i18n from '@i18n';
 import { cx, commonColor, width, commonStyles } from '@config/styles';
 import { modelConfig, gradientColors1, gradientColors2 } from '@config/common';
@@ -51,7 +51,7 @@ function ModalEdit() {
   const [gradientColorType, setGradientColorType] = useState(0);
   const [screenBrightness, setScreenBrightness] = useState(0);
   const [extra, setExtra] = useState<Extra>({}); // 保存额外数据
-  const [borderColor, setBorderColor] = useState(0); // 边框颜色
+  // const [borderColor, setBorderColor] = useState(0); // 边框颜色
 
   const textRef = useRef(null);
 
@@ -77,8 +77,8 @@ function ModalEdit() {
       const _gradientColorType = _extra.textColor ? _extra.textColor : 0;
       const _screenBrightness = _extra.brightness ? _extra.brightness : 0;
       const _repeatTime = _extra.stayTime ? _extra.stayTime : repeatTimeData[2];
-      const _borderColor = _extra.borderColor ? _extra.borderColor : 0;
-      setBorderColor(_borderColor);
+      // const _borderColor = _extra.borderColor ? _extra.borderColor : 0;
+      // setBorderColor(_borderColor);
       setTimeColorType(_timeColorType);
       setGradientColorType(_gradientColorType);
       setScreenBrightness(_screenBrightness);
@@ -109,7 +109,7 @@ function ModalEdit() {
 
     const _extra = {
       ...extra,
-      borderColor,
+      borderColor: 0,
       stayTime: repeatTime,
       textColor: gradientColorType,
       brightness: screenBrightness,

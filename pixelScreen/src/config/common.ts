@@ -21,12 +21,11 @@ interface ModelConfig {
   };
 }
 
-export const modalCategoryIds1 = [11, 12];
-export const modalCategoryIds2 = [21, 22, 23, 24];
-export const modalCategoryIds3 = [31, 32];
-export const modalCategoryIds4 = [41, 42];
-export const modalCategoryIds5 = [51, 52, 53, 54];
-export const modalCategoryIds6 = [61, 62, 63, 64, 65];
+export const modalCategoryIds1 = [11, 12, 13];
+export const modalCategoryIds2 = [21, 31];
+export const modalCategoryIds3 = [
+  51, 52, 53, 54, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 86, 87, 88, 89, 90,
+];
 
 // Data[0]第1个列表序号要显示的模板编号，对应的模板参数；
 // Data[1] 背景色：黑底，对比色，5纯色；
@@ -63,89 +62,134 @@ export const modelConfig: ModelConfig[] = [
     dpValue: '0c00000000000000000000',
   },
   {
-    icon: Res.mode_21,
-    modeId: 21,
+    icon: Res.mode_13,
+    modeId: 13,
     dpValue: '150000000000000000',
   },
   {
-    icon: Res.mode_22,
-    modeId: 22,
+    icon: Res.mode_21,
+    modeId: 21,
     dpValue: '160000000000000000',
-  },
-  {
-    icon: Res.mode_23,
-    modeId: 23,
-    dpValue: '170000000000000000',
-  },
-  {
-    icon: Res.mode_24,
-    modeId: 24,
-    dpValue: '180000000000000000',
   },
   {
     icon: Res.mode_31,
     modeId: 31,
-    dpValue: '1f0000000000000000',
-  },
-  {
-    icon: Res.mode_32,
-    modeId: 32,
-    dpValue: '200000000000000000',
-  },
-  {
-    icon: Res.mode_41,
-    modeId: 41,
-    dpValue: '290000000000000000',
-  },
-  {
-    icon: Res.mode_42,
-    modeId: 42,
-    dpValue: '2a0000000000000000',
+    dpValue: '170000000000000000',
   },
   {
     icon: Res.mode_51,
     modeId: 51,
-    dpValue: '330000000000000000',
+    dpValue: '180000000000000000',
   },
   {
     icon: Res.mode_52,
     modeId: 52,
-    dpValue: '340000000000000000',
+    dpValue: '1f0000000000000000',
   },
   {
     icon: Res.mode_53,
     modeId: 53,
-    dpValue: '350000000000000000',
+    dpValue: '200000000000000000',
   },
   {
     icon: Res.mode_54,
     modeId: 54,
+    dpValue: '290000000000000000',
+  },
+  {
+    icon: Res.mode_71,
+    modeId: 71,
+    dpValue: '2a0000000000000000',
+  },
+  {
+    icon: Res.mode_72,
+    modeId: 72,
+    dpValue: '330000000000000000',
+  },
+  {
+    icon: Res.mode_73,
+    modeId: 73,
+    dpValue: '340000000000000000',
+  },
+  {
+    icon: Res.mode_74,
+    modeId: 74,
+    dpValue: '350000000000000000',
+  },
+  {
+    icon: Res.mode_75,
+    modeId: 75,
     dpValue: '360000000000000000',
   },
   {
-    icon: Res.mode_61,
-    modeId: 61,
+    icon: Res.mode_76,
+    modeId: 76,
     dpValue: '3d0000000000000000',
   },
   {
-    icon: Res.mode_62,
-    modeId: 62,
+    icon: Res.mode_77,
+    modeId: 77,
     dpValue: '3e0000000000000000',
   },
   {
-    icon: Res.mode_63,
-    modeId: 63,
+    icon: Res.mode_78,
+    modeId: 78,
     dpValue: '3f0000000000000000',
   },
   {
-    icon: Res.mode_64,
-    modeId: 64,
+    icon: Res.mode_79,
+    modeId: 79,
     dpValue: '400000000000000000',
   },
   {
-    icon: Res.mode_65,
-    modeId: 65,
+    icon: Res.mode_80,
+    modeId: 80,
     dpValue: '410000000000000000',
+  },
+  {
+    icon: Res.mode_81,
+    modeId: 81,
+    dpValue: '420000000000000000',
+  },
+  {
+    icon: Res.mode_82,
+    modeId: 82,
+    dpValue: '430000000000000000',
+  },
+  {
+    icon: Res.mode_84,
+    modeId: 84,
+    dpValue: '440000000000000000',
+  },
+  {
+    icon: Res.mode_85,
+    modeId: 85,
+    dpValue: '450000000000000000',
+  },
+  {
+    icon: Res.mode_86,
+    modeId: 86,
+    dpValue: '460000000000000000',
+  },
+  {
+    icon: Res.mode_87,
+    modeId: 87,
+    dpValue: '470000000000000000',
+  },
+  {
+    icon: Res.mode_88,
+    modeId: 88,
+    dpValue: '480000000000000000',
+  },
+  {
+    icon: Res.mode_89,
+    modeId: 89,
+    dpValue: '490000000000000000',
+  },
+  {
+    icon: Res.mode_90,
+    modeId: 90,
+    dpValue: '4a0000000000000000',
   },
 ];
 
@@ -220,69 +264,6 @@ export type Music = {
   id: number;
 };
 
-export const sceneMusicList: Music[] = [
-  {
-    name: i18n.getLang('scene_music_0'),
-    icon: Res.mute,
-    id: 0,
-  },
-  {
-    name: i18n.getLang('scene_music_1'),
-    icon: Res.scene_music_1,
-    id: 1,
-  },
-  {
-    name: i18n.getLang('scene_music_2'),
-    icon: Res.scene_music_2,
-    id: 2,
-  },
-  {
-    name: i18n.getLang('scene_music_3'),
-    icon: Res.scene_music_3,
-    id: 3,
-  },
-  {
-    name: i18n.getLang('scene_music_4'),
-    icon: Res.scene_music_4,
-    id: 4,
-  },
-  {
-    name: i18n.getLang('scene_music_5'),
-    icon: Res.scene_music_5,
-    id: 5,
-  },
-  {
-    name: i18n.getLang('scene_music_6'),
-    icon: Res.scene_music_6,
-    id: 6,
-  },
-  {
-    name: i18n.getLang('scene_music_7'),
-    icon: Res.scene_music_7,
-    id: 7,
-  },
-  {
-    name: i18n.getLang('scene_music_8'),
-    icon: Res.scene_music_8,
-    id: 8,
-  },
-  {
-    name: i18n.getLang('scene_music_9'),
-    icon: Res.scene_music_9,
-    id: 9,
-  },
-  {
-    name: i18n.getLang('scene_music_10'),
-    icon: Res.scene_music_10,
-    id: 10,
-  },
-  {
-    name: i18n.getLang('scene_music_11'),
-    icon: Res.scene_music_11,
-    id: 11,
-  },
-];
-
 export const clockMusicList: Music[] = [
   {
     name: i18n.getLang('music_0'),
@@ -344,42 +325,42 @@ export const clockAnimationList: Music[] = [
   },
   {
     name: i18n.getLang('clock_animation_1'),
-    icon: Res.clock_animate_1,
+    icon: Res.mode_51,
     id: 1,
   },
   {
     name: i18n.getLang('clock_animation_2'),
-    icon: Res.clock_animate_2,
+    icon: Res.mode_79,
     id: 2,
   },
   {
     name: i18n.getLang('clock_animation_3'),
-    icon: Res.clock_animate_3,
+    icon: Res.mode_80,
     id: 3,
   },
   {
     name: i18n.getLang('clock_animation_4'),
-    icon: Res.clock_animate_4,
+    icon: Res.mode_81,
     id: 4,
   },
   {
     name: i18n.getLang('clock_animation_5'),
-    icon: Res.clock_animate_5,
+    icon: Res.mode_82,
     id: 5,
   },
   {
     name: i18n.getLang('clock_animation_6'),
-    icon: Res.clock_animate_6,
+    icon: Res.mode_90,
     id: 6,
   },
   {
     name: i18n.getLang('clock_animation_7'),
-    icon: Res.clock_animate_7,
+    icon: Res.mode_84,
     id: 7,
   },
   {
     name: i18n.getLang('clock_animation_8'),
-    icon: Res.clock_animate_8,
+    icon: Res.mode_53,
     id: 8,
   },
 ];
@@ -392,42 +373,105 @@ export const sceneAnimationList: Music[] = [
   },
   {
     name: i18n.getLang('sleep_animate_1'),
-    icon: Res.sleep_animate_1,
+    icon: Res.mode_54,
     id: 1,
   },
   {
     name: i18n.getLang('sleep_animate_2'),
-    icon: Res.sleep_animate_2,
+    icon: Res.mode_78,
     id: 2,
   },
   {
     name: i18n.getLang('sleep_animate_3'),
-    icon: Res.sleep_animate_3,
+    icon: Res.mode_86,
     id: 3,
   },
   {
     name: i18n.getLang('sleep_animate_4'),
-    icon: Res.sleep_animate_4,
+    icon: Res.mode_87,
     id: 4,
   },
   {
     name: i18n.getLang('sleep_animate_5'),
-    icon: Res.sleep_animate_5,
+    icon: Res.mode_88,
     id: 5,
   },
   {
     name: i18n.getLang('sleep_animate_6'),
-    icon: Res.sleep_animate_6,
+    icon: Res.mode_89,
     id: 6,
   },
   {
     name: i18n.getLang('sleep_animate_7'),
-    icon: Res.sleep_animate_7,
+    icon: Res.mode_90,
     id: 7,
   },
   {
     name: i18n.getLang('sleep_animate_8'),
-    icon: Res.sleep_animate_8,
+    icon: Res.mode_52,
     id: 8,
+  },
+];
+
+export const sceneMusicList: Music[] = [
+  {
+    name: i18n.getLang('scene_music_0'),
+    icon: Res.mute,
+    id: 0,
+  },
+  {
+    name: i18n.getLang('scene_music_1'),
+    icon: Res.scene_music_1,
+    id: 1,
+  },
+  {
+    name: i18n.getLang('scene_music_2'),
+    icon: Res.scene_music_2,
+    id: 2,
+  },
+  {
+    name: i18n.getLang('scene_music_3'),
+    icon: Res.scene_music_3,
+    id: 3,
+  },
+  {
+    name: i18n.getLang('scene_music_4'),
+    icon: Res.scene_music_4,
+    id: 4,
+  },
+  {
+    name: i18n.getLang('scene_music_5'),
+    icon: Res.scene_music_5,
+    id: 5,
+  },
+  {
+    name: i18n.getLang('scene_music_6'),
+    icon: Res.scene_music_6,
+    id: 6,
+  },
+  {
+    name: i18n.getLang('scene_music_7'),
+    icon: Res.scene_music_7,
+    id: 7,
+  },
+  {
+    name: i18n.getLang('scene_music_8'),
+    icon: Res.scene_music_8,
+    id: 8,
+  },
+  {
+    name: i18n.getLang('scene_music_9'),
+    icon: Res.scene_music_9,
+    id: 9,
+  },
+  {
+    name: i18n.getLang('scene_music_10'),
+    icon: Res.scene_music_10,
+    id: 10,
+  },
+  {
+    name: i18n.getLang('scene_music_11'),
+    icon: Res.scene_music_11,
+    id: 11,
   },
 ];

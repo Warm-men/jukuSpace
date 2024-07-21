@@ -144,7 +144,6 @@ function ModalEdit() {
   };
 
   const onClickItem = item => {
-    console.log('🚀 ~ file: index.tsx:146 ~ onClickItem ~ item:', item);
     navigation.push('modalDetail', { item });
   };
 

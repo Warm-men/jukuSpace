@@ -9,6 +9,7 @@ import Res from '@res';
 import i18n from '@i18n';
 import SwitchView from '@components/switch';
 import { dpCodes } from '@config';
+import { clockAnimationList, clockMusicList } from '@config/common';
 import Clock from './clock';
 import styles from './styles';
 import { clockString2Object, repeat2Text } from '../../utils';
@@ -104,14 +105,9 @@ function Home() {
   const getSleepSmallImages = data => {
     const { animationId, music } = data || {};
     if (!data || (data.animationId === undefined && data.music === undefined)) return [null, null];
-    if (animationId === undefined) {
-      return [Res[`clock_animate_${music}`], null];
-    }
-    if (music === undefined) {
-      return [null, Res[`clock_${animationId}`]];
-    }
-    const musicImg = music === 0 ? Res.mute : Res[`clock_${music}`];
-    const animationImg = animationId === 0 ? Res.no_animation : Res[`clock_animate_${animationId}`];
+    const animationImg =
+      clockAnimationList.find(item => item.id === animationId)?.icon || Res.no_animation;
+    const musicImg = clockMusicList.find(item => item.id === music)?.icon || Res.mute;
     return [animationImg, musicImg];
   };
 

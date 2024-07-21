@@ -8,7 +8,7 @@ import { commonColor, cx } from '@config/styles';
 import Res from '@res';
 import { dpCodes } from '@config';
 import i18n from '@i18n';
-import { sceneDataDefault } from '@config/common';
+import { sceneDataDefault, sceneAnimationList, sceneMusicList } from '@config/common';
 import { getSleepLeftTime, sleepStr2Object, sleep2String } from '@utils';
 import { TYText, TopBar, Progress, TYSdk, GlobalToast } from 'tuya-panel-kit';
 import _ from 'lodash';
@@ -153,13 +153,10 @@ function Scene() {
     const { animation, music } = sceneData || {};
     if (!sceneData || (sceneData.animation === undefined && sceneData.music === undefined))
       return [null, null];
-    if (animation === undefined) {
-      return [Res[`sleep_animate_${music}`], null];
-    }
-    if (music === undefined) {
-      return [null, Res[`scene_music_${animation}`]];
-    }
-    return [Res[`sleep_animate_${animation}`], Res[`scene_music_${music}`]];
+    const animationImg =
+      sceneAnimationList.find(item => item.id === animation)?.icon || Res.no_animation;
+    const musicImg = sceneMusicList.find(item => item.id === music)?.icon || Res.mute;
+    return [animationImg, musicImg];
   };
 
   const renderSceneWorking = () => {
@@ -307,38 +304,6 @@ function Scene() {
                 </TouchableOpacity>
               );
             })}
-            {/* <TouchableOpacity activeOpacity={0.8} onPress={toggleCountdown}>
-              <View style={styles.effectViewWrap}>
-                <Image source={countdownImage} style={styles.effectIcon} />
-                <TYText style={styles.effectViewText}>{i18n.getLang('countdown')}</TYText>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={() => {
-                setShowAnimate(true);
-              }}
-            >
-              <View style={styles.effectViewWrap}>
-                <Image source={Res.xing} style={styles.effectIcon} />
-                <TYText style={styles.effectViewText}>
-                  {i18n.getLang(`sleep_animate_${sceneData.animation}`)}
-                </TYText>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={() => {
-                setShowMusic(true);
-              }}
-            >
-              <View style={styles.effectViewWrap}>
-                <Image source={Res.music_icon} style={styles.effectIcon} />
-                <TYText style={styles.effectViewText}>
-                  {i18n.getLang(`scene_music_${sceneData.music}`)}
-                </TYText>
-              </View>
-            </TouchableOpacity> */}
           </View>
         ) : null}
 
@@ -356,7 +321,6 @@ function Scene() {
               max={10}
               step={1}
               onComplete={(value: number) => {
-                // updateSceneState('musicVolume', value);
                 updateVolume(value);
               }}
               showValue={false}

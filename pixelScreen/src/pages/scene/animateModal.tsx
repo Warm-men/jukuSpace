@@ -31,13 +31,13 @@ const PopUp = (props: any) => {
         onClose();
         setSelectedAnimate(value);
       }}
-      popupViewHeight={cx(480)}
+      popupViewHeight={cx(400)}
       onConfirm={handleConfirm}
       title={i18n.getLang('scene_animate')}
     >
       <ScrollView
         style={styles.listView}
-        contentContainerStyle={{ paddingLeft: cx(22), paddingBottom: cx(16) }}
+        contentContainerStyle={{ paddingLeft: cx(20), paddingBottom: cx(16) }}
       >
         <View style={styles.popupViewEffect}>
           {sceneAnimationList.map((item: Music) => {
@@ -85,20 +85,20 @@ const styles = StyleSheet.create({
     marginBottom: cx(16),
   },
   effectItem: {
-    width: cx(154),
-    marginRight: cx(18),
+    width: cx(104),
+    marginRight: cx(12),
     marginTop: cx(12),
   },
   effectItemEffect: {
-    borderWidth: cx(3),
+    borderWidth: cx(2),
     borderColor: 'transparent',
-    borderRadius: cx(12),
+    borderRadius: cx(8),
     marginBottom: cx(4),
     overflow: 'hidden',
   },
   effectImage: {
-    width: cx(152),
-    height: cx(77),
-    borderRadius: cx(12),
+    width: cx(100),
+    height: cx(50),
+    borderRadius: cx(8),
   },
 });

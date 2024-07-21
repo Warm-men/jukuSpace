@@ -23,7 +23,7 @@ const PopUp = (props: any) => {
         setValue(_value);
       }}
       onConfirm={handleConfirm}
-      popupViewHeight={cx(480)}
+      popupViewHeight={cx(400)}
       title={i18n.getLang('set_clock_animate')}
     >
       <ScrollView contentContainerStyle={{ paddingBottom: cx(28) }}>
@@ -65,24 +65,24 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
-    paddingLeft: cx(16),
+    paddingLeft: cx(20),
   },
   musicItem: {
-    width: cx(162),
+    width: cx(104),
     marginBottom: cx(22),
-    marginRight: cx(16),
+    marginRight: cx(12),
   },
   imageView: {
-    width: cx(162),
-    height: cx(85),
-    borderWidth: cx(4),
-    borderRadius: cx(12),
+    width: cx(104),
+    height: cx(54),
+    borderWidth: cx(2),
+    borderRadius: cx(8),
     borderColor: 'transparent',
     marginBottom: cx(8),
   },
   musicImage: {
-    borderRadius: cx(12),
-    width: cx(154),
-    height: cx(77),
+    borderRadius: cx(8),
+    width: cx(100),
+    height: cx(50),
   },
 });

@@ -10,7 +10,7 @@ import Res from '@res';
 import i18n from '@i18n';
 import { dpCodes } from '@config';
 import { getSleepLeftTime, sleepStr2Object, sleep2String } from '@utils';
-import { sceneDataDefault } from '@config/common';
+import { sceneDataDefault, sceneAnimationList, sceneMusicList } from '@config/common';
 import PlayButton from '@components/playButton';
 
 const { sleepAidStatusCode, switchFaSleepCode, sleepSettingCode } = dpCodes;
@@ -79,14 +79,9 @@ function Scene() {
     const { animation, music } = sceneItem || {};
     if (!sceneItem || (sceneItem.animation === undefined && sceneItem.music === undefined))
       return [null, null];
-    if (animation === undefined) {
-      return [Res[`sleep_animate_${music}`], null];
-    }
-    if (music === undefined) {
-      return [null, Res[`scene_music_${animation}`]];
-    }
-    const musicImg = music === 0 ? Res.mute : Res[`scene_music_${music}`];
-    const animationImg = animation === 0 ? Res.no_animation : Res[`sleep_animate_${animation}`];
+    const animationImg =
+      sceneAnimationList.find(item => item.id === animation)?.icon || Res.no_animation;
+    const musicImg = sceneMusicList.find(item => item.id === music)?.icon || Res.mute;
     return [animationImg, musicImg];
   };
 
