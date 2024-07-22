@@ -200,7 +200,7 @@ function Scene() {
   const countdownImage = sceneData.manualClose ? Res.auto_close_off : Res.auto_close_on;
 
   const updateVolume = (value: number) => {
-    TYSdk.device.putDeviceData({ [volumeSetCode]: value * 10 });
+    TYSdk.device.putDeviceData({ [volumeSetCode]: value });
     updateSceneState('musicVolume', value);
     // if (isWorking) {
     //   TYSdk.device.putDeviceData({ [volumeSetCode]: value * 10 });
@@ -311,10 +311,10 @@ function Scene() {
           <View>
             <View style={[styles.row, styles.spaceBt]}>
               <TYText style={styles.sliderText}>{i18n.getLang('volume_setting')}</TYText>
-              <TYText style={styles.sliderText1}>{volumeSet / 10}</TYText>
+              <TYText style={styles.sliderText1}>{volumeSet}</TYText>
             </View>
             <SliderView
-              value={volumeSet / 10}
+              value={volumeSet}
               style={styles.sliderView}
               img={Res.volume}
               min={1}

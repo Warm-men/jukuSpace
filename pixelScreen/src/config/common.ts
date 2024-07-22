@@ -112,12 +112,12 @@ export const modelConfig: ModelConfig[] = [
     dpValue: '340000000000000000',
   },
   {
-    icon: Res.mode_74,
+    icon: Res.mode_75, // 固件没有对应的图标
     modeId: 74,
     dpValue: '350000000000000000',
   },
   {
-    icon: Res.mode_75,
+    icon: Res.mode_74, // 固件没有对应的图标
     modeId: 75,
     dpValue: '360000000000000000',
   },
@@ -313,12 +313,12 @@ export const clockMusicList: Music[] = [
   {
     name: i18n.getLang('scene_music_4'),
     icon: Res.scene_music_4,
-    id: 4,
+    id: 8,
   },
   {
     name: i18n.getLang('scene_music_5'),
     icon: Res.scene_music_5,
-    id: 5,
+    id: 9,
   },
 ];
 
@@ -355,7 +355,7 @@ export const clockAnimationList: Music[] = [
   },
   {
     name: i18n.getLang('clock_animation_6'),
-    icon: Res.mode_90,
+    icon: Res.mode_83,
     id: 6,
   },
   {
@@ -383,7 +383,7 @@ export const sceneAnimationList: Music[] = [
   },
   {
     name: i18n.getLang('sleep_animate_2'),
-    icon: Res.mode_78,
+    icon: Res.mode_85,
     id: 2,
   },
   {
@@ -439,44 +439,44 @@ export const sceneMusicList: Music[] = [
     icon: Res.scene_music_3,
     id: 3,
   },
-  {
-    name: i18n.getLang('scene_music_4'),
-    icon: Res.scene_music_4,
-    id: 4,
-  },
-  {
-    name: i18n.getLang('scene_music_5'),
-    icon: Res.scene_music_5,
-    id: 5,
-  },
+  // {
+  //   name: i18n.getLang('scene_music_4'),
+  //   icon: Res.scene_music_4,
+  //   id: 4,
+  // },
+  // {
+  //   name: i18n.getLang('scene_music_5'),
+  //   icon: Res.scene_music_5,
+  //   id: 5,
+  // },
   {
     name: i18n.getLang('scene_music_6'),
     icon: Res.scene_music_6,
-    id: 6,
+    id: 4,
   },
   {
     name: i18n.getLang('scene_music_7'),
     icon: Res.scene_music_7,
-    id: 7,
+    id: 5,
   },
   {
     name: i18n.getLang('scene_music_8'),
     icon: Res.scene_music_8,
-    id: 8,
+    id: 6,
   },
   {
     name: i18n.getLang('scene_music_9'),
     icon: Res.scene_music_9,
-    id: 9,
+    id: 7,
   },
   {
     name: i18n.getLang('scene_music_10'),
     icon: Res.scene_music_10,
-    id: 10,
+    id: 8,
   },
   {
     name: i18n.getLang('scene_music_11'),
     icon: Res.scene_music_11,
-    id: 11,
+    id: 9,
   },
 ];

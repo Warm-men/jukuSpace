@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
   clickText: {
     fontSize: cx(14),
     color: '#78787A',
-    width: cx(170),
+    width: cx(100),
     textAlign: 'right',
   },
   pickerText: {
