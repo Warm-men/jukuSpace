@@ -4,14 +4,16 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useSelector } from 'react-redux';
 import { dpCodes } from '@config';
-import { TYSdk, TYText, GlobalToast } from 'tuya-panel-kit';
+import { TYSdk, TYText, GlobalToast, Utils } from 'tuya-panel-kit';
 import { modelConfig } from '@config/common';
+
 import Res from '@res';
 import i18n from '@i18n';
 import styles from './styles';
 import { decodePlayString, playListString2Map } from '../../utils';
 
 const { playListCode, playListStateCode, playListUpCode, playListDownCode, playModeCode } = dpCodes;
+export const { convertX: cx, convertY: cy } = Utils.RatioUtils;
 
 interface ModelConfig {
   name?: string;
@@ -124,8 +126,9 @@ function Modal(props) {
             </TouchableOpacity>
           </View>
           <View style={styles.modalList}>
-            {modeData.map(item => {
+            {modeData.map((item, index) => {
               const isPLaying = playId === item.modeId;
+              const isRightBorderNone = (index + 1) % 3 === 0;
               return (
                 <TouchableOpacity
                   key={item.modeId}
@@ -134,7 +137,13 @@ function Modal(props) {
                   }}
                   activeOpacity={0.85}
                 >
-                  <View style={[styles.modalItemView, isPLaying && styles.modalItemViewBorder]}>
+                  <View
+                    style={[
+                      styles.modalItemView,
+                      isPLaying && styles.modalItemViewBorder,
+                      { marginRight: isRightBorderNone ? 0 : cx(12) },
+                    ]}
+                  >
                     <Image source={item.icon} style={styles.modalItemImage} />
                   </View>
                 </TouchableOpacity>

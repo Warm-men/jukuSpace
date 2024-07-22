@@ -47,6 +47,7 @@ const mode_79 = require('./mode_79.png');
 const mode_80 = require('./mode_80.png');
 const mode_81 = require('./mode_81.png');
 const mode_82 = require('./mode_82.png');
+const mode_83 = require('./mode_83.png');
 const mode_84 = require('./mode_84.png');
 const mode_85 = require('./mode_85.png');
 const mode_86 = require('./mode_86.png');
@@ -81,4 +82,4 @@ const time_color_focus = require('./time_color_focus.png');
 const volume = require('./volume.png');
 const xing = require('./xing.png');
 
-export default { FM, add, add_plug, arrow_right, arrow_right_bar, auto_close_off, auto_close_on, chart, chooesed, clock_1, clock_2, clock_3, clock_4, clock_5, clock_6, clock_7, clock_icon, close, close_1, color_slider_bg, delete_icon, done, gradient_color_0, gradient_color_1, gradient_color_2, gradient_color_3, loop1, loop, mode_11, mode_12, mode_13, mode_21, mode_31, mode_51, mode_52, mode_53, mode_54, mode_71, mode_72, mode_73, mode_74, mode_75, mode_76, mode_77, mode_78, mode_79, mode_80, mode_81, mode_82, mode_84, mode_85, mode_86, mode_87, mode_88, mode_89, mode_90, music_icon, mute, next, no_animation, pre, scene_music_10, scene_music_11, scene_music_1, scene_music_2, scene_music_3, scene_music_4, scene_music_5, scene_music_6, scene_music_7, scene_music_8, scene_music_9, setting, sort, sound_and_light, start, stopScence, stopScene, time_color_blur, time_color_focus, volume, xing };
+export default { FM, add, add_plug, arrow_right, arrow_right_bar, auto_close_off, auto_close_on, chart, chooesed, clock_1, clock_2, clock_3, clock_4, clock_5, clock_6, clock_7, clock_icon, close, close_1, color_slider_bg, delete_icon, done, gradient_color_0, gradient_color_1, gradient_color_2, gradient_color_3, loop1, loop, mode_11, mode_12, mode_13, mode_21, mode_31, mode_51, mode_52, mode_53, mode_54, mode_71, mode_72, mode_73, mode_74, mode_75, mode_76, mode_77, mode_78, mode_79, mode_80, mode_81, mode_82, mode_83, mode_84, mode_85, mode_86, mode_87, mode_88, mode_89, mode_90, music_icon, mute, next, no_animation, pre, scene_music_10, scene_music_11, scene_music_1, scene_music_2, scene_music_3, scene_music_4, scene_music_5, scene_music_6, scene_music_7, scene_music_8, scene_music_9, setting, sort, sound_and_light, start, stopScence, stopScene, time_color_blur, time_color_focus, volume, xing };

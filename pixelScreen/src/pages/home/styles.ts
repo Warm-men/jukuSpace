@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     fontSize: cx(12),
     color: '#fff',
     opacity: 0.75,
-    width: cx(120)
+    width: cx(120),
   },
   text16B: {
     fontSize: cx(16),
@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
   modalList: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
   },
   modalListTitle: {
     flexDirection: 'row',

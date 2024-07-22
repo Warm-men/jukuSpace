@@ -24,7 +24,7 @@ interface ModelConfig {
 export const modalCategoryIds1 = [11, 12, 13];
 export const modalCategoryIds2 = [21, 31];
 export const modalCategoryIds3 = [
-  51, 52, 53, 54, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 84, 85, 86, 87, 88, 89, 90,
+  51, 52, 53, 54, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90,
 ];
 
 // Data[0]第1个列表序号要显示的模板编号，对应的模板参数；
@@ -154,6 +154,11 @@ export const modelConfig: ModelConfig[] = [
   {
     icon: Res.mode_82,
     modeId: 82,
+    dpValue: '430000000000000000',
+  },
+  {
+    icon: Res.mode_83,
+    modeId: 83,
     dpValue: '430000000000000000',
   },
   {
