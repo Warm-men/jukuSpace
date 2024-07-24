@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Platform } from 'react-native';
 import { Utils, TYText } from 'tuya-panel-kit';
-import _times from 'lodash/times';
-import _deepClone from 'lodash/cloneDeep';
 import i18n from '@i18n';
 import ModalPop from '@components/modalRender';
 import PickerView from '@components/pickerView';
@@ -56,7 +54,7 @@ const styles = StyleSheet.create({
   },
   pickerBg: {
     position: 'absolute',
-    top: 84,
+    top: Platform.OS === 'ios' ? 84 : 52,
     left: cx(100),
     height: 48,
     width: cx(180),
@@ -65,7 +63,7 @@ const styles = StyleSheet.create({
   },
   pickerText: {
     position: 'absolute',
-    bottom: cx(12),
+    bottom: cx(14),
     right: cx(34),
     fontSize: cx(12),
     color: '#FFFFFF',

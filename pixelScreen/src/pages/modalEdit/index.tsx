@@ -42,12 +42,8 @@ function ModalEdit() {
 
   const navigation = useNavigation<StackNavigationProp<any, any>>();
 
-  const [repeatTime, setRepeatTime] = useState(150);
   const [modeData, setModeData] = useState<ModelConfig[]>([]);
   const [orderList, setOrderList] = useState<string[]>([]);
-  const [gradientColorType, setGradientColorType] = useState(0);
-  const [screenBrightness, setScreenBrightness] = useState(0);
-  const [extra, setExtra] = useState<Extra>({}); // 保存额外数据
   const [showDelete, setShowDelete] = useState<boolean>(false); // 显示删除
 
   useEffect(() => {
@@ -62,35 +58,18 @@ function ModalEdit() {
     const _orderList = newData.map((item, index) => `${index}`);
     setOrderList(_orderList);
     setModeData(newData);
-    const _extra = newData.find(item => item.extra)?.extra; // 目前版本模版的参数是统一配置的，但是参数分配到每组dp片段中，所以只取第一个即可
-    if (_extra) {
-      setExtra(_extra);
-      const _gradientColorType = _extra.textColor ? _extra.textColor : 0;
-      const _screenBrightness = _extra.brightness ? _extra.brightness : 0;
-      const _repeatTime = _extra.stayTime ? _extra.stayTime : 150;
-      setGradientColorType(_gradientColorType);
-      setScreenBrightness(_screenBrightness);
-      setRepeatTime(_repeatTime);
-    }
   }, [playList]);
 
   const save = () => {
     const newList: ModelConfig[] = [];
+    // 按照顺序保存
     orderList.forEach((index: string) => {
       const _item = modeData[+index];
       newList.push(_item);
     });
+    // 过滤掉已删除的
     const validList = newList.filter(item => !item.isDeleted);
-    const _extra = {
-      ...extra,
-      stayTime: repeatTime,
-      textColor: gradientColorType,
-      brightness: screenBrightness,
-    };
-    const _modeData = validList.map(item => {
-      return { ...item, extra: { ..._extra, modeId: item.modeId } };
-    });
-    const _data = playListMap2String(_modeData);
+    const _data = playListMap2String(validList);
     TYSdk.device.putDeviceData({
       [playListCode]: _data,
     });
@@ -118,10 +97,6 @@ function ModalEdit() {
     setOrderList(_newOrderList);
     setModeData(_modeData);
   };
-
-  const repeatTimeData = [30, 60, 120, 240, 300];
-
-  const isCustomer = !repeatTimeData.includes(repeatTime) && repeatTime !== 0;
 
   const getDataObject = () => {
     const dataObject = {};

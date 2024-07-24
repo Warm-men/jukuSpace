@@ -12,9 +12,6 @@ import {
   modalCategoryIds1,
   modalCategoryIds2,
   modalCategoryIds3,
-  modalCategoryIds4,
-  modalCategoryIds5,
-  modalCategoryIds6,
 } from '@config/common';
 import i18n from '@i18n';
 import { playListString2Map, playListMap2String } from '@utils';

@@ -107,7 +107,7 @@ function Clock() {
   const getHour = () => {
     const data = clockData[clockIndex];
     const { hour } = data;
-    return hour > 12 ? hour - 12 : hour;
+    return hour > 12 && !is24h ? hour - 12 : hour;
   };
 
   const [clockDataState, setClockDataState] = useState<ClockObject>(clockData[clockIndex]);
@@ -284,9 +284,11 @@ function Clock() {
             }}
             data={is24h ? get24HourData() : getHourData()}
           />
-          <View style={styles.pickerMiddle}>
-            <TYText style={styles.pickerText}>:</TYText>
-          </View>
+          {is24h ? (
+            <View style={styles.pickerMiddle}>
+              <TYText style={styles.pickerText}>:</TYText>
+            </View>
+          ) : null}
           <PickerView
             value={minute}
             onChange={value => {

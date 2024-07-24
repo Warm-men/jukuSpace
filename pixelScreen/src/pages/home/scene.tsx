@@ -181,6 +181,7 @@ const styles = StyleSheet.create({
     borderRadius: cx(16),
     paddingTop: cx(20),
     paddingBottom: cx(6),
+    overflow: 'hidden',
   },
   blackText: {
     fontSize: cx(16),

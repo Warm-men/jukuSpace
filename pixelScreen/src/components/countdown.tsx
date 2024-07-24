@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Utils, TYText, Picker } from 'tuya-panel-kit';
 import _times from 'lodash/times';
@@ -15,22 +15,26 @@ interface MainProps {
 const PopUp = (props: MainProps) => {
   const { onValueChange, value } = props;
 
-  const _hour = Math.floor(value / 60) || 0;
-  const _min = Math.floor(value / 60) || 0;
+  const hour = Math.floor(value / 60) || 0;
 
-  const [hour, setHour] = useState(_hour);
-  const [min, setMin] = useState(_min);
+  const onValueChangeHour = (_value: number) => {
+    const m = value % 60;
+    const _time = _value * 60 + m;
+    onValueChange(_time);
+  };
 
-  useEffect(() => {
-    const time = hour * 60 + min;
-    onValueChange(time);
-  }, [hour, min]);
+  const onValueChangeMinute = (_value: number) => {
+    const m = _value % 60;
+    const h = Math.floor(value / 60);
+    const _time = h * 60 + m;
+    onValueChange(_time);
+  };
 
   const getHourData = () => {
     const range = Utils.NumberUtils.range(0, 3, 1);
     const timerRange = range.map((item: number) => {
       return {
-        label: item > 9 ? `${item}` : `0${item}`,
+        label: `0${item}`,
         value: item,
       };
     });
@@ -71,8 +75,8 @@ const PopUp = (props: MainProps) => {
           fontSize: cx(40),
           dividerColor: 'transparent',
         }}
-        selectedValue={hour}
-        onValueChange={(value: number) => setHour(value)}
+        selectedValue={Math.floor(value / 60)}
+        onValueChange={onValueChangeHour}
       >
         {getHourData().map(item => (
           <Picker.Item key={item.value} value={item.value} label={item.label} />
@@ -92,8 +96,8 @@ const PopUp = (props: MainProps) => {
           fontSize: cx(40),
           dividerColor: 'transparent',
         }}
-        selectedValue={min}
-        onValueChange={(value: number) => setMin(value)}
+        selectedValue={value % 60}
+        onValueChange={onValueChangeMinute}
       >
         {getMinData().map(item => (
           <Picker.Item key={item.value} value={item.value} label={item.label} />
