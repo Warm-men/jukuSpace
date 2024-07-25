@@ -25,6 +25,7 @@ interface ModelConfig {
   modeId: number;
   dpValue: string;
   isActive?: boolean;
+  extra?: any;
 }
 
 const ModalList = (props: any) => {
@@ -42,10 +43,11 @@ const ModalList = (props: any) => {
     newData.forEach((item: ModelConfig) => {
       const _item = data.find((i: ModelConfig) => i.modeId === item.modeId);
       if (_item) {
-        const updatedItem = { ...item, isActive: true };
+        const updatedItem = { ..._item, isActive: true };
         Object.assign(item, updatedItem);
       }
     });
+
     setModeData(newData);
   }, [playList]);
 
@@ -55,7 +57,7 @@ const ModalList = (props: any) => {
     data.forEach(item => {
       const _item = modelConfig.find(i => i.modeId === item.modeId);
       if (_item) {
-        newData.push(_item);
+        newData.push(item);
       }
     });
     setSelectedMode(newData);
@@ -92,10 +94,7 @@ const ModalList = (props: any) => {
   };
 
   const handleConfirm = () => {
-    const _list = selectedMode.map((item: ModelConfig) => {
-      return { ...item, extra: {} };
-    });
-    const _data = playListMap2String(_list);
+    const _data = playListMap2String(selectedMode);
     TYSdk.device.putDeviceData({
       [playListCode]: _data,
     });

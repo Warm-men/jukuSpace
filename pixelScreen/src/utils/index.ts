@@ -370,7 +370,7 @@ const encodePlayItem = (item: any, modeId: number) => {
   return `${_modeId}${background}${borderColor}${enterEffect}${stayEffect}${showEffect}${speed}${stayTime}${textColor}${brightness}`;
 };
 export const playListMap2String = (
-  playList: { modeId: number; dpValue: string; extra: Extra }[]
+  playList: { modeId: number; dpValue: string; extra?: Extra }[]
 ) => {
   const playListStr = playList.reduce((prev, item) => {
     return prev + encodePlayItem(item.extra, item.modeId);
