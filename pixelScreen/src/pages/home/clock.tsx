@@ -19,12 +19,14 @@ function Clock() {
     [alarm2SettingCode]: alarm2Setting,
   } = useSelector(({ dpState }: any) => dpState);
 
+  const openStatus = ['00', '01'];
+
   const getStatus = () => {
     // Data[0]表示闹钟1状态00-02；00-响闹 01-贪睡 02-停闹
     // Data[1]表示闹钟2状态00-02；00-响闹 01-贪睡 02-停闹
     const clock1String = clockStatusData.slice(0, 2);
     const clock2String = clockStatusData.slice(2, 4);
-    const openStatus = ['00', '01'];
+
     return openStatus.includes(clock1String) || openStatus.includes(clock2String);
   };
 
@@ -41,10 +43,10 @@ function Clock() {
     // Data[1]表示闹钟2状态00-02；00-响闹 01-贪睡 02-停闹
     const clock1String = clockStatusData.slice(0, 2);
     const clock2String = clockStatusData.slice(2, 4);
-    if (clock1String === '00') {
+    if (openStatus.includes(clock1String)) {
       return 1;
     }
-    if (clock2String === '00') {
+    if (openStatus.includes(clock2String)) {
       return 2;
     }
     return 1;
@@ -64,14 +66,12 @@ function Clock() {
   }, [clockStatusData]);
 
   const remindLater = () => {
-    // setIsClockOpen(false);
     TYSdk.device.putDeviceData({
       [snoozeCode]: true,
     });
   };
 
   const stop = () => {
-    // setIsClockOpen(false);
     TYSdk.device.putDeviceData({
       [alarmStopCode]: true,
     });
@@ -113,12 +113,6 @@ function Clock() {
               </View>
             </TouchableOpacity>
           )}
-          {/* <TouchableOpacity onPress={remindLater}>
-            <View style={[styles.row, styles.center, styles.homeModalLater]}>
-              <Image source={Res.clock_icon} style={styles.homeModalLaterIcon} />
-              <TYText style={styles.blackText}>{i18n.getLang('remind_later')}</TYText>
-            </View>
-          </TouchableOpacity> */}
         </View>
         <View style={styles.center}>
           <TouchableOpacity onPress={stop}>

@@ -3,7 +3,7 @@
   "license": "MIT",
   "name": "1tdpd",
   "uiid": "",
-  "version": "1.0.18",
+  "version": "1.0.19",
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "lint": "prettier --write '**/*.{js,jsx,ts,tsx}'",
