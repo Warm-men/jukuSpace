@@ -149,14 +149,15 @@ function Scene() {
     );
   };
 
+  const animation = sceneAnimationList.find(item => item.id === sceneData?.animation);
+  const music = sceneMusicList.find(item => item.id === sceneData?.music);
+
   const getSmallImages = () => {
-    const { animation, music } = sceneData || {};
     if (!sceneData || (sceneData.animation === undefined && sceneData.music === undefined))
       return [null, null];
-    const animationImg =
-      sceneAnimationList.find(item => item.id === animation)?.icon || Res.no_animation;
-    const musicImg = sceneMusicList.find(item => item.id === music)?.icon || Res.mute;
-    return [animationImg, musicImg];
+    const _animationImg = animation?.icon || Res.no_animation;
+    const _musicImg = music?.icon || Res.mute;
+    return [_animationImg, _musicImg];
   };
 
   const renderSceneWorking = () => {
@@ -219,14 +220,14 @@ function Scene() {
       image: countdownImage,
     },
     {
-      text: i18n.getLang(`sleep_animate_${sceneData.animation}`),
+      text: animation?.name,
       onPress: () => {
         setShowAnimate(true);
       },
       image: Res.xing,
     },
     {
-      text: i18n.getLang(`scene_music_${sceneData.music}`),
+      text: music?.name,
       onPress: () => {
         setShowMusic(true);
       },
@@ -295,7 +296,7 @@ function Scene() {
             {offWorkingBottom.map((item, index) => {
               return (
                 <TouchableOpacity
-                  key={item.text}
+                  key={index}
                   activeOpacity={0.8}
                   onPress={item.onPress}
                   style={styles.effectViewWrap}

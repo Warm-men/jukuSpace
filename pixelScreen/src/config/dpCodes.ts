@@ -1,6 +1,6 @@
 export default {
   networkTimingCode: 'network_timing',
-  timeSyncCode: 'time_sync',
+  timeSyncCode: 'timesync',
   wetherOnOffCode: 'wather_onofff',
   backLightCode: 'backlight_enum',
   playListCode: 'play_list',
